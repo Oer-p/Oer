@@ -1,98 +1,234 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080a0d">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05070a">
 <title>OER — Teman</title>
 <style>
-:root{--bg:#080a0d;--panel:#0d1015;--panel2:#141820;--border:#252b35;--text:#f6f7fa;--muted:#929baa;--cyan:#06b9dd}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-button,input{font:inherit}button{cursor:pointer;color:inherit}[hidden]{display:none!important}
-.app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
-.sidebar{background:#0c0f13;border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;height:100vh}
-.brand{display:flex;align-items:center;gap:10px;padding:23px}
-.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#05c4e8,#079ecb);display:grid;place-items:center;font-weight:900;font-size:22px}
-.brand strong{font-size:25px;letter-spacing:-1px}
-.nav{padding:8px 12px;display:grid;gap:5px}
-.nav a{height:46px;padding:0 14px;display:flex;align-items:center;gap:12px;border-radius:13px;text-decoration:none;color:#a7afbd;font-size:14px;font-weight:600}
-.nav a:hover,.nav a.active{background:#202630;color:white}
-.side-note{margin:auto 14px 16px;padding:15px;border:1px solid var(--border);border-radius:15px;background:#11151b}
-.side-note p{font-size:11px;color:var(--muted);line-height:1.7;margin-top:7px}
-.side-foot{border-top:1px solid var(--border);padding:14px;color:#778294;font-size:10px}
-.main{min-width:0}
-.topbar{height:72px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:12px}
-.topbar h1{font-size:22px}.topbar p{font-size:11px;color:var(--muted);margin-top:4px}
-.content{max-width:1100px;margin:auto;padding:27px 28px 40px}
-.welcome{margin-bottom:22px}.welcome h2{font-size:26px;margin-bottom:8px;letter-spacing:-.6px}.welcome p{font-size:13px;color:var(--muted);line-height:1.7}
-.search{height:49px;display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:0 14px;margin-bottom:20px}
-.search:focus-within{border-color:#078ba8}.search input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:white;font-size:13px}.search input::placeholder{color:#818c9d}
-.tabs{display:flex;gap:5px;overflow:auto;border-bottom:1px solid var(--border);margin-bottom:19px}
-.tab{flex-shrink:0;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);padding:12px 13px;font-size:12px;font-weight:650}
-.tab.active{color:white;border-bottom-color:var(--cyan)}
-.count{display:inline-block;padding:3px 6px;background:#252d38;border-radius:6px;margin-left:4px;font-size:10px}
-.heading{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}.heading h3{font-size:15px}.heading span{font-size:11px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
-.person{padding:17px;border:1px solid var(--border);border-radius:17px;background:linear-gradient(145deg,#11151b,#0d1015);min-width:0}
-.person-top{display:flex;align-items:center;gap:11px;min-width:0}
-.avatar{width:47px;height:47px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;overflow:hidden;background:#263545;border:1px solid #303b49;color:#d8e8f2;font-weight:750}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.info{min-width:0}.name{font-size:13px;font-weight:700;overflow-wrap:anywhere}.handle{font-size:11px;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
-.bio{font-size:11px;color:#9da7b7;line-height:1.6;margin:14px 0;overflow-wrap:anywhere}
-.actions{display:flex;gap:7px;flex-wrap:wrap}
-.btn{flex:1;min-width:75px;border:1px solid #303947;background:#1a2029;border-radius:10px;padding:10px 8px;font-size:11px;font-weight:650}
-.btn:hover{background:#252e3a}.btn.primary{background:#078ba8;border-color:#078ba8}.btn.primary:hover{background:#06a9cc}.btn:disabled{opacity:.55;cursor:wait}
-.empty{padding:40px 18px;border:1px dashed #303947;border-radius:17px;text-align:center}
-.empty h3{font-size:16px;margin-bottom:9px}.empty p{font-size:12px;color:var(--muted);line-height:1.7;max-width:350px;margin:0 auto 15px}
-.primary{background:#078ba8;border:0;border-radius:10px;padding:11px 15px;color:white;font-size:12px;font-weight:700}
-.notice{font-size:12px;line-height:1.7;color:#9da7b7;margin-bottom:14px}
-.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,12px);opacity:0;pointer-events:none;z-index:10;background:#202731;border:1px solid #37414f;border-radius:12px;padding:12px 16px;font-size:12px;max-width:calc(100vw - 24px);transition:.2s}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding-left:20px;padding-right:20px}}
-@media(max-width:650px){.app{display:block}.sidebar{display:none}.topbar{height:65px;padding:0 14px}.topbar h1{font-size:19px}.content{padding:21px 13px 30px}.welcome h2{font-size:23px}.grid{grid-template-columns:1fr;gap:10px}.person{padding:15px}.tabs{margin-bottom:17px}}
+:root {
+  --bg: #05070a;
+  --panel: #0b0f14;
+  --panel2: #11161d;
+  --panel3: #171d26;
+  --border: #1e2630;
+  --text: #f1f5f9;
+  --muted: #8b97a8;
+  --cyan: #00a8e8;
+  --cyan-glow: rgba(0, 168, 232, 0.15);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+button, input { font: inherit; }
+button { cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+.sidebar {
+  background: var(--panel); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.sidebar-scroll { flex: 1; overflow-y: auto; padding: 20px 14px; }
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 6px 24px; }
+.brand-logo {
+  width: 40px; height: 40px; border-radius: 13px; background: var(--cyan);
+  display: grid; place-items: center; box-shadow: 0 0 20px var(--cyan-glow);
+}
+.brand-logo svg { width: 24px; height: 24px; }
+.brand-name { font-size: 20px; font-weight: 800; }
+.brand-tag { font-size: 9px; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; }
+
+.nav { display: grid; gap: 3px; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px;
+  border-radius: 12px; color: var(--muted); font-size: 14px; font-weight: 600;
+}
+.nav-item svg { width: 20px; height: 20px; }
+.nav-item:hover { background: var(--panel2); color: var(--text); }
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(0,168,232,0.15), rgba(0,168,232,0.05));
+  color: var(--cyan); border: 1px solid rgba(0,168,232,0.2);
+}
+
+.main { display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  height: 64px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; border-bottom: 1px solid var(--border);
+  background: rgba(11,15,20,0.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10;
+}
+.topbar h1 { font-size: 18px; font-weight: 700; }
+.topbar button {
+  height: 38px; padding: 0 14px; border-radius: 10px;
+  background: var(--panel2); border: 1px solid var(--border); font-size: 12px; font-weight: 600;
+}
+
+.content { max-width: 960px; margin: 0 auto; padding: 24px 20px 90px; width: 100%; }
+.welcome { margin-bottom: 24px; }
+.welcome h2 { font-size: 24px; margin-bottom: 6px; }
+.welcome p { color: var(--muted); font-size: 14px; }
+
+.search {
+  display: flex; align-items: center; gap: 10px; height: 46px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+  padding: 0 14px; margin-bottom: 18px;
+}
+.search:focus-within { border-color: var(--cyan); }
+.search input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--text); font-size: 14px;
+}
+
+.tabs {
+  display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--border); margin-bottom: 20px;
+}
+.tab {
+  flex-shrink: 0; padding: 12px 14px; font-size: 13px; font-weight: 650;
+  color: var(--muted); border-bottom: 2px solid transparent;
+}
+.tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+.count {
+  display: inline-block; padding: 2px 6px; background: var(--panel3);
+  border-radius: 6px; font-size: 10px; margin-left: 4px;
+}
+
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;
+}
+.person {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px;
+}
+.person-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.avatar {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--panel3);
+  display: grid; place-items: center; font-weight: 700; color: var(--cyan); flex-shrink: 0;
+}
+.info { min-width: 0; }
+.name { font-size: 14px; font-weight: 700; }
+.handle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.bio { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  flex: 1; min-width: 80px; height: 38px; border-radius: 10px;
+  font-size: 12px; font-weight: 650; border: 1px solid var(--border);
+  background: var(--panel2);
+}
+.btn.primary { background: var(--cyan); color: #001018; border-color: var(--cyan); }
+.btn:disabled { opacity: 0.5; }
+
+.empty {
+  text-align: center; padding: 48px 20px; color: var(--muted);
+  border: 1px dashed var(--border); border-radius: var(--radius);
+}
+.empty h3 { color: var(--text); margin-bottom: 8px; }
+.empty p { font-size: 13px; margin-bottom: 16px; }
+.btn-main {
+  height: 42px; padding: 0 18px; border-radius: 12px;
+  background: var(--cyan); color: #001018; font-weight: 700; font-size: 13px;
+}
+
+.bottom-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
+  background: var(--panel); border-top: 1px solid var(--border);
+  grid-template-columns: repeat(4, 1fr); z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bottom-nav a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; font-size: 10px; color: var(--muted); font-weight: 600;
+}
+.bottom-nav a.active { color: var(--cyan); }
+.bottom-nav svg { width: 22px; height: 22px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(10px);
+  background: var(--panel3); border: 1px solid var(--border); color: white;
+  padding: 12px 18px; border-radius: 12px; font-size: 13px; opacity: 0;
+  pointer-events: none; transition: 0.2s; z-index: 100; max-width: 90vw;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 800px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .bottom-nav { display: grid; }
+  .content { padding-bottom: 90px; }
+}
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="sidebar">
-  <div class="brand"><div class="logo">O</div><strong>OER</strong></div>
-  <nav class="nav">
-    <a href="home.html">⌂ &nbsp; Beranda</a>
-    <a href="chat.html">▤ &nbsp; Chat</a>
-    <a class="active" href="friends.html">♧ &nbsp; Teman</a>
-  </nav>
-  <div class="side-note"><strong>Temukan teman di OER</strong><p>Cari pengguna, kirim permintaan pertemanan, dan mulai membangun koneksi.</p></div>
-  <div class="side-foot">OER — Ruang komunikasi digital.<br>© 2026 OER.</div>
-</aside>
-<main class="main">
-  <header class="topbar">
-    <div><h1>Teman</h1><p>Kelola koneksi dan pertemananmu di OER</p></div>
-    <button class="primary" id="reloadBtn">Muat ulang</button>
-  </header>
-  <div class="content">
-    <section class="welcome"><h2>Temukan orang baru.</h2><p>Cari teman, kelola permintaan, dan bangun koneksi di OER.</p></section>
-    <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Cari nama atau username..." autocomplete="off"><span style="font-size:10px;color:#818c9d;white-space:nowrap">Cari</span></label>
-    <div class="tabs" role="tablist">
-      <button class="tab active" data-tab="friends">Teman <span class="count" id="friendsCount">0</span></button>
-      <button class="tab" data-tab="discover">Temukan orang</button>
-      <button class="tab" data-tab="requests">Permintaan <span class="count" id="requestsCount">0</span></button>
-      <button class="tab" data-tab="sent">Terkirim <span class="count" id="sentCount">0</span></button>
+  <aside class="sidebar">
+    <div class="sidebar-scroll">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/></svg>
+        </div>
+        <div>
+          <div class="brand-name">OER</div>
+          <div class="brand-tag">Connect Everything</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>Beranda</a>
+        <a class="nav-item" href="chat.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>Chat</a>
+        <a class="nav-item" href="status.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>Status</a>
+        <a class="nav-item active" href="friends.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Teman</a>
+      </nav>
     </div>
-    <div class="heading"><h3 id="sectionTitle">Daftar Teman</h3><span id="resultCount">Memuat...</span></div>
-    <p class="notice" id="pageNotice" hidden></p>
-    <div class="grid" id="peopleGrid"></div>
-    <div class="empty" id="emptyState" hidden><h3 id="emptyTitle">Belum ada teman</h3><p id="emptyDescription">Temukan orang untuk mulai membangun koneksi.</p><button class="primary" id="discoverButton">Temukan orang</button></div>
-  </div>
-</main>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h1>Teman</h1>
+      <button id="reloadBtn">Muat ulang</button>
+    </header>
+
+    <div class="content">
+      <div class="welcome">
+        <h2>Temukan orang baru</h2>
+        <p>Cari teman, kelola permintaan, dan bangun koneksi di OER.</p>
+      </div>
+
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+        <input id="searchInput" type="search" placeholder="Cari nama atau username...">
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="friends">Teman <span class="count" id="friendsCount">0</span></button>
+        <button class="tab" data-tab="discover">Temukan</button>
+        <button class="tab" data-tab="requests">Permintaan <span class="count" id="requestsCount">0</span></button>
+        <button class="tab" data-tab="sent">Terkirim <span class="count" id="sentCount">0</span></button>
+      </div>
+
+      <div class="grid" id="peopleGrid"></div>
+      <div class="empty" id="emptyState" hidden>
+        <h3 id="emptyTitle">Belum ada teman</h3>
+        <p id="emptyDescription">Temukan orang untuk mulai membangun koneksi.</p>
+        <button class="btn-main" id="discoverButton">Temukan orang</button>
+      </div>
+    </div>
+  </main>
 </div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>Home</a>
+  <a href="chat.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>Chat</a>
+  <a href="status.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>Status</a>
+  <a href="friends.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Teman</a>
+</nav>
+
+<div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-"use strict";
-
 const SUPABASE_URL = "https://mkjetsmaozegaqbgfsyk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_QIxIe-teLAlFNdGX77pMGw_3NZkPJw1";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -103,12 +239,7 @@ const empty = $("#emptyState");
 const search = $("#searchInput");
 const toast = $("#toast");
 
-let user = null;
-let profiles = [];
-let relations = [];
-let tab = "friends";
-let busy = false;
-let toastTimer;
+let user = null, profiles = [], relations = [], tab = "friends", busy = false, toastTimer;
 
 const labels = {
   friends: ["Daftar Teman", "Belum ada teman", "Temukan orang untuk mulai membangun koneksi."],
@@ -118,9 +249,7 @@ const labels = {
 };
 
 function escapeHTML(v) {
-  return String(v ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
+  return String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 function showToast(text) {
   toast.textContent = text;
@@ -128,11 +257,9 @@ function showToast(text) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
 }
-function personName(p) {
-  return p.display_name || p.username || "Pengguna OER";
-}
+function personName(p) { return p.display_name || p.username || "Pengguna OER"; }
 function initials(p) {
-  return personName(p).trim().split(/\s+/).slice(0,2).map(s => s[0] || "").join("").toUpperCase();
+  return personName(p).trim().split(/\s+/).slice(0,2).map(s => s[0]||"").join("").toUpperCase();
 }
 function relationWith(id) {
   return relations.find(r =>
@@ -146,15 +273,12 @@ function relationStatus(id) {
   if (r.status === "accepted") return "friend";
   return r.sender_id === user.id ? "sent" : "incoming";
 }
-function profileFor(id) {
-  return profiles.find(p => p.id === id);
-}
 function filteredPeople() {
   const q = search.value.trim().toLowerCase();
   return profiles.filter(p => {
     if (p.id === user.id) return false;
     const status = relationStatus(p.id);
-    let matchTab =
+    const matchTab =
       (tab === "friends" && status === "friend") ||
       (tab === "discover" && status === "none") ||
       (tab === "requests" && status === "incoming") ||
@@ -167,23 +291,26 @@ function buttonFor(p) {
   const status = relationStatus(p.id);
   if (status === "friend") {
     return `<button class="btn" data-action="chat" data-id="${escapeHTML(p.id)}">Buka Chat</button>
-    <button class="btn" data-action="remove" data-id="${escapeHTML(p.id)}">Hapus</button>`;
+            <button class="btn" data-action="remove" data-id="${escapeHTML(p.id)}">Hapus</button>`;
   }
   if (status === "incoming") {
     return `<button class="btn primary" data-action="accept" data-id="${escapeHTML(p.id)}">Terima</button>
-    <button class="btn" data-action="decline" data-id="${escapeHTML(p.id)}">Tolak</button>`;
+            <button class="btn" data-action="decline" data-id="${escapeHTML(p.id)}">Tolak</button>`;
   }
   if (status === "sent") {
-    return `<button class="btn" data-action="cancel" data-id="${escapeHTML(p.id)}">Batalkan Permintaan</button>`;
+    return `<button class="btn" data-action="cancel" data-id="${escapeHTML(p.id)}">Batalkan</button>`;
   }
-  return `<button class="btn primary" data-action="add" data-id="${escapeHTML(p.id)}">＋ Tambah Teman</button>`;
+  return `<button class="btn primary" data-action="add" data-id="${escapeHTML(p.id)}">+ Tambah</button>`;
 }
 function card(p) {
   const username = p.username ? "@" + p.username : "Pengguna OER";
   return `<article class="person">
     <div class="person-top">
       <div class="avatar">${escapeHTML(initials(p))}</div>
-      <div class="info"><div class="name">${escapeHTML(personName(p))}</div><div class="handle">${escapeHTML(username)}</div></div>
+      <div class="info">
+        <div class="name">${escapeHTML(personName(p))}</div>
+        <div class="handle">${escapeHTML(username)}</div>
+      </div>
     </div>
     <p class="bio">Pengguna OER</p>
     <div class="actions">${buttonFor(p)}</div>
@@ -199,8 +326,6 @@ function render() {
   $("#friendsCount").textContent = counts.friends;
   $("#requestsCount").textContent = counts.requests;
   $("#sentCount").textContent = counts.sent;
-  $("#sectionTitle").textContent = labels[tab][0];
-  $("#resultCount").textContent = rows.length + " orang";
   grid.innerHTML = rows.map(card).join("");
   empty.hidden = rows.length > 0;
   $("#emptyTitle").textContent = labels[tab][1];
@@ -208,50 +333,41 @@ function render() {
   $("#discoverButton").hidden = tab === "discover";
   document.querySelectorAll("[data-tab]").forEach(b => {
     b.classList.toggle("active", b.dataset.tab === tab);
-    b.setAttribute("aria-selected", String(b.dataset.tab === tab));
   });
 }
 async function loadData() {
   if (busy) return;
   busy = true;
   $("#reloadBtn").disabled = true;
-  $("#resultCount").textContent = "Memuat...";
-  $("#pageNotice").hidden = true;
   try {
     const { data: authData, error: authError } = await db.auth.getUser();
     if (authError) throw authError;
     user = authData.user;
     if (!user) {
       showToast("Silakan login terlebih dahulu.");
-      setTimeout(() => location.href = "home.html", 900);
+      setTimeout(() => location.href = "index.html", 900);
       return;
     }
-
     const { data: profileRows, error: profileError } = await db
       .from("profiles")
       .select("id, username, display_name, share_profile")
       .or(`share_profile.eq.true,id.eq.${user.id}`)
       .limit(500);
-
     if (profileError) throw profileError;
     profiles = profileRows || [];
-
     const { data: relationRows, error: relationError } = await db
       .from("friend_requests")
       .select("id, sender_id, receiver_id, status, created_at");
-
     if (relationError) throw relationError;
     relations = relationRows || [];
     render();
   } catch (err) {
-    console.error("OER friends:", err);
-    $("#resultCount").textContent = "Gagal memuat";
-    $("#pageNotice").hidden = false;
-    $("#pageNotice").textContent =
-      "Gagal memuat teman: " + (err.message || "Periksa tabel profiles, friend_requests, dan kebijakan RLS di Supabase.");
-    grid.innerHTML = "";
-    empty.hidden = true;
+    console.error(err);
     showToast("Gagal memuat data teman.");
+    grid.innerHTML = "";
+    empty.hidden = false;
+    $("#emptyTitle").textContent = "Gagal memuat";
+    $("#emptyDescription").textContent = err.message || "Periksa koneksi atau kebijakan Supabase.";
   } finally {
     busy = false;
     $("#reloadBtn").disabled = false;
@@ -263,61 +379,48 @@ async function performAction(action, targetId, button) {
   try {
     const relation = relationWith(targetId);
     if (action === "add") {
-      if (relation) throw new Error("Permintaan pertemanan sudah ada.");
+      if (relation) throw new Error("Permintaan sudah ada.");
       const { error } = await db.from("friend_requests").insert({
-        sender_id: user.id,
-        receiver_id: targetId,
-        status: "pending"
+        sender_id: user.id, receiver_id: targetId, status: "pending"
       });
       if (error) throw error;
-      showToast("Permintaan pertemanan terkirim.");
+      showToast("Permintaan terkirim.");
     } else if (action === "accept") {
-      if (!relation || relation.receiver_id !== user.id || relation.status !== "pending") {
-        throw new Error("Permintaan tidak ditemukan.");
-      }
-      const { error } = await db.from("friend_requests")
-        .update({ status: "accepted" }).eq("id", relation.id);
+      if (!relation || relation.receiver_id !== user.id) throw new Error("Permintaan tidak ditemukan.");
+      const { error } = await db.from("friend_requests").update({ status: "accepted" }).eq("id", relation.id);
       if (error) throw error;
-      showToast("Permintaan pertemanan diterima.");
+      showToast("Permintaan diterima.");
     } else if (action === "decline" || action === "cancel" || action === "remove") {
-      if (!relation) throw new Error("Relasi pertemanan tidak ditemukan.");
-      if (action === "remove" && !confirm("Hapus teman ini dari daftar pertemanan?")) return;
-      const { error } = await db.from("friend_requests")
-        .delete().eq("id", relation.id);
+      if (!relation) throw new Error("Relasi tidak ditemukan.");
+      if (action === "remove" && !confirm("Hapus teman ini?")) return;
+      const { error } = await db.from("friend_requests").delete().eq("id", relation.id);
       if (error) throw error;
-      showToast(action === "remove" ? "Teman dihapus." :
-        action === "cancel" ? "Permintaan dibatalkan." : "Permintaan ditolak.");
+      showToast(action === "remove" ? "Teman dihapus." : action === "cancel" ? "Permintaan dibatalkan." : "Permintaan ditolak.");
     } else if (action === "chat") {
       location.href = "chat.html?user=" + encodeURIComponent(targetId);
       return;
     }
     await loadData();
   } catch (err) {
-    console.error(err);
-    showToast(err.message || "Aksi gagal. Periksa kebijakan database.");
+    showToast(err.message || "Aksi gagal.");
   } finally {
     button.disabled = false;
   }
 }
+
 document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => {
-  tab = b.dataset.tab;
-  search.value = "";
-  render();
+  tab = b.dataset.tab; search.value = ""; render();
 }));
 search.addEventListener("input", render);
 grid.addEventListener("click", e => {
   const b = e.target.closest("[data-action]");
   if (b) performAction(b.dataset.action, b.dataset.id, b);
 });
-$("#discoverButton").addEventListener("click", () => {
-  tab = "discover"; search.value = ""; render();
-});
+$("#discoverButton").addEventListener("click", () => { tab = "discover"; search.value = ""; render(); });
 $("#reloadBtn").addEventListener("click", loadData);
 
 db.auth.onAuthStateChange((event, session) => {
-  if (event === "SIGNED_OUT" || !session) {
-    location.href = "home.html";
-  }
+  if (event === "SIGNED_OUT" || !session) location.href = "index.html";
 });
 loadData();
 </script>
