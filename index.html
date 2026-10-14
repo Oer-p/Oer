@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#050707">
@@ -509,12 +510,99 @@ h4{margin:8px 0}
 <div class="toast" id="toast"></div>
 
 <script>
+const SUPABASE_URL = 'https://mkjetsmaozegaqbgfsyk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_QIxIe-teLAlFNdGX77pMGw_3NZkPJw1';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
-let uploadMode='any',pendingFile=null,profile={
- name:'Mexa Smart',handle:'mexa',bio:'Hidup itu sederhana, nikmati prosesnya.',
- hobbies:['Gaming','Musik','Fotografi'],avatar:null,cover:null
-};
+function renderProfile(){
+  $('#profileName').textContent = profile.name || '';
+  $('#profileHandle').textContent = '@' + (profile.handle || '');
+  $('#profileBio').textContent = profile.bio || '';
+  $('#sideName').textContent = profile.name || '';
+
+  const avatar = profile.avatar
+    ? `<img src="${esc(profile.avatar)}" alt="Foto profil">`
+    : esc((profile.name || 'M').charAt(0).toUpperCase());
+
+  $('#profileAvatar').innerHTML = avatar;
+  $('#sideAvatar').innerHTML = avatar;
+
+  $('#hobbyList').innerHTML = (profile.hobbies || [])
+    .map(h => `<span class="tool">♡ ${esc(h)}</span>`)
+    .join('');
+
+  $('#profileCover').style.backgroundImage = profile.cover
+    ? `url("${profile.cover}")`
+    : '';
+
+  const wa = $('#profileWhatsApp');
+  wa.replaceChildren();
+
+  if (profile.whatsapp) {
+    const label = document.createElement('span');
+    label.textContent = 'No. WhatsApp: ';
+
+    const link = document.createElement('a');
+    link.textContent = profile.whatsapp;
+    link.href = 'https://wa.me/' + profile.whatsapp.replace(/\D/g, '');
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+
+    wa.append(label, link);
+  } else {
+    wa.textContent = 'No. WhatsApp belum ditambahkan';
+  }
+}
+
+function editProfile(){
+  modal('Edit profil', `
+    <div class="field">
+      <label>Nama</label>
+      <input id="editName" value="${esc(profile.name)}">
+    </div>
+
+    <div class="field">
+      <label>Username</label>
+      <input id="editHandle" value="${esc(profile.handle)}">
+    </div>
+
+    <div class="field">
+      <label>Bio</label>
+      <textarea id="editBio">${esc(profile.bio)}</textarea>
+    </div>
+
+    <div class="field">
+      <label>Hobi, pisahkan dengan koma</label>
+      <input id="editHobbies"
+        value="${esc((profile.hobbies || []).join(', '))}">
+    </div>
+
+    <div class="field">
+      <label>No. WhatsApp</label>
+      <input id="editWhatsApp"
+        type="tel"
+        placeholder="Contoh: 628123456789"
+        value="${esc(profile.whatsapp || '')}">
+    </div>
+
+    <button class="btn" data-action="save-profile">
+      Simpan profil
+    </button>
+
+    <button class="btn2" data-action="pick-avatar">
+      Ganti foto profil
+    </button>
+
+    <button class="btn2" data-action="pick-cover">
+      Ganti foto cover
+    </button>
+  `);
+                       }
 let posts=[],sharedApps=[],messages=[];
 let toastTimer;
 
@@ -583,6 +671,38 @@ function sendMessage(){
  box.scrollTop=box.scrollHeight;
  toast('Pesan ditambahkan ke demo lokal.');
 }
+async function loadProfileFromSupabase(){
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) return;
+
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('full_name, username, bio, hobbies, whatsapp_number, avatar_url, cover_url')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Gagal memuat profil:', error);
+    toast('Gagal memuat profil: ' + error.message);
+    return;
+  }
+
+  if (!data) return;
+
+  profile.name = data.full_name || '';
+  profile.handle = data.username || '';
+  profile.bio = data.bio || '';
+  profile.hobbies = data.hobbies || [];
+  profile.whatsapp = data.whatsapp_number || '';
+  profile.avatar = data.avatar_url || null;
+  profile.cover = data.cover_url || null;
+
+  renderProfile();
+renderFriends();
+loadProfileFromSupabase();
+    }
 
 function renderProfile(){
   $('#profileName').textContent = profile.name;
@@ -692,26 +812,37 @@ document.addEventListener('click',e=>{
  case'send-message':sendMessage();break;
  case'edit-profile':editProfile();break;
  case'close-modal':closeModal();break;
- case'save-profile':
-  profile.name=$('#editName').value.trim()||profile.name;
-  profile.handle=$('#editHandle').value.trim().replace(/^@/,'')||profile.handle;
-  profile.bio=$('#editBio').value.trim();
-  profile.hobbies=$('#editHobbies').value.split(',').map(x=>x.trim()).filter(Boolean);
-  renderProfile();closeModal();toast('Profil demo diperbarui.');break;
- case'pick-avatar':closeModal();$('#avatarInput').click();break;
- case'pick-cover':closeModal();$('#coverInput').click();break;
- case'open-chat':
-  $('#chatName').textContent=b.dataset.name;
-  $('#messages').innerHTML='';
-  go('chat');toast('Ruang chat demo dibuka.');break;
- case'add-story':openUpload('image');break;
- case'like':{
-  const span=b.querySelector('span');
-  if(!b.dataset.liked){b.dataset.liked='1';b.style.color='var(--mint)';if(span)span.textContent=(parseInt(span.textContent)||0)+1;toast('Suka ditambahkan.')}
-  else{delete b.dataset.liked;b.style.color='';if(span)span.textContent=Math.max(0,(parseInt(span.textContent)||0)-1);toast('Suka dibatalkan.')}
-  break;
- }
- case'comment':
+ async function loadProfileFromSupabase(){
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) return;
+
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('full_name, username, bio, hobbies, whatsapp_number, avatar_url, cover_url')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Gagal memuat profil:', error);
+    toast('Gagal memuat profil: ' + error.message);
+    return;
+  }
+
+  if (!data) return;
+
+  profile.name = data.full_name || '';
+  profile.handle = data.username || '';
+  profile.bio = data.bio || '';
+  profile.hobbies = data.hobbies || [];
+  profile.whatsapp = data.whatsapp_number || '';
+  profile.avatar = data.avatar_url || null;
+  profile.cover = data.cover_url || null;
+
+  renderProfile();
+   }
+   case'comment':
   modal('Komentar',`<div class="field"><label>Tulis komentar</label><textarea id="commentText"></textarea></div><button class="btn" data-action="send-comment">Kirim komentar</button>`);break;
  case'send-comment':
   if(!$('#commentText').value.trim()){toast('Komentar masih kosong.');break}
