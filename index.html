@@ -1230,7 +1230,11 @@ textarea:focus-visible {
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-scroll">
+    
+    </div>
+
+    <footer class="sidebar-bottom">
+      
 
       <div class="brand">
         <div class="brand-logo">
@@ -2184,6 +2188,10 @@ function renderNotificationsPage() {
   `;
 }
   
+/* Inisialisasi */
+renderFriends();
+renderStatuses();
+setPage("chat");
 /* TENTANG OER DI BAGIAN BAWAH HOME */
 .about-oer {
   margin-top: 24px;
@@ -2264,11 +2272,6 @@ function renderNotificationsPage() {
   line-height: 1.7;
   }
   
-
-/* Inisialisasi */
-renderFriends();
-renderStatuses();
-setPage("chat");
 </script>
 </body>
 </html>
