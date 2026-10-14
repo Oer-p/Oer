@@ -1,0 +1,602 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050707">
+<title>OER Chat</title>
+
+<style>
+:root {
+  --bg:#050707;
+  --panel:#0b1012;
+  --panel2:#101719;
+  --line:#1c292c;
+  --text:#f3fbfc;
+  --muted:#8da0a4;
+  --cyan:#04bfd0;
+  --mint:#c8fff0;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font:15px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(ellipse at 75% -10%,#103238 0,transparent 36%),
+    radial-gradient(ellipse at 0% 45%,#071c20 0,transparent 28%),
+    var(--bg);
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:220px 330px minmax(0,1fr);
+  gap:14px;
+  padding:14px;
+  max-width:1800px;
+  margin:auto;
+}
+.panel{
+  background:linear-gradient(160deg,rgba(17,27,29,.96),rgba(7,11,12,.98));
+  border:1px solid var(--line);
+  border-radius:20px;
+  min-width:0;
+  overflow:hidden;
+}
+.sidebar{
+  padding:22px 15px;
+  display:flex;
+  flex-direction:column;
+  gap:26px;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 8px}
+.logo{
+  width:39px;height:39px;
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--cyan),#08727a);
+  display:grid;place-items:center;
+  color:#001315;font-size:20px;font-weight:900;
+  box-shadow:0 0 28px #04bfd025;
+}
+.brandname{font-size:20px;font-weight:850;letter-spacing:1.5px}
+.tag{font-size:9px;color:var(--muted);letter-spacing:2px}
+.nav-label{
+  color:#5e7478;font-size:10px;font-weight:800;
+  letter-spacing:1.8px;padding:0 10px;margin-bottom:8px;
+}
+.nav{display:grid;gap:5px}
+.nav button{
+  border:0;color:#9db0b3;background:transparent;
+  text-align:left;border-radius:12px;padding:12px;
+  display:flex;align-items:center;gap:12px;width:100%;
+}
+.nav button.active,.nav button:hover{
+  color:var(--mint);background:#0c292d;
+}
+.ico{width:22px;text-align:center;font-size:18px}
+.sidebar-foot{
+  margin-top:auto;border-top:1px solid var(--line);
+  padding:16px 8px 0;color:var(--muted);font-size:12px;
+}
+.online-dot{
+  display:inline-block;width:7px;height:7px;
+  background:#39d99b;border-radius:50%;margin-right:7px;
+}
+.list-panel{display:flex;flex-direction:column;min-height:calc(100vh - 28px)}
+.list-head{padding:23px 20px 16px;border-bottom:1px solid var(--line)}
+.headrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.headrow h1{font-size:23px;letter-spacing:-.7px;margin:0}
+.round-btn{
+  border:1px solid #254247;background:#102125;color:var(--mint);
+  width:37px;height:37px;border-radius:12px;font-size:20px;
+}
+.search{
+  margin-top:17px;display:flex;gap:9px;align-items:center;
+  background:#070c0d;border:1px solid #203034;
+  border-radius:13px;padding:0 13px;
+}
+.search span{color:#7f999d}
+.search input{
+  min-width:0;width:100%;height:43px;color:var(--text);
+  background:transparent;border:0;outline:0;
+}
+.section{padding:17px 18px 5px}
+.section-title{
+  display:flex;justify-content:space-between;align-items:center;
+  color:#a7b9bc;font-size:11px;letter-spacing:1.4px;
+  font-weight:800;margin-bottom:13px;
+}
+.section-title small{color:#60777b;font-size:11px;letter-spacing:0}
+.stories{display:flex;gap:13px;overflow:auto;padding-bottom:8px}
+.story{width:57px;flex:0 0 57px;text-align:center;font-size:11px;color:#a8b8ba}
+.story-ring{
+  width:53px;height:53px;border-radius:18px;padding:2px;
+  margin:0 auto 6px;background:linear-gradient(140deg,var(--cyan),#235d64);
+}
+.story-ring .add{
+  width:100%;height:100%;display:grid;place-items:center;
+  background:#102124;border-radius:15px;color:var(--cyan);font-size:25px;
+}
+.empty{padding:27px 20px;text-align:center;color:var(--muted);font-size:13px}
+.empty-icon{
+  width:50px;height:50px;margin:0 auto 12px;border-radius:17px;
+  background:#0d2427;color:var(--cyan);display:grid;place-items:center;font-size:22px;
+}
+.friend-list{padding:3px 9px 14px}
+.friend{
+  width:100%;border:1px solid transparent;background:transparent;
+  color:var(--text);border-radius:14px;padding:10px;
+  display:flex;align-items:center;gap:11px;text-align:left;
+}
+.friend:hover,.friend.selected{background:#102326;border-color:#1b4146}
+.avatar{
+  width:43px;height:43px;flex:0 0 43px;border-radius:15px;
+  background:#163034;display:grid;place-items:center;color:var(--mint);
+  font-weight:800;overflow:hidden;
+}
+.friend-info{min-width:0;flex:1}
+.friend-name{font-size:13px;font-weight:750}
+.friend-last{
+  font-size:11px;color:var(--muted);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;margin-top:3px;
+}
+.time{font-size:10px;color:#6d8589}
+.chat-panel{min-height:calc(100vh - 28px);display:flex;flex-direction:column}
+.chat-top{
+  padding:17px 22px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--line);background:#0b1112b8;
+}
+.chat-user{flex:1;min-width:0}
+.chat-user strong{display:block;font-size:14px}
+.chat-user small{color:#7f999d;font-size:11px}
+.chat-actions{display:flex;gap:8px}
+.chat-actions button{
+  background:#0e1c1f;border:1px solid #22383c;color:var(--mint);
+  border-radius:11px;width:38px;height:38px;
+}
+.welcome{margin:auto;max-width:470px;padding:34px;text-align:center}
+.welcome-logo{
+  width:76px;height:76px;border-radius:25px;margin:0 auto 19px;
+  display:grid;place-items:center;font-size:34px;font-weight:900;
+  color:#002024;background:linear-gradient(135deg,var(--cyan),var(--mint));
+  box-shadow:0 0 60px #04bfd018;
+}
+.welcome h2{font-size:27px;letter-spacing:-.8px;margin:0 0 9px}
+.welcome p{color:var(--muted);font-size:13px;line-height:1.8;margin:0}
+.hint{
+  display:inline-block;margin-top:21px;border:1px solid #1b383c;
+  background:#0c191b;color:#9cb3b6;padding:9px 13px;
+  border-radius:11px;font-size:11px;
+}
+.messages{padding:24px;display:flex;flex-direction:column;gap:12px;flex:1;overflow:auto}
+.bubble{
+  max-width:min(75%,560px);padding:12px 15px;border-radius:17px;
+  background:#142023;border:1px solid #223236;font-size:13px;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.bubble.mine{
+  align-self:flex-end;background:linear-gradient(135deg,#075c65,#08717a);
+  border-color:#12838b;border-bottom-right-radius:5px;
+}
+.bubble.theirs{align-self:flex-start;border-bottom-left-radius:5px}
+.bubble small{display:block;text-align:right;color:#b4d3d5;font-size:9px;margin-top:6px}
+.composer-wrap{padding:15px 17px;border-top:1px solid var(--line);background:#080d0ebd}
+.attach-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.attach{
+  border:1px solid #213538;background:#0d1719;color:#9fb8bb;
+  padding:7px 10px;border-radius:10px;font-size:11px;
+}
+.attach:hover{color:var(--mint);border-color:#27717a}
+.compose{display:flex;align-items:center;gap:9px}
+.compose input[type=text]{
+  flex:1;min-width:0;border:1px solid #26383b;background:#070b0c;
+  color:var(--text);outline:0;border-radius:14px;padding:13px 15px;
+}
+.send{
+  border:0;border-radius:13px;background:var(--cyan);color:#001416;
+  font-weight:850;padding:0 19px;height:45px;
+}
+.file-input{display:none}
+.mobile-top{display:none}
+.back{display:none}
+
+@media(max-width:1050px){
+  .app{grid-template-columns:70px minmax(250px,310px) minmax(0,1fr)}
+  .sidebar{padding:18px 9px;align-items:center}
+  .brandname-wrap,.nav-label,.navtext,.sidebar-foot{display:none}
+  .nav{width:100%}
+  .nav button{justify-content:center;padding:13px 0}
+  .ico{font-size:19px}
+}
+@media(max-width:720px){
+  body{background:var(--bg)}
+  .app{display:block;padding:0;min-height:100vh}
+  .sidebar{display:none}
+  .list-panel{min-height:100vh;border-radius:0;border:0}
+  .chat-panel{display:none;min-height:100vh;border-radius:0;border:0}
+  .app.chat-open .list-panel{display:none}
+  .app.chat-open .chat-panel{display:flex}
+  .mobile-top{
+    display:flex;align-items:center;gap:10px;padding:13px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  .mobile-top .brandname{font-size:17px}
+  .list-head{padding:18px 16px}
+  .section{padding-left:16px;padding-right:16px}
+  .chat-top{padding:12px 14px}
+  .messages{padding:16px}
+  .composer-wrap{padding:11px}
+  .attach-row{gap:6px}
+  .attach{padding:7px 8px}
+  .bubble{max-width:88%}
+  .welcome h2{font-size:24px}
+  .back{display:block}
+}
+</style>
+</head>
+
+<body>
+<div class="app" id="app">
+
+  <aside class="panel sidebar">
+    <div class="brand">
+      <div class="logo">O</div>
+      <div class="brandname-wrap">
+        <div class="brandname">OER</div>
+        <div class="tag">CONNECT EVERYTHING</div>
+      </div>
+    </div>
+
+    <div style="width:100%">
+      <div class="nav-label">MENU UTAMA</div>
+      <nav class="nav">
+        <button data-page="home"><span class="ico">⌂</span><span class="navtext">Home</span></button>
+        <button class="active" data-page="chat"><span class="ico">◉</span><span class="navtext">Chat</span></button>
+        <button data-page="status"><span class="ico">◌</span><span class="navtext">Status</span></button>
+        <button data-page="friends"><span class="ico">♧</span><span class="navtext">Teman</span></button>
+        <button data-page="media"><span class="ico">▧</span><span class="navtext">Media</span></button>
+        <button data-page="settings"><span class="ico">⚙</span><span class="navtext">Pengaturan</span></button>
+      </nav>
+    </div>
+
+    <div class="sidebar-foot">
+      <span class="online-dot"></span>OER siap terhubung
+      <span style="display:block;margin:8px 0 0 14px">CONNECT EVERYTHING</span>
+    </div>
+  </aside>
+
+  <section class="panel list-panel">
+    <div class="mobile-top">
+      <div class="logo" style="width:34px;height:34px;border-radius:11px">O</div>
+      <div>
+        <div class="brandname">OER</div>
+        <div class="tag">CONNECT EVERYTHING</div>
+      </div>
+    </div>
+
+    <header class="list-head">
+      <div class="headrow">
+        <h1>Pesan</h1>
+        <button class="round-btn" id="newChat" title="Buat percakapan">＋</button>
+      </div>
+      <div class="search">
+        <span>⌕</span>
+        <input id="search" type="search" placeholder="Cari teman atau pesan...">
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-title">STATUS <small>cerita teman</small></div>
+      <div class="stories">
+        <div class="story">
+          <div class="story-ring"><div class="add">＋</div></div>
+          Status saya
+        </div>
+        <div class="story">
+          <div class="story-ring"><div class="add">···</div></div>
+          Teman
+        </div>
+        <div class="story">
+          <div class="story-ring"><div class="add">···</div></div>
+          Teman
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:14px">
+      <div class="section-title">DAFTAR CHAT <small id="friendCount">0 chat</small></div>
+    </section>
+
+    <div class="friend-list" id="friendList">
+      <div class="empty">
+        <div class="empty-icon">☏</div>
+        <strong style="color:#dce9eb">Belum ada percakapan</strong>
+        <p style="margin:7px 0 0">Tekan tombol + untuk membuat percakapan demo.</p>
+      </div>
+    </div>
+  </section>
+
+  <main class="panel chat-panel">
+    <header class="chat-top">
+      <button class="round-btn back" id="backBtn" aria-label="Kembali">‹</button>
+      <div class="avatar">O</div>
+      <div class="chat-user">
+        <strong id="chatTitle">OER Chat</strong>
+        <small id="chatSubtitle">Pesan, media, dan file aplikasi</small>
+      </div>
+      <div class="chat-actions">
+        <button title="Cari dalam chat" id="searchChat">⌕</button>
+        <button title="Info chat" id="infoChat">ⓘ</button>
+      </div>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="welcome">
+        <div class="welcome-logo">O</div>
+        <h2>Semua koneksi, satu tempat.</h2>
+        <p>Mulai percakapan OER. Kirim pesan, foto, video, musik, atau file APK untuk diunduh penerima.</p>
+        <span class="hint">Pilih percakapan untuk mulai mengobrol</span>
+      </div>
+    </div>
+
+    <div class="composer-wrap">
+      <div class="attach-row">
+        <button class="attach" data-file="photo">▧ Foto JPG</button>
+        <button class="attach" data-file="video">▷ Video MP4</button>
+        <button class="attach" data-file="audio">♫ Musik MP3</button>
+        <button class="attach" data-file="apk">▣ Aplikasi APK</button>
+        <button class="attach" data-file="other">＋ File lain</button>
+      </div>
+
+      <div class="compose">
+        <input type="text" id="messageInput" placeholder="Tulis pesan..." disabled>
+        <button class="send" id="sendBtn" disabled>Kirim ↗</button>
+      </div>
+      <input class="file-input" type="file" id="filePicker">
+    </div>
+  </main>
+</div>
+
+<script>
+const app = document.getElementById('app');
+const messages = document.getElementById('messages');
+const input = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const filePicker = document.getElementById('filePicker');
+
+let activeChat = null;
+let chats = [];
+
+const typeAccept = {
+  photo: '.jpg,.jpeg,image/jpeg',
+  video: '.mp4,video/mp4',
+  audio: '.mp3,audio/mpeg',
+  apk: '.apk,application/vnd.android.package-archive',
+  other: '*/*'
+};
+
+document.querySelectorAll('[data-file]').forEach(button => {
+  button.addEventListener('click', () => {
+    if (!activeChat) {
+      alert('Pilih atau buat percakapan terlebih dahulu.');
+      return;
+    }
+
+    filePicker.accept = typeAccept[button.dataset.file] || '*/*';
+    filePicker.onchange = () => {
+      const file = filePicker.files && filePicker.files[0];
+      if (!file) return;
+
+      addMessage('file', file.name, {
+        name: file.name,
+        size: file.size,
+        type: file.type
+      });
+
+      filePicker.value = '';
+    };
+    filePicker.click();
+  });
+});
+
+function renderFriends(filter = '') {
+  const box = document.getElementById('friendList');
+  const filtered = chats.filter(chat =>
+    chat.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  document.getElementById('friendCount').textContent = chats.length + ' chat';
+
+  if (!filtered.length) {
+    box.innerHTML = '<div class="empty"><div class="empty-icon">☏</div>' +
+      '<strong style="color:#dce9eb">' +
+      (filter ? 'Tidak ada hasil' : 'Belum ada percakapan') +
+      '</strong><p style="margin:7px 0 0">' +
+      (filter ? 'Coba kata pencarian lain.' : 'Tekan tombol + untuk membuat percakapan demo lokal.') +
+      '</p></div>';
+    return;
+  }
+
+  box.innerHTML = '';
+  filtered.forEach(chat => {
+    const button = document.createElement('button');
+    button.className = 'friend' + (activeChat === chat.id ? ' selected' : '');
+    button.innerHTML =
+      '<div class="avatar">' + escapeHtml(chat.name.slice(0,1).toUpperCase()) + '</div>' +
+      '<div class="friend-info"><div class="friend-name">' + escapeHtml(chat.name) +
+      '</div><div class="friend-last">' + escapeHtml(chat.last || 'Mulai percakapan') +
+      '</div></div><span class="time">' + (chat.time || '') + '</span>';
+    button.addEventListener('click', () => openChat(chat.id));
+    box.appendChild(button);
+  });
+}
+
+function openChat(id) {
+  activeChat = id;
+  const chat = chats.find(item => item.id === id);
+  if (!chat) return;
+
+  app.classList.add('chat-open');
+  document.getElementById('chatTitle').textContent = chat.name;
+  document.getElementById('chatSubtitle').textContent = 'Demo lokal • belum tersambung online';
+  input.disabled = false;
+  sendBtn.disabled = false;
+  renderMessages();
+  renderFriends(document.getElementById('search').value);
+}
+
+function renderMessages() {
+  const chat = chats.find(item => item.id === activeChat);
+  messages.innerHTML = '';
+
+  if (!chat || !chat.messages.length) {
+    messages.innerHTML = '<div class="welcome"><div class="welcome-logo">O</div>' +
+      '<h2>Mulai percakapan</h2>' +
+      '<p>Kirim pesan pertama kamu. Ini masih demo lokal di perangkat ini.</p></div>';
+    return;
+  }
+
+  chat.messages.forEach(message => {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble ' + (message.mine ? 'mine' : 'theirs');
+
+    if (message.kind === 'file') {
+      bubble.textContent = '📎 ' + message.text + ' (' + formatBytes(message.meta.size) + ')';
+      const note = document.createElement('small');
+      note.textContent = 'Nama file tercatat saja • belum diunggah';
+      bubble.appendChild(note);
+    } else {
+      bubble.textContent = message.text;
+      const time = document.createElement('small');
+      time.textContent = message.time;
+      bubble.appendChild(time);
+    }
+
+    messages.appendChild(bubble);
+  });
+
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function addMessage(kind, text, meta = {}) {
+  const chat = chats.find(item => item.id === activeChat);
+  if (!chat) return;
+
+  chat.messages.push({
+    kind,
+    text,
+    meta,
+    mine: true,
+    time: new Date().toLocaleTimeString('id-ID', {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  });
+
+  chat.last = kind === 'file' ? '📎 ' + text : text;
+  chat.time = 'sekarang';
+  renderMessages();
+  renderFriends(document.getElementById('search').value);
+}
+
+function sendMessage() {
+  const text = input.value.trim();
+  if (!text || !activeChat) return;
+  addMessage('text', text);
+  input.value = '';
+}
+
+sendBtn.addEventListener('click', sendMessage);
+input.addEventListener('keydown', event => {
+  if (event.key === 'Enter') sendMessage();
+});
+
+document.getElementById('newChat').addEventListener('click', () => {
+  const name = prompt('Nama percakapan / teman:');
+  if (!name || !name.trim()) return;
+
+  const id = 'chat-' + Date.now();
+  chats.unshift({
+    id,
+    name: name.trim(),
+    messages: [],
+    last: '',
+    time: 'baru'
+  });
+
+  renderFriends();
+  openChat(id);
+});
+
+document.getElementById('search').addEventListener('input', event => {
+  renderFriends(event.target.value);
+});
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  app.classList.remove('chat-open');
+});
+
+document.querySelectorAll('.nav button').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.nav button').forEach(item => item.classList.remove('active'));
+    button.classList.add('active');
+
+    const page = button.dataset.page;
+    if (page === 'chat') return;
+
+    const labels = {
+      home: 'Halaman Home akan dihubungkan ke halaman utama OER.',
+      status: 'Fitur Status akan diaktifkan pada integrasi berikutnya.',
+      friends: 'Daftar teman membutuhkan koneksi akun OER.',
+      media: 'Kirim dan simpan media online membutuhkan penyimpanan.',
+      settings: 'Pengaturan akun OER akan ditambahkan.'
+    };
+
+    alert(labels[page] || 'Fitur belum aktif.');
+  });
+});
+
+document.getElementById('searchChat').addEventListener('click', () => {
+  const term = prompt('Cari pesan dalam percakapan:');
+  if (term === null || !activeChat) return;
+
+  const chat = chats.find(item => item.id === activeChat);
+  const found = chat.messages.filter(message =>
+    message.text.toLowerCase().includes(term.toLowerCase())
+  );
+
+  alert(found.length ? found.map(item => item.text).join('\n') : 'Pesan tidak ditemukan.');
+});
+
+document.getElementById('infoChat').addEventListener('click', () => {
+  const chat = chats.find(item => item.id === activeChat);
+  alert(chat ? 'Nama percakapan: ' + chat.name + '\nMode: demo lokal' :
+    'Pilih percakapan terlebih dahulu.');
+});
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, char => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[char]));
+}
+
+function formatBytes(size) {
+  if (!Number.isFinite(size)) return 'ukuran tidak diketahui';
+  if (size < 1024) return size + ' B';
+  if (size < 1048576) return (size / 1024).toFixed(1) + ' KB';
+  return (size / 1048576).toFixed(1) + ' MB';
+}
+
+renderFriends();
+</script>
+</body>
+</html>
+
