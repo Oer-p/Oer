@@ -37,7 +37,6 @@ button, input, textarea { font: inherit; }
 button { cursor: pointer; border: none; background: none; color: inherit; }
 img { max-width: 100%; display: block; }
 
-/* ===== LAYOUT ===== */
 .app {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -64,7 +63,6 @@ img { max-width: 100%; display: block; }
   background: var(--bg);
 }
 
-/* ===== BRAND ===== */
 .brand {
   display: flex;
   align-items: center;
@@ -95,7 +93,6 @@ img { max-width: 100%; display: block; }
   margin-top: 2px;
 }
 
-/* ===== NAV ===== */
 .nav {
   display: grid;
   gap: 4px;
@@ -123,7 +120,6 @@ img { max-width: 100%; display: block; }
   border: 1px solid rgba(0,168,232,0.2);
 }
 
-/* ===== BOTTOM NAV (mobile) ===== */
 .bottom-nav {
   display: none;
   position: fixed;
@@ -133,7 +129,7 @@ img { max-width: 100%; display: block; }
   height: 64px;
   background: var(--panel);
   border-top: 1px solid var(--border);
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   z-index: 50;
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -148,9 +144,8 @@ img { max-width: 100%; display: block; }
   font-weight: 600;
 }
 .bottom-nav a.active { color: var(--cyan); }
-.bottom-nav svg { width: 22px; height: 22px; }
+.bottom-nav svg { width: 20px; height: 20px; }
 
-/* ===== COMMON ===== */
 .topbar {
   height: 64px;
   display: flex;
@@ -164,10 +159,7 @@ img { max-width: 100%; display: block; }
   top: 0;
   z-index: 10;
 }
-.topbar h1 {
-  font-size: 18px;
-  font-weight: 700;
-}
+.topbar h1 { font-size: 18px; font-weight: 700; }
 .btn {
   display: inline-flex;
   align-items: center;
@@ -191,28 +183,7 @@ img { max-width: 100%; display: block; }
   color: var(--text);
 }
 .btn-ghost:hover { background: var(--panel3); }
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-}
-.avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--panel3);
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--cyan);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-/* ===== HOME SPECIFIC ===== */
 .hero {
   flex: 1;
   display: flex;
@@ -288,7 +259,6 @@ img { max-width: 100%; display: block; }
   color: var(--muted);
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 800px) {
   .app { grid-template-columns: 1fr; }
   .sidebar { display: none; }
@@ -301,7 +271,6 @@ img { max-width: 100%; display: block; }
 </head>
 <body>
 <div class="app">
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-scroll">
       <div class="brand">
@@ -317,27 +286,47 @@ img { max-width: 100%; display: block; }
       </div>
 
       <nav class="nav">
+        <!-- PROFIL PALING ATAS -->
+        <a class="nav-item" href="profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+          </svg>
+          Profil
+        </a>
         <a class="nav-item active" href="index.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/>
+          </svg>
           Beranda
         </a>
         <a class="nav-item" href="chat.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
+          </svg>
           Chat
         </a>
         <a class="nav-item" href="status.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="5.5"/>
+            <circle cx="12" cy="12" r="2"/>
+          </svg>
           Status
         </a>
         <a class="nav-item" href="friends.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
           Teman
         </a>
       </nav>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="hero">
       <div class="hero-logo">
@@ -374,22 +363,42 @@ img { max-width: 100%; display: block; }
   </main>
 </div>
 
-<!-- BOTTOM NAV MOBILE -->
+<!-- BOTTOM NAV (Profil paling kiri) -->
 <nav class="bottom-nav">
+  <a href="profile.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+    </svg>
+    Profil
+  </a>
   <a href="index.html" class="active">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/>
+    </svg>
     Home
   </a>
   <a href="chat.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
+    </svg>
     Chat
   </a>
   <a href="status.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="5.5"/>
+      <circle cx="12" cy="12" r="2"/>
+    </svg>
     Status
   </a>
   <a href="friends.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
     Teman
   </a>
 </nav>
