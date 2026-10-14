@@ -368,95 +368,298 @@ const input = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
 const filePicker = document.getElementById('filePicker');
 
+const DB_NAME = 'OER_CHAT_LOCAL_V2';
+const DB_VERSION = 1;
+const STORE = 'appdata';
+
+let db = null;
 let activeChat = null;
 let chats = [];
+let objectUrls = [];
 
 const typeAccept = {
-  photo: '.jpg,.jpeg,image/jpeg',
+  photo: '.jpg,.jpeg,.png,.webp,image/*',
   video: '.mp4,video/mp4',
   audio: '.mp3,audio/mpeg',
   apk: '.apk,application/vnd.android.package-archive',
   other: '*/*'
 };
 
-document.querySelectorAll('[data-file]').forEach(button => {
-  button.addEventListener('click', () => {
-    if (!activeChat) {
-      alert('Pilih atau buat percakapan terlebih dahulu.');
+function openDatabase() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) {
+      reject(new Error('Browser tidak mendukung IndexedDB.'));
       return;
     }
 
-    filePicker.accept = typeAccept[button.dataset.file] || '*/*';
-    filePicker.onchange = () => {
-      const file = filePicker.files && filePicker.files[0];
-      if (!file) return;
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-      addMessage('file', file.name, {
-        name: file.name,
-        size: file.size,
-        type: file.type
-      });
-
-      filePicker.value = '';
+    request.onupgradeneeded = () => {
+      const database = request.result;
+      if (!database.objectStoreNames.contains(STORE)) {
+        database.createObjectStore(STORE);
+      }
     };
-    filePicker.click();
+
+    request.onsuccess = () => {
+      db = request.result;
+      resolve(db);
+    };
+
+    request.onerror = () => reject(request.error);
   });
-});
+}
+
+function saveChats() {
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database belum siap.'));
+      return;
+    }
+
+    const transaction = db.transaction(STORE, 'readwrite');
+    transaction.objectStore(STORE).put(chats, 'chats');
+
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+    transaction.onabort = () => reject(transaction.error);
+  });
+}
+
+function loadChats() {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(STORE, 'readonly');
+    const request = transaction.objectStore(STORE).get('chats');
+
+    request.onsuccess = () => resolve(
+      Array.isArray(request.result) ? request.result : []
+    );
+
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+function formatBytes(size) {
+  if (!Number.isFinite(size)) return 'Ukuran tidak diketahui';
+  if (size < 1024) return size + ' B';
+  if (size < 1048576) return (size / 1024).toFixed(1) + ' KB';
+  if (size < 1073741824) return (size / 1048576).toFixed(1) + ' MB';
+  return (size / 1073741824).toFixed(2) + ' GB';
+}
+
+function timeNow() {
+  return new Date().toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function revokeMessageUrls() {
+  objectUrls.forEach(url => URL.revokeObjectURL(url));
+  objectUrls = [];
+}
+
+function createObjectURL(blob) {
+  const url = URL.createObjectURL(blob);
+  objectUrls.push(url);
+  return url;
+}
+
+function getActiveChat() {
+  return chats.find(chat => chat.id === activeChat);
+}
 
 function renderFriends(filter = '') {
   const box = document.getElementById('friendList');
-  const filtered = chats.filter(chat =>
-    chat.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  const query = filter.trim().toLowerCase();
 
-  document.getElementById('friendCount').textContent = chats.length + ' chat';
+  const filtered = chats.filter(chat => {
+    const nameMatches = chat.name.toLowerCase().includes(query);
+    const messageMatches = chat.messages.some(message =>
+      String(message.text || '').toLowerCase().includes(query)
+    );
+    return !query || nameMatches || messageMatches;
+  });
+
+  document.getElementById('friendCount').textContent =
+    chats.length + ' chat';
 
   if (!filtered.length) {
-    box.innerHTML = '<div class="empty"><div class="empty-icon">☏</div>' +
-      '<strong style="color:#dce9eb">' +
-      (filter ? 'Tidak ada hasil' : 'Belum ada percakapan') +
-      '</strong><p style="margin:7px 0 0">' +
-      (filter ? 'Coba kata pencarian lain.' : 'Tekan tombol + untuk membuat percakapan demo lokal.') +
-      '</p></div>';
+    box.innerHTML =
+      '<div class="empty">' +
+        '<div class="empty-icon">☏</div>' +
+        '<strong style="color:#dce9eb">' +
+        (query ? 'Tidak ada hasil' : 'Belum ada percakapan') +
+        '</strong>' +
+        '<p style="margin:7px 0 0">' +
+        (query
+          ? 'Coba kata pencarian lain.'
+          : 'Tekan tombol + untuk membuat percakapan.') +
+        '</p>' +
+      '</div>';
     return;
   }
 
   box.innerHTML = '';
+
   filtered.forEach(chat => {
     const button = document.createElement('button');
-    button.className = 'friend' + (activeChat === chat.id ? ' selected' : '');
-    button.innerHTML =
-      '<div class="avatar">' + escapeHtml(chat.name.slice(0,1).toUpperCase()) + '</div>' +
-      '<div class="friend-info"><div class="friend-name">' + escapeHtml(chat.name) +
-      '</div><div class="friend-last">' + escapeHtml(chat.last || 'Mulai percakapan') +
-      '</div></div><span class="time">' + (chat.time || '') + '</span>';
+    button.className =
+      'friend' + (activeChat === chat.id ? ' selected' : '');
+
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = chat.name.slice(0, 1).toUpperCase();
+
+    const info = document.createElement('div');
+    info.className = 'friend-info';
+
+    const name = document.createElement('div');
+    name.className = 'friend-name';
+    name.textContent = chat.name;
+
+    const last = document.createElement('div');
+    last.className = 'friend-last';
+    last.textContent = chat.last || 'Mulai percakapan';
+
+    const time = document.createElement('span');
+    time.className = 'time';
+    time.textContent = chat.time || '';
+
+    info.append(name, last);
+    button.append(avatar, info, time);
     button.addEventListener('click', () => openChat(chat.id));
+
     box.appendChild(button);
   });
 }
 
 function openChat(id) {
-  activeChat = id;
   const chat = chats.find(item => item.id === id);
   if (!chat) return;
 
+  activeChat = id;
   app.classList.add('chat-open');
+
   document.getElementById('chatTitle').textContent = chat.name;
-  document.getElementById('chatSubtitle').textContent = 'Demo lokal • belum tersambung online';
+  document.getElementById('chatSubtitle').textContent =
+    'Tersimpan di perangkat ini • mode lokal';
+
   input.disabled = false;
   sendBtn.disabled = false;
+
   renderMessages();
   renderFriends(document.getElementById('search').value);
 }
 
+function appendFileContent(bubble, message) {
+  const file = message.meta && message.meta.file;
+  const fileName = message.meta && message.meta.name
+    ? message.meta.name
+    : message.text;
+
+  if (!(file instanceof Blob)) {
+    const text = document.createElement('div');
+    text.textContent = '📎 ' + fileName;
+    bubble.appendChild(text);
+
+    const note = document.createElement('small');
+    note.textContent = 'File lama tidak tersedia di penyimpanan.';
+    bubble.appendChild(note);
+    return;
+  }
+
+  const url = createObjectURL(file);
+  const type = file.type || '';
+  const size = formatBytes(file.size);
+
+  const title = document.createElement('div');
+  title.textContent = '📎 ' + fileName + ' (' + size + ')';
+  title.style.marginBottom = '8px';
+  title.style.fontWeight = '700';
+  bubble.appendChild(title);
+
+  if (type.startsWith('image/')) {
+    const image = document.createElement('img');
+    image.src = url;
+    image.alt = fileName;
+    image.loading = 'lazy';
+    image.style.maxWidth = '100%';
+    image.style.maxHeight = '320px';
+    image.style.borderRadius = '12px';
+    image.style.display = 'block';
+    bubble.appendChild(image);
+  } else if (type.startsWith('video/')) {
+    const video = document.createElement('video');
+    video.src = url;
+    video.controls = true;
+    video.preload = 'metadata';
+    video.style.maxWidth = '100%';
+    video.style.maxHeight = '320px';
+    video.style.borderRadius = '12px';
+    bubble.appendChild(video);
+  } else if (type.startsWith('audio/')) {
+    const audio = document.createElement('audio');
+    audio.src = url;
+    audio.controls = true;
+    audio.preload = 'metadata';
+    audio.style.maxWidth = '100%';
+    bubble.appendChild(audio);
+  }
+
+  const download = document.createElement('a');
+  download.href = url;
+  download.download = fileName;
+  download.textContent =
+    type.includes('android.package-archive')
+      ? '⬇ Unduh file APK'
+      : '⬇ Unduh file';
+  download.style.display = 'inline-block';
+  download.style.marginTop = '10px';
+  download.style.color = '#c8fff0';
+  download.style.textDecoration = 'none';
+  download.style.fontWeight = '700';
+
+  bubble.appendChild(download);
+
+  const note = document.createElement('small');
+  note.textContent = 'File lokal • belum dikirim ke pengguna lain';
+  bubble.appendChild(note);
+}
+
 function renderMessages() {
-  const chat = chats.find(item => item.id === activeChat);
+  revokeMessageUrls();
+
+  const chat = getActiveChat();
   messages.innerHTML = '';
 
-  if (!chat || !chat.messages.length) {
-    messages.innerHTML = '<div class="welcome"><div class="welcome-logo">O</div>' +
-      '<h2>Mulai percakapan</h2>' +
-      '<p>Kirim pesan pertama kamu. Ini masih demo lokal di perangkat ini.</p></div>';
+  if (!chat) {
+    messages.innerHTML =
+      '<div class="welcome">' +
+        '<div class="welcome-logo">O</div>' +
+        '<h2>Semua koneksi, satu tempat.</h2>' +
+        '<p>Buat percakapan untuk mulai mengirim pesan.</p>' +
+      '</div>';
+    return;
+  }
+
+  if (!chat.messages.length) {
+    messages.innerHTML =
+      '<div class="welcome">' +
+        '<div class="welcome-logo">O</div>' +
+        '<h2>Mulai percakapan</h2>' +
+        '<p>Kirim pesan pertama kamu di sini.</p>' +
+      '</div>';
     return;
   }
 
@@ -465,14 +668,14 @@ function renderMessages() {
     bubble.className = 'bubble ' + (message.mine ? 'mine' : 'theirs');
 
     if (message.kind === 'file') {
-      bubble.textContent = '📎 ' + message.text + ' (' + formatBytes(message.meta.size) + ')';
-      const note = document.createElement('small');
-      note.textContent = 'Nama file tercatat saja • belum diunggah';
-      bubble.appendChild(note);
+      appendFileContent(bubble, message);
     } else {
-      bubble.textContent = message.text;
+      const content = document.createElement('div');
+      content.textContent = message.text;
+      bubble.appendChild(content);
+
       const time = document.createElement('small');
-      time.textContent = message.time;
+      time.textContent = message.time || '';
       bubble.appendChild(time);
     }
 
@@ -482,54 +685,88 @@ function renderMessages() {
   messages.scrollTop = messages.scrollHeight;
 }
 
-function addMessage(kind, text, meta = {}) {
-  const chat = chats.find(item => item.id === activeChat);
-  if (!chat) return;
+async function addMessage(kind, text, meta = {}) {
+  const chat = getActiveChat();
+  if (!chat) {
+    alert('Pilih atau buat percakapan terlebih dahulu.');
+    return;
+  }
 
   chat.messages.push({
+    id: 'msg-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
     kind,
     text,
     meta,
     mine: true,
-    time: new Date().toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    time: timeNow()
   });
 
   chat.last = kind === 'file' ? '📎 ' + text : text;
-  chat.time = 'sekarang';
+  chat.time = timeNow();
+
   renderMessages();
   renderFriends(document.getElementById('search').value);
+
+  try {
+    await saveChats();
+  } catch (error) {
+    console.error('Gagal menyimpan pesan:', error);
+    alert('Pesan tampil, tetapi gagal disimpan. Periksa ruang penyimpanan browser.');
+  }
 }
 
-function sendMessage() {
+async function sendMessage() {
   const text = input.value.trim();
   if (!text || !activeChat) return;
-  addMessage('text', text);
+
   input.value = '';
+  await addMessage('text', text);
+  input.focus();
 }
 
 sendBtn.addEventListener('click', sendMessage);
+
 input.addEventListener('keydown', event => {
-  if (event.key === 'Enter') sendMessage();
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
 });
 
-document.getElementById('newChat').addEventListener('click', () => {
-  const name = prompt('Nama percakapan / teman:');
+document.getElementById('newChat').addEventListener('click', async () => {
+  const name = prompt('Nama percakapan atau teman:');
   if (!name || !name.trim()) return;
 
-  const id = 'chat-' + Date.now();
-  chats.unshift({
-    id,
-    name: name.trim(),
+  const cleanName = name.trim();
+
+  const existing = chats.find(chat =>
+    chat.name.toLowerCase() === cleanName.toLowerCase()
+  );
+
+  if (existing) {
+    openChat(existing.id);
+    return;
+  }
+
+  const chat = {
+    id: 'chat-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+    name: cleanName,
     messages: [],
     last: '',
-    time: 'baru'
-  });
+    time: timeNow()
+  };
+
+  chats.unshift(chat);
+
+  try {
+    await saveChats();
+  } catch (error) {
+    console.error(error);
+    alert('Percakapan belum berhasil disimpan.');
+  }
 
   renderFriends();
-  openChat(id);
+  openChat(chat.id);
 });
 
 document.getElementById('search').addEventListener('input', event => {
@@ -540,63 +777,140 @@ document.getElementById('backBtn').addEventListener('click', () => {
   app.classList.remove('chat-open');
 });
 
+document.querySelectorAll('[data-file]').forEach(button => {
+  button.addEventListener('click', () => {
+    if (!activeChat) {
+      alert('Buat atau pilih percakapan terlebih dahulu.');
+      return;
+    }
+
+    filePicker.accept = typeAccept[button.dataset.file] || '*/*';
+    filePicker.value = '';
+    filePicker.click();
+  });
+});
+
+filePicker.addEventListener('change', async () => {
+  const file = filePicker.files && filePicker.files[0];
+  if (!file) return;
+
+  const maxSize = 100 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    alert('Ukuran file maksimal 100 MB untuk demo lokal ini.');
+    filePicker.value = '';
+    return;
+  }
+
+  const confirmed = confirm(
+    'Tambahkan file ini ke percakapan lokal?\n\n' +
+    file.name + '\n' + formatBytes(file.size) +
+    '\n\nFile belum dikirim ke pengguna lain.'
+  );
+
+  if (confirmed) {
+    await addMessage('file', file.name, {
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      file: file
+    });
+  }
+
+  filePicker.value = '';
+});
+
 document.querySelectorAll('.nav button').forEach(button => {
   button.addEventListener('click', () => {
-    document.querySelectorAll('.nav button').forEach(item => item.classList.remove('active'));
-    button.classList.add('active');
-
     const page = button.dataset.page;
-    if (page === 'chat') return;
 
-    const labels = {
-      home: 'Halaman Home akan dihubungkan ke halaman utama OER.',
-      status: 'Fitur Status akan diaktifkan pada integrasi berikutnya.',
-      friends: 'Daftar teman membutuhkan koneksi akun OER.',
-      media: 'Kirim dan simpan media online membutuhkan penyimpanan.',
-      settings: 'Pengaturan akun OER akan ditambahkan.'
-    };
+    if (page === 'home') {
+      window.location.href = 'index.html';
+      return;
+    }
 
-    alert(labels[page] || 'Fitur belum aktif.');
+    if (page !== 'chat') {
+      const labels = {
+        status: 'Fitur Status belum tersedia.',
+        friends: 'Daftar teman online memerlukan server bersama.',
+        media: 'Media yang ada saat ini hanya tersimpan di perangkat ini.',
+        settings: 'Pengaturan akun belum tersedia.'
+      };
+
+      alert(labels[page] || 'Fitur belum tersedia.');
+      return;
+    }
+
+    document.querySelectorAll('.nav button').forEach(item =>
+      item.classList.remove('active')
+    );
+    button.classList.add('active');
   });
 });
 
 document.getElementById('searchChat').addEventListener('click', () => {
-  const term = prompt('Cari pesan dalam percakapan:');
-  if (term === null || !activeChat) return;
+  const chat = getActiveChat();
+  if (!chat) {
+    alert('Pilih percakapan terlebih dahulu.');
+    return;
+  }
 
-  const chat = chats.find(item => item.id === activeChat);
+  const term = prompt('Cari pesan dalam percakapan:');
+  if (term === null || !term.trim()) return;
+
   const found = chat.messages.filter(message =>
-    message.text.toLowerCase().includes(term.toLowerCase())
+    String(message.text || '').toLowerCase().includes(term.trim().toLowerCase())
   );
 
-  alert(found.length ? found.map(item => item.text).join('\n') : 'Pesan tidak ditemukan.');
+  if (!found.length) {
+    alert('Pesan tidak ditemukan.');
+    return;
+  }
+
+  alert(found.map(message =>
+    '[' + (message.time || '') + '] ' + message.text
+  ).join('\n'));
 });
 
 document.getElementById('infoChat').addEventListener('click', () => {
-  const chat = chats.find(item => item.id === activeChat);
-  alert(chat ? 'Nama percakapan: ' + chat.name + '\nMode: demo lokal' :
-    'Pilih percakapan terlebih dahulu.');
+  const chat = getActiveChat();
+
+  alert(chat
+    ? 'Nama: ' + chat.name +
+      '\nJumlah pesan: ' + chat.messages.length +
+      '\nPenyimpanan: browser ini' +
+      '\nKoneksi ke pengguna lain: belum tersedia'
+    : 'Pilih percakapan terlebih dahulu.');
 });
 
-function escapeHtml(text) {
-  return String(text).replace(/[&<>"']/g, char => ({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#39;'
-  }[char]));
+async function initChat() {
+  try {
+    await openDatabase();
+    chats = await loadChats();
+    renderFriends();
+
+    const lastChat = chats[0];
+    if (lastChat) {
+      openChat(lastChat.id);
+    }
+  } catch (error) {
+    console.error('OER Chat gagal dimuat:', error);
+
+    document.getElementById('friendList').innerHTML =
+      '<div class="empty">' +
+        '<strong>Database browser tidak tersedia</strong>' +
+        '<p>Gunakan browser modern dan buka halaman melalui HTTPS.</p>' +
+      '</div>';
+
+    alert('OER Chat tidak dapat membuka penyimpanan browser. Coba buka melalui GitHub Pages HTTPS.');
+  }
 }
 
-function formatBytes(size) {
-  if (!Number.isFinite(size)) return 'ukuran tidak diketahui';
-  if (size < 1024) return size + ' B';
-  if (size < 1048576) return (size / 1024).toFixed(1) + ' KB';
-  return (size / 1048576).toFixed(1) + ' MB';
-}
+window.addEventListener('pagehide', revokeMessageUrls);
 
-renderFriends();
-</script>
+initChat();
+  </script>
+  
 </body>
 </html>
 
