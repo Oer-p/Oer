@@ -434,6 +434,7 @@ h4{margin:8px 0}
       <div class="tools">
         <button class="btn2" data-action="pick-avatar">Foto profil</button>
         <button class="btn2" data-action="pick-cover">Foto cover</button>
+        <div id="profileWhatsApp"></div>
       </div>
     </div>
   </div>
@@ -582,25 +583,87 @@ function sendMessage(){
  box.scrollTop=box.scrollHeight;
  toast('Pesan ditambahkan ke demo lokal.');
 }
+
 function renderProfile(){
- $('#profileName').textContent=profile.name;
- $('#profileHandle').textContent='@'+profile.handle;
- $('#profileBio').textContent=profile.bio;
- $('#sideName').textContent=profile.name;
- const avatar=profile.avatar?`<img src="${profile.avatar}" alt="Foto profil">`:esc(profile.name.charAt(0).toUpperCase());
- $('#profileAvatar').innerHTML=avatar;$('#sideAvatar').innerHTML=avatar;
- $('#hobbyList').innerHTML=profile.hobbies.map(h=>`<span class="tool">♡ ${esc(h)}</span>`).join('');
- if(profile.cover)$('#profileCover').style.backgroundImage=`url("${profile.cover}")`;
+  $('#profileName').textContent = profile.name;
+  $('#profileHandle').textContent = '@' + profile.handle;
+  $('#profileBio').textContent = profile.bio;
+  $('#sideName').textContent = profile.name;
+
+  const avatar = profile.avatar
+    ? `<img src="${esc(profile.avatar)}" alt="Foto profil">`
+    : esc(profile.name.charAt(0).toUpperCase());
+
+  $('#profileAvatar').innerHTML = avatar;
+  $('#sideAvatar').innerHTML = avatar;
+
+  $('#hobbyList').innerHTML = profile.hobbies
+    .map(h => `<span class="tool">♡ ${esc(h)}</span>`)
+    .join('');
+
+  if(profile.cover){
+    $('#profileCover').style.backgroundImage =
+      `url("${profile.cover}")`;
+  }
+
+  // Tampilkan nomor WhatsApp di profil
+  const waElement = $('#profileWhatsApp');
+  if(waElement){
+    if(profile.whatsapp){
+      const nomorWA = String(profile.whatsapp).replace(/\D/g, '');
+      waElement.innerHTML =
+        `No. WhatsApp: <a href="https://wa.me/${nomorWA}" target="_blank" rel="noopener noreferrer">${esc(profile.whatsapp)}</a>`;
+    } else {
+      waElement.textContent = 'No. WhatsApp belum ditambahkan';
+    }
+  }
 }
+
 function editProfile(){
- modal('Edit profil',`
- <div class="field"><label>Nama</label><input id="editName" value="${esc(profile.name)}"></div>
- <div class="field"><label>Username</label><input id="editHandle" value="${esc(profile.handle)}"></div>
- <div class="field"><label>Bio</label><textarea id="editBio">${esc(profile.bio)}</textarea></div>
- <div class="field"><label>Hobi, pisahkan dengan koma</label><input id="editHobbies" value="${esc(profile.hobbies.join(', '))}"></div>
- <button class="btn" data-action="save-profile">Simpan profil</button>
- <button class="btn2" data-action="pick-avatar">Ganti foto profil</button>
- <button class="btn2" data-action="pick-cover">Ganti foto cover</button>`);
+  modal('Edit profil', `
+    <div class="field">
+      <label>Nama</label>
+      <input id="editName" value="${esc(profile.name)}">
+    </div>
+
+    <div class="field">
+      <label>Username</label>
+      <input id="editHandle" value="${esc(profile.handle)}">
+    </div>
+
+    <div class="field">
+      <label>Bio</label>
+      <textarea id="editBio">${esc(profile.bio)}</textarea>
+    </div>
+
+    <div class="field">
+      <label>Hobi, pisahkan dengan koma</label>
+      <input id="editHobbies"
+        value="${esc(profile.hobbies.join(', '))}">
+    </div>
+
+    <div class="field">
+      <label>No. WhatsApp</label>
+      <input
+        id="editWhatsApp"
+        type="tel"
+        placeholder="Contoh: 628123456789"
+        value="${esc(profile.whatsapp || '')}">
+      <small>Gunakan kode negara, misalnya 62 untuk Indonesia.</small>
+    </div>
+
+    <button class="btn" data-action="save-profile">
+      Simpan profil
+    </button>
+
+    <button class="btn2" data-action="pick-avatar">
+      Ganti foto profil
+    </button>
+
+    <button class="btn2" data-action="pick-cover">
+      Ganti foto cover
+    </button>
+  `);
 }
 function renderFriends(query=''){
  const people=['Rina Oktavia','Dika Pratama','Salsa Putri','Fajar Ramadhan','Nadia Putri'];
