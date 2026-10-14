@@ -2183,6 +2183,87 @@ function renderNotificationsPage() {
     </div>
   `;
 }
+  
+/* TENTANG OER DI BAGIAN BAWAH HOME */
+.about-oer {
+  margin-top: 24px;
+  padding: 19px 16px;
+  background: linear-gradient(145deg, #141920, #0e1116);
+  border: 1px solid #262d37;
+  border-radius: 19px;
+}
+
+.about-oer-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.about-oer-logo {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  background: #08b7d8;
+  border-radius: 11px;
+  color: white;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.about-oer-title strong {
+  font-size: 16px;
+  color: #fff;
+}
+
+.about-oer-title small {
+  display: block;
+  color: #8f9aaa;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.about-oer-description {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #a6afbd;
+  margin-bottom: 15px;
+}
+
+.about-oer-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.about-oer-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px;
+  background: #1b212a;
+  border: 1px solid #252d38;
+  border-radius: 11px;
+  color: #dce2eb;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.about-oer-feature span {
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.about-oer-footer {
+  border-top: 1px solid #282e38;
+  margin-top: 14px;
+  padding-top: 12px;
+  color: #768294;
+  font-size: 10px;
+  line-height: 1.7;
+  }
+  
 
 /* Inisialisasi */
 renderFriends();
