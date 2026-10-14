@@ -604,6 +604,7 @@ function renderProfile(){
   if(profile.cover){
     $('#profileCover').style.backgroundImage =
       `url("${profile.cover}")`;
+  profile.whatsapp = $('#editWhatsApp').value.trim();
   }
 
   // Tampilkan nomor WhatsApp di profil
