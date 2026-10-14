@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050707">
+<title>Profil OER</title>
+<style>
+:root {
+  --bg:#050707;
+  --panel:#0d1517;
+  --line:#203235;
+  --cyan:#04bfd0;
+  --mint:#c8fff0;
+  --white:#f5ffff;
+  --muted:#94a6a8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header{
+  padding:18px 20px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;
+}
+.logo{
+  width:40px;height:40px;border-radius:12px;
+  background:var(--cyan);color:#041416;
+  display:grid;place-items:center;font-weight:900;font-size:23px;
+}
+header h1{margin:0;font-size:22px;letter-spacing:3px}
+header small{color:var(--muted);font-size:10px;letter-spacing:2px}
+main{max-width:760px;margin:24px auto;padding:0 14px 50px}
+.card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;overflow:hidden;margin-bottom:18px;
+}
+.cover{
+  height:190px;position:relative;
+  background:linear-gradient(120deg,#075b62,#133334,#101a1b);
+  background-size:cover;background-position:center;
+}
+.cover-actions{position:absolute;right:12px;top:12px}
+button,.button{
+  border:1px solid var(--line);border-radius:11px;
+  padding:10px 14px;background:#142326;color:var(--mint);
+}
+.primary{background:var(--mint);color:#06201d;border:0;font-weight:bold}
+.profile-info{padding:0 20px 20px}
+.profile-top{
+  display:flex;align-items:end;justify-content:space-between;
+  gap:12px;margin-top:-48px;position:relative;flex-wrap:wrap;
+}
+.avatar{
+  width:105px;height:105px;border-radius:50%;
+  border:5px solid var(--panel);background:#15383b;
+  display:grid;place-items:center;font-size:35px;font-weight:bold;
+  overflow:hidden;color:var(--mint);
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+h2{margin:13px 0 5px;font-size:25px}
+.handle{color:var(--muted);font-size:14px}
+.bio{color:#c2d0d1;line-height:1.6;white-space:pre-wrap}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pill{
+  border:1px solid #294346;background:#132123;
+  color:#c3dddd;border-radius:30px;padding:7px 11px;font-size:12px;
+}
+.section{padding:20px}
+.section h3{margin:0 0 16px;font-size:17px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+label{font-size:12px;color:#a9babc}
+input,textarea,select{
+  width:100%;background:#080d0e;color:white;
+  border:1px solid var(--line);border-radius:11px;
+  padding:12px;outline:none;min-width:0;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
+textarea{min-height:90px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.note{font-size:12px;color:var(--muted);line-height:1.6}
+#toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  padding:12px 18px;border-radius:12px;background:var(--mint);
+  color:#06201d;font-weight:bold;display:none;max-width:90%;
+}
+@media(max-width:560px){
+  main{margin-top:14px}
+  .cover{height:150px}
+  .grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .profile-info{padding:0 15px 18px}
+  .section{padding:16px}
+  .avatar{width:90px;height:90px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">O</div>
+  <div>
+    <h1>OER</h1>
+    <small>CONNECT EVERYTHING</small>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <div class="cover" id="coverPreview">
+      <div class="cover-actions">
+        <button type="button" onclick="document.getElementById('coverFile').click()">
+          📷 Ganti sampul
+        </button>
+      </div>
+    </div>
+
+    <div class="profile-info">
+      <div class="profile-top">
+        <div class="avatar" id="avatarPreview">O</div>
+        <div class="actions">
+          <button type="button" onclick="document.getElementById('avatarFile').click()">
+            Ganti foto PP
+          </button>
+          <button type="button" class="primary" onclick="saveProfile()">
+            Simpan profil
+          </button>
+        </div>
+      </div>
+
+      <h2 id="displayName">Nama pengguna</h2>
+      <div class="handle" id="displayHandle">@username</div>
+      <p class="bio" id="displayBio">Tulis sesuatu tentang dirimu.</p>
+
+      <div class="pills">
+        <span class="pill" id="displayPhone">📱 Nomor belum diisi</span>
+        <span class="pill" id="displayLocation">📍 Lokasi belum diisi</span>
+        <span class="pill" id="displayStatus">🟢 Tersedia</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section">
+    <h3>✦ Informasi profil</h3>
+
+    <div class="grid">
+      <div class="field">
+        <label for="name">Nama lengkap</label>
+        <input id="name" maxlength="80" placeholder="Nama lengkap">
+      </div>
+
+      <div class="field">
+        <label for="username">Username unik</label>
+        <input id="username" maxlength="30" placeholder="contoh: pengguna_oer">
+      </div>
+
+      <div class="field full">
+        <label for="phone">Nomor WhatsApp / telepon</label>
+        <input id="phone" type="tel" maxlength="25"
+          placeholder="Contoh: +62 81234567890">
+        <div class="note">
+          Nomor ini ditampilkan di profil. Ini belum memverifikasi nomor
+          dan belum mengaktifkan pengiriman OTP WhatsApp.
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="bio">Bio tentang kamu</label>
+        <textarea id="bio" maxlength="500"
+          placeholder="Ceritakan sedikit tentang dirimu..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="birthday">Tanggal lahir</label>
+        <input id="birthday" type="date">
+      </div>
+
+      <div class="field">
+        <label for="gender">Jenis kelamin</label>
+        <select id="gender">
+          <option value="">Pilih jika ingin diisi</option>
+          <option>Laki-laki</option>
+          <option>Perempuan</option>
+          <option>Tidak ingin menyebutkan</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="location">Kota / lokasi</label>
+        <input id="location" maxlength="100" placeholder="Kota tempat tinggal">
+      </div>
+
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status">
+          <option>Tersedia</option>
+          <option>Sibuk</option>
+          <option>Jangan diganggu</option>
+          <option>Sedang belajar</option>
+          <option>Bepergian</option>
+        </select>
+      </div>
+
+      <div class="field full">
+        <label for="hobbies">Hobi dan minat</label>
+        <input id="hobbies" maxlength="300"
+          placeholder="Musik, olahraga, teknologi (pisahkan dengan koma)">
+      </div>
+
+      <div class="field full">
+        <label for="website">Website atau tautan pribadi</label>
+        <input id="website" type="url" maxlength="300"
+          placeholder="https://...">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" type="button" onclick="saveProfile()">
+        Simpan perubahan
+      </button>
+      <button type="button" onclick="resetForm()">Batalkan perubahan</button>
+    </div>
+
+    <p class="note">
+      Untuk saat ini data disimpan di browser perangkat ini.
+      Agar profil bisa dipakai saat login di perangkat lain, nanti perlu
+      disambungkan ke database online dan ID akun pengguna.
+    </p>
+  </div>
+</main>
+
+<input id="avatarFile" type="file" accept="image/*" hidden>
+<input id="coverFile" type="file" accept="image/*" hidden>
+<div id="toast"></div>
+
+<script>
+const STORAGE_KEY = "oer_profile_v1";
+
+const fields = [
+  "name", "username", "phone", "bio", "birthday",
+  "gender", "location", "status", "hobbies", "website"
+];
+
+let profile = {
+  name: "",
+  username: "",
+  phone: "",
+  bio: "",
+  birthday: "",
+  gender: "",
+  location: "",
+  status: "Tersedia",
+  hobbies: "",
+  website: "",
+  avatar: "",
+  cover: ""
+};
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.style.display = "block";
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => {
+    toast.style.display = "none";
+  }, 2600);
+}
+
+function readForm() {
+  fields.forEach(id => {
+    profile[id] = document.getElementById(id).value.trim();
+  });
+}
+
+function fillForm() {
+  fields.forEach(id => {
+    document.getElementById(id).value = profile[id] || "";
+  });
+  renderProfile();
+}
+
+function renderProfile() {
+  document.getElementById("displayName").textContent =
+    profile.name || "Nama pengguna";
+
+  document.getElementById("displayHandle").textContent =
+    profile.username ? "@" + profile.username.replace(/^@/, "") : "@username";
+
+  document.getElementById("displayBio").textContent =
+    profile.bio || "Tulis sesuatu tentang dirimu.";
+
+  document.getElementById("displayPhone").textContent =
+    "📱 " + (profile.phone || "Nomor belum diisi");
+
+  document.getElementById("displayLocation").textContent =
+    "📍 " + (profile.location || "Lokasi belum diisi");
+
+  document.getElementById("displayStatus").textContent =
+    "🟢 " + (profile.status || "Tersedia");
+
+  const avatar = document.getElementById("avatarPreview");
+  avatar.innerHTML = "";
+
+  if (profile.avatar) {
+    const img = document.createElement("img");
+    img.src = profile.avatar;
+    img.alt = "Foto profil";
+    avatar.appendChild(img);
+  } else {
+    avatar.textContent = (profile.name || "O").charAt(0).toUpperCase();
+  }
+
+  document.getElementById("coverPreview").style.backgroundImage =
+    profile.cover
+      ? `url("${profile.cover}")`
+      : "linear-gradient(120deg,#075b62,#133334,#101a1b)";
+}
+
+function saveProfile() {
+  readForm();
+
+  profile.username = profile.username
+    .replace(/^@/, "")
+    .replace(/\s+/g, "_");
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    fillForm();
+    showToast("Profil OER berhasil disimpan di browser ini.");
+  } catch (error) {
+    showToast("Penyimpanan gagal. Coba gunakan foto yang lebih kecil.");
+  }
+}
+
+function resetForm() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) profile = { ...profile, ...JSON.parse(saved) };
+  } catch (error) {}
+
+  fillForm();
+  showToast("Perubahan yang belum disimpan dibatalkan.");
+}
+
+function loadProfile() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) profile = { ...profile, ...JSON.parse(saved) };
+  } catch (error) {
+    showToast("Data profil sebelumnya tidak bisa dibaca.");
+  }
+  fillForm();
+}
+
+function loadImage(inputId, property) {
+  const input = document.getElementById(inputId);
+
+  input.addEventListener("change", event => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Pilih file gambar.");
+      input.value = "";
+      return;
+    }
+
+    if (file.size > 3 * 1024 * 1024) {
+      showToast("Ukuran gambar maksimal 3 MB.");
+      input.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      profile[property] = reader.result;
+      renderProfile();
+      showToast("Foto dipilih. Tekan Simpan perubahan untuk menyimpan.");
+    };
+
+    reader.readAsDataURL(file);
+    input.value = "";
+  });
+}
+
+loadImage("avatarFile", "avatar");
+loadImage("coverFile", "cover");
+loadProfile();
+</script>
+</body>
+</html>
