@@ -3,561 +3,323 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#080a0d">
-<meta name="description" content="Daftar teman OER">
 <title>OER — Teman</title>
-
 <style>
-:root{
-  --bg:#080a0d;
-  --panel:#0d1015;
-  --panel2:#141820;
-  --panel3:#1d232d;
-  --border:#252b35;
-  --text:#f6f7fa;
-  --muted:#929baa;
-  --cyan:#06b9dd;
-  --cyan2:#079bbf;
-}
+:root{--bg:#080a0d;--panel:#0d1015;--panel2:#141820;--border:#252b35;--text:#f6f7fa;--muted:#929baa;--cyan:#06b9dd}
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);color:var(--text);min-height:100vh;
-}
-button,input{font:inherit}
-button{cursor:pointer;color:inherit}
-button:focus-visible,input:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
-[hidden]{display:none!important}
-.app{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr)}
-.sidebar{
-  background:linear-gradient(160deg,#0c0f13,#090b0e);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  min-height:100vh;position:sticky;top:0;height:100vh;
-}
-.brand{display:flex;align-items:center;gap:10px;padding:23px 22px}
-.brand-logo{
-  width:38px;height:38px;border-radius:12px;
-  display:grid;place-items:center;
-  background:linear-gradient(145deg,#05c4e8,#079ecb);
-}
-.brand-logo svg{width:24px;height:24px}
-.brand-name{font-size:25px;font-weight:850;letter-spacing:-1px}
-.sidebar-nav{padding:8px 12px;display:grid;gap:5px}
-.nav-item{
-  display:flex;align-items:center;gap:13px;
-  width:100%;height:47px;padding:0 15px;
-  border:0;border-radius:14px;text-decoration:none;
-  background:transparent;color:#a7afbd;
-  font-size:14px;font-weight:600;
-}
-.nav-item svg{width:21px;height:21px;flex-shrink:0}
-.nav-item:hover{background:#171c24;color:white}
-.nav-item.active{background:linear-gradient(110deg,#262d37,#202630);color:white}
-.sidebar-note{
-  margin:auto 14px 16px;padding:15px;
-  border:1px solid var(--border);border-radius:16px;
-  background:linear-gradient(145deg,#141920,#0e1116);
-}
-.sidebar-note strong{font-size:13px;display:block;margin-bottom:7px}
-.sidebar-note p{font-size:11px;color:var(--muted);line-height:1.7}
-.sidebar-footer{
-  border-top:1px solid var(--border);
-  padding:14px 18px;color:#778294;font-size:10px;line-height:1.8;
-}
-.main{min-width:0;min-height:100vh}
-.topbar{
-  height:76px;border-bottom:1px solid var(--border);
-  padding:0 30px;display:flex;align-items:center;
-  justify-content:space-between;gap:15px;
-}
-.topbar h1{font-size:23px;letter-spacing:-.5px}
-.topbar p{font-size:12px;color:var(--muted);margin-top:4px}
-.topbar-left{display:flex;align-items:center;gap:12px;min-width:0}
-.back-btn{
-  display:none;width:38px;height:38px;border:1px solid var(--border);
-  border-radius:12px;background:var(--panel2);align-items:center;justify-content:center;
-}
-.back-btn svg{width:20px;height:20px}
-.online-badge{
-  display:flex;align-items:center;gap:7px;
-  color:#a8b4c3;font-size:11px;
-  border:1px solid var(--border);border-radius:20px;padding:8px 11px;
-}
-.online-dot{width:7px;height:7px;border-radius:50%;background:#38d99b}
-.content{max-width:1100px;margin:0 auto;padding:27px 30px 40px}
-.welcome{margin-bottom:24px}
-.welcome h2{font-size:26px;letter-spacing:-.7px;margin-bottom:8px}
-.welcome p{font-size:13px;color:var(--muted);line-height:1.7}
-.search-area{
-  display:flex;align-items:center;gap:10px;
-  padding:0 15px;height:51px;
-  background:var(--panel2);border:1px solid var(--border);
-  border-radius:15px;margin-bottom:23px;
-}
-.search-area:focus-within{border-color:#087d96}
-.search-area svg{width:21px;height:21px;color:#9da8b8;flex-shrink:0}
-.search-area input{
-  width:100%;min-width:0;border:0;outline:none;
-  background:transparent;color:white;font-size:13px;
-}
-.search-area input::placeholder{color:#818c9d}
-.search-hint{font-size:10px;color:#7f8a9a;white-space:nowrap}
-.tabs{
-  display:flex;gap:8px;overflow-x:auto;
-  border-bottom:1px solid var(--border);margin-bottom:19px;
-}
-.tab{
-  flex-shrink:0;padding:12px 15px 13px;
-  border:0;border-bottom:2px solid transparent;
-  background:transparent;color:var(--muted);
-  font-size:12px;font-weight:650;
-}
-.tab.active{color:#fff;border-bottom-color:var(--cyan)}
-.tab-count{
-  display:inline-grid;place-items:center;
-  min-width:19px;height:19px;padding:0 5px;
-  margin-left:5px;border-radius:7px;
-  background:#252d38;color:#cbd4e0;font-size:10px;
-}
-.section-heading{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;margin-bottom:14px;
-}
-.section-heading h3{font-size:15px;font-weight:700}
-.section-heading span{font-size:11px;color:var(--muted)}
-.people-grid{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;
-}
-.person-card{
-  min-width:0;padding:18px;
-  border:1px solid var(--border);border-radius:18px;
-  background:linear-gradient(145deg,#11151b,#0d1015);
-  transition:border-color .2s,transform .2s;
-}
-.person-card:hover{border-color:#35404e;transform:translateY(-2px)}
-.person-top{display:flex;align-items:center;gap:12px;min-width:0}
-.avatar{
-  width:48px;height:48px;border-radius:50%;flex-shrink:0;
-  display:grid;place-items:center;overflow:hidden;
-  background:linear-gradient(145deg,#263545,#18212b);
-  border:1px solid #303b49;color:#d8e8f2;
-  font-size:15px;font-weight:750;
-}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input{font:inherit}button{cursor:pointer;color:inherit}[hidden]{display:none!important}
+.app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+.sidebar{background:#0c0f13;border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:23px}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#05c4e8,#079ecb);display:grid;place-items:center;font-weight:900;font-size:22px}
+.brand strong{font-size:25px;letter-spacing:-1px}
+.nav{padding:8px 12px;display:grid;gap:5px}
+.nav a{height:46px;padding:0 14px;display:flex;align-items:center;gap:12px;border-radius:13px;text-decoration:none;color:#a7afbd;font-size:14px;font-weight:600}
+.nav a:hover,.nav a.active{background:#202630;color:white}
+.side-note{margin:auto 14px 16px;padding:15px;border:1px solid var(--border);border-radius:15px;background:#11151b}
+.side-note p{font-size:11px;color:var(--muted);line-height:1.7;margin-top:7px}
+.side-foot{border-top:1px solid var(--border);padding:14px;color:#778294;font-size:10px}
+.main{min-width:0}
+.topbar{height:72px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:12px}
+.topbar h1{font-size:22px}.topbar p{font-size:11px;color:var(--muted);margin-top:4px}
+.content{max-width:1100px;margin:auto;padding:27px 28px 40px}
+.welcome{margin-bottom:22px}.welcome h2{font-size:26px;margin-bottom:8px;letter-spacing:-.6px}.welcome p{font-size:13px;color:var(--muted);line-height:1.7}
+.search{height:49px;display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:0 14px;margin-bottom:20px}
+.search:focus-within{border-color:#078ba8}.search input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:white;font-size:13px}.search input::placeholder{color:#818c9d}
+.tabs{display:flex;gap:5px;overflow:auto;border-bottom:1px solid var(--border);margin-bottom:19px}
+.tab{flex-shrink:0;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);padding:12px 13px;font-size:12px;font-weight:650}
+.tab.active{color:white;border-bottom-color:var(--cyan)}
+.count{display:inline-block;padding:3px 6px;background:#252d38;border-radius:6px;margin-left:4px;font-size:10px}
+.heading{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}.heading h3{font-size:15px}.heading span{font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.person{padding:17px;border:1px solid var(--border);border-radius:17px;background:linear-gradient(145deg,#11151b,#0d1015);min-width:0}
+.person-top{display:flex;align-items:center;gap:11px;min-width:0}
+.avatar{width:47px;height:47px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;overflow:hidden;background:#263545;border:1px solid #303b49;color:#d8e8f2;font-weight:750}
 .avatar img{width:100%;height:100%;object-fit:cover}
-.person-info{min-width:0;flex:1}
-.person-name{
-  font-size:13px;font-weight:700;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.person-handle{
-  margin-top:5px;font-size:11px;color:var(--muted);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.person-bio{
-  color:#9da7b7;font-size:11px;line-height:1.65;
-  margin:14px 0 15px;min-height:35px;
-}
-.person-actions{display:flex;gap:8px}
-.action-btn{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  min-width:0;flex:1;padding:10px 8px;border-radius:10px;
-  border:1px solid #303947;background:#1a2029;
-  color:#e7edf5;font-size:11px;font-weight:650;
-}
-.action-btn svg{width:15px;height:15px;flex-shrink:0}
-.action-btn:hover{background:#252e3a}
-.action-btn.primary{background:#078ba8;border-color:#078ba8;color:#fff}
-.action-btn.primary:hover{background:#06a9cc}
-.action-btn.pending{background:#172a30;border-color:#24505b;color:#80dff1}
-.action-btn.accept{background:#087e9b;border-color:#087e9b}
-.empty-state{
-  border:1px dashed #303947;border-radius:18px;
-  padding:45px 20px;text-align:center;
-}
-.empty-icon{
-  width:65px;height:65px;margin:0 auto 15px;
-  display:grid;place-items:center;border-radius:20px;
-  background:#171e27;color:#8d9bad;
-}
-.empty-icon svg{width:30px;height:30px}
-.empty-state h3{font-size:16px;margin-bottom:8px}
-.empty-state p{font-size:12px;color:var(--muted);line-height:1.7;max-width:350px;margin:0 auto 16px}
-.primary-btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  border:0;border-radius:11px;padding:12px 16px;
-  background:#078ba8;color:white;font-size:12px;font-weight:700;
-}
-.primary-btn:hover{background:#06a9cc}
-.toast{
-  position:fixed;left:50%;bottom:22px;
-  transform:translate(-50%,15px);opacity:0;
-  pointer-events:none;z-index:10;
-  max-width:calc(100vw - 28px);
-  background:#202731;border:1px solid #37414f;
-  color:white;border-radius:13px;padding:12px 16px;
-  font-size:12px;text-align:center;
-  transition:opacity .2s,transform .2s;
-}
+.info{min-width:0}.name{font-size:13px;font-weight:700;overflow-wrap:anywhere}.handle{font-size:11px;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
+.bio{font-size:11px;color:#9da7b7;line-height:1.6;margin:14px 0;overflow-wrap:anywhere}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.btn{flex:1;min-width:75px;border:1px solid #303947;background:#1a2029;border-radius:10px;padding:10px 8px;font-size:11px;font-weight:650}
+.btn:hover{background:#252e3a}.btn.primary{background:#078ba8;border-color:#078ba8}.btn.primary:hover{background:#06a9cc}.btn:disabled{opacity:.55;cursor:wait}
+.empty{padding:40px 18px;border:1px dashed #303947;border-radius:17px;text-align:center}
+.empty h3{font-size:16px;margin-bottom:9px}.empty p{font-size:12px;color:var(--muted);line-height:1.7;max-width:350px;margin:0 auto 15px}
+.primary{background:#078ba8;border:0;border-radius:10px;padding:11px 15px;color:white;font-size:12px;font-weight:700}
+.notice{font-size:12px;line-height:1.7;color:#9da7b7;margin-bottom:14px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,12px);opacity:0;pointer-events:none;z-index:10;background:#202731;border:1px solid #37414f;border-radius:12px;padding:12px 16px;font-size:12px;max-width:calc(100vw - 24px);transition:.2s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:1050px){
-  .people-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .content{padding-left:22px;padding-right:22px}
-}
-@media(max-width:650px){
-  .app{display:block}
-  .sidebar{display:none}
-  .main{min-height:100vh}
-  .topbar{height:67px;padding:0 14px}
-  .topbar h1{font-size:19px}
-  .back-btn{display:flex}
-  .online-badge{font-size:10px;padding:7px 9px}
-  .content{padding:21px 13px 30px}
-  .welcome h2{font-size:23px}
-  .welcome p{font-size:12px}
-  .search-area{height:47px}
-  .people-grid{grid-template-columns:1fr;gap:10px}
-  .person-card{padding:15px}
-  .person-bio{min-height:0;margin:12px 0}
-  .person-actions{max-width:270px}
-  .tabs{margin-bottom:17px}
-  .search-hint{display:none}
-}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding-left:20px;padding-right:20px}}
+@media(max-width:650px){.app{display:block}.sidebar{display:none}.topbar{height:65px;padding:0 14px}.topbar h1{font-size:19px}.content{padding:21px 13px 30px}.welcome h2{font-size:23px}.grid{grid-template-columns:1fr;gap:10px}.person{padding:15px}.tabs{margin-bottom:17px}}
 </style>
 </head>
-
 <body>
 <div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-logo">
-        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
-          <path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/>
-        </svg>
-      </div>
-      <span class="brand-name">OER</span>
+<aside class="sidebar">
+  <div class="brand"><div class="logo">O</div><strong>OER</strong></div>
+  <nav class="nav">
+    <a href="home.html">⌂ &nbsp; Beranda</a>
+    <a href="chat.html">▤ &nbsp; Chat</a>
+    <a class="active" href="friends.html">♧ &nbsp; Teman</a>
+  </nav>
+  <div class="side-note"><strong>Temukan teman di OER</strong><p>Cari pengguna, kirim permintaan pertemanan, dan mulai membangun koneksi.</p></div>
+  <div class="side-foot">OER — Ruang komunikasi digital.<br>© 2026 OER.</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div><h1>Teman</h1><p>Kelola koneksi dan pertemananmu di OER</p></div>
+    <button class="primary" id="reloadBtn">Muat ulang</button>
+  </header>
+  <div class="content">
+    <section class="welcome"><h2>Temukan orang baru.</h2><p>Cari teman, kelola permintaan, dan bangun koneksi di OER.</p></section>
+    <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Cari nama atau username..." autocomplete="off"><span style="font-size:10px;color:#818c9d;white-space:nowrap">Cari</span></label>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="friends">Teman <span class="count" id="friendsCount">0</span></button>
+      <button class="tab" data-tab="discover">Temukan orang</button>
+      <button class="tab" data-tab="requests">Permintaan <span class="count" id="requestsCount">0</span></button>
+      <button class="tab" data-tab="sent">Terkirim <span class="count" id="sentCount">0</span></button>
     </div>
-
-    <nav class="sidebar-nav" aria-label="Navigasi utama">
-      <a class="nav-item" href="home.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>
-        Beranda
-      </a>
-      <a class="nav-item" href="chat.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
-        Chat
-      </a>
-      <a class="nav-item active" href="friends.html" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
-        Teman
-      </a>
-    </nav>
-
-    <div class="sidebar-note">
-      <strong>Temukan teman di OER</strong>
-      <p>Cari orang, kirim permintaan pertemanan, dan mulai membangun percakapan bersama.</p>
-    </div>
-
-    <div class="sidebar-footer">
-      OER — Ruang komunikasi digital.<br>
-      © 2026 OER.
-    </div>
-  </aside>
-
-  <main class="main">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="back-btn" id="backButton" aria-label="Kembali ke beranda">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-        </button>
-        <div>
-          <h1>Teman</h1>
-          <p>Kelola koneksi dan pertemananmu di OER</p>
-        </div>
-      </div>
-      <div class="online-badge"><span class="online-dot"></span> Ruang Teman</div>
-    </header>
-
-    <div class="content">
-      <section class="welcome">
-        <h2>Temukan orang baru.</h2>
-        <p>Cari teman, kelola permintaan, dan bangun koneksi baru di OER.</p>
-      </section>
-
-      <label class="search-area">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="10.8" cy="10.8" r="7.2"/><path d="m16.2 16.2 5 5"/></svg>
-        <input id="searchInput" type="search" placeholder="Cari nama teman..." autocomplete="off" aria-label="Cari teman">
-        <span class="search-hint">Cari teman</span>
-      </label>
-
-      <div class="tabs" role="tablist" aria-label="Kategori teman">
-        <button class="tab active" data-tab="friends" role="tab" aria-selected="true">Teman <span class="tab-count" id="friendsCount">0</span></button>
-        <button class="tab" data-tab="discover" role="tab" aria-selected="false">Temukan orang</button>
-        <button class="tab" data-tab="requests" role="tab" aria-selected="false">Permintaan <span class="tab-count" id="requestsCount">0</span></button>
-        <button class="tab" data-tab="sent" role="tab" aria-selected="false">Terkirim <span class="tab-count" id="sentCount">0</span></button>
-      </div>
-
-      <section>
-        <div class="section-heading">
-          <h3 id="sectionTitle">Daftar Teman</h3>
-          <span id="resultCount">0 orang</span>
-        </div>
-        <div class="people-grid" id="peopleGrid"></div>
-        <div class="empty-state" id="emptyState" hidden>
-          <div class="empty-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="7" r="3.5"/><path d="M2 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/><path d="M16 4a3.5 3.5 0 0 1 0 7M19 14a5 5 0 0 1 3 4.5V20"/></svg>
-          </div>
-          <h3 id="emptyTitle">Belum ada teman</h3>
-          <p id="emptyDescription">Temukan orang untuk mulai membangun koneksi di OER.</p>
-          <button class="primary-btn" id="discoverButton">Temukan orang</button>
-        </div>
-      </section>
-    </div>
-  </main>
+    <div class="heading"><h3 id="sectionTitle">Daftar Teman</h3><span id="resultCount">Memuat...</span></div>
+    <p class="notice" id="pageNotice" hidden></p>
+    <div class="grid" id="peopleGrid"></div>
+    <div class="empty" id="emptyState" hidden><h3 id="emptyTitle">Belum ada teman</h3><p id="emptyDescription">Temukan orang untuk mulai membangun koneksi.</p><button class="primary" id="discoverButton">Temukan orang</button></div>
+  </div>
+</main>
 </div>
-
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
 
-const $ = selector => document.querySelector(selector);
+const SUPABASE_URL = "https://mkjetsmaozegaqbgfsyk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_QIxIe-teLAlFNdGX77pMGw_3NZkPJw1";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const peopleGrid = $("#peopleGrid");
-const emptyState = $("#emptyState");
-const searchInput = $("#searchInput");
+const $ = s => document.querySelector(s);
+const grid = $("#peopleGrid");
+const empty = $("#emptyState");
+const search = $("#searchInput");
 const toast = $("#toast");
 
-let activeTab = "friends";
-let toastTimer = null;
+let user = null;
+let profiles = [];
+let relations = [];
+let tab = "friends";
+let busy = false;
+let toastTimer;
 
-/*
-  Data contoh lokal untuk tampilan awal.
-  Belum terhubung ke akun pengguna atau database.
-*/
-const people = [
-  {
-    id: "demo-1",
-    name: "Nadia Putri",
-    handle: "@nadiaputri",
-    bio: "Senang berbagi cerita, ide, dan momen sehari-hari.",
-    initials: "NP",
-    status: "friend"
-  },
-  {
-    id: "demo-2",
-    name: "Rizky Pratama",
-    handle: "@rizkypratama",
-    bio: "Mengenal orang baru dan berdiskusi tentang teknologi.",
-    initials: "RP",
-    status: "discover"
-  },
-  {
-    id: "demo-3",
-    name: "Salsabila Zahra",
-    handle: "@salsabilaz",
-    bio: "Berbagi inspirasi, karya, dan hal-hal positif.",
-    initials: "SZ",
-    status: "incoming"
-  },
-  {
-    id: "demo-4",
-    name: "Dimas Saputra",
-    handle: "@dimassaputra",
-    bio: "Mari terhubung dan bertukar pengalaman.",
-    initials: "DS",
-    status: "sent"
-  }
-];
-
-const tabInfo = {
-  friends: {
-    title: "Daftar Teman",
-    emptyTitle: "Belum ada teman",
-    emptyDescription: "Temukan orang untuk mulai membangun koneksi di OER."
-  },
-  discover: {
-    title: "Temukan Orang",
-    emptyTitle: "Tidak ada pengguna ditemukan",
-    emptyDescription: "Coba kata pencarian lain."
-  },
-  requests: {
-    title: "Permintaan Pertemanan",
-    emptyTitle: "Tidak ada permintaan",
-    emptyDescription: "Permintaan pertemanan yang masuk akan muncul di sini."
-  },
-  sent: {
-    title: "Permintaan Terkirim",
-    emptyTitle: "Belum ada permintaan terkirim",
-    emptyDescription: "Permintaan pertemanan yang kamu kirim akan muncul di sini."
-  }
+const labels = {
+  friends: ["Daftar Teman", "Belum ada teman", "Temukan orang untuk mulai membangun koneksi."],
+  discover: ["Temukan Orang", "Pengguna tidak ditemukan", "Coba nama atau username lain."],
+  requests: ["Permintaan Pertemanan", "Tidak ada permintaan", "Permintaan masuk akan muncul di sini."],
+  sent: ["Permintaan Terkirim", "Belum ada permintaan terkirim", "Permintaan yang kamu kirim akan muncul di sini."]
 };
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  }[char]));
+function escapeHTML(v) {
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
 }
-
-function showToast(message) {
-  toast.textContent = message;
+function showToast(text) {
+  toast.textContent = text;
   toast.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
 }
-
-function getTabPeople() {
-  const query = searchInput.value.trim().toLowerCase();
-
-  return people.filter(person => {
-    const matchesTab = person.status === activeTab ||
-      (activeTab === "discover" && person.status === "discover");
-
-    const matchesSearch =
-      person.name.toLowerCase().includes(query) ||
-      person.handle.toLowerCase().includes(query);
-
-    return matchesTab && matchesSearch;
+function personName(p) {
+  return p.display_name || p.username || "Pengguna OER";
+}
+function initials(p) {
+  return personName(p).trim().split(/\s+/).slice(0,2).map(s => s[0] || "").join("").toUpperCase();
+}
+function relationWith(id) {
+  return relations.find(r =>
+    (r.sender_id === user.id && r.receiver_id === id) ||
+    (r.receiver_id === user.id && r.sender_id === id)
+  );
+}
+function relationStatus(id) {
+  const r = relationWith(id);
+  if (!r) return "none";
+  if (r.status === "accepted") return "friend";
+  return r.sender_id === user.id ? "sent" : "incoming";
+}
+function profileFor(id) {
+  return profiles.find(p => p.id === id);
+}
+function filteredPeople() {
+  const q = search.value.trim().toLowerCase();
+  return profiles.filter(p => {
+    if (p.id === user.id) return false;
+    const status = relationStatus(p.id);
+    let matchTab =
+      (tab === "friends" && status === "friend") ||
+      (tab === "discover" && status === "none") ||
+      (tab === "requests" && status === "incoming") ||
+      (tab === "sent" && status === "sent");
+    const searchable = (personName(p) + " " + (p.username || "")).toLowerCase();
+    return matchTab && (!q || searchable.includes(q));
   });
 }
-
-function getAction(person) {
-  if (person.status === "friend") {
-    return `
-      <button class="action-btn" data-action="chat" data-id="${escapeHTML(person.id)}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
-        Chat
-      </button>
-      <button class="action-btn" data-action="remove" data-id="${escapeHTML(person.id)}" aria-label="Hapus teman ${escapeHTML(person.name)}">•••</button>`;
+function buttonFor(p) {
+  const status = relationStatus(p.id);
+  if (status === "friend") {
+    return `<button class="btn" data-action="chat" data-id="${escapeHTML(p.id)}">Buka Chat</button>
+    <button class="btn" data-action="remove" data-id="${escapeHTML(p.id)}">Hapus</button>`;
   }
-
-  if (person.status === "incoming") {
-    return `
-      <button class="action-btn accept" data-action="accept" data-id="${escapeHTML(person.id)}">Terima</button>
-      <button class="action-btn" data-action="decline" data-id="${escapeHTML(person.id)}">Tolak</button>`;
+  if (status === "incoming") {
+    return `<button class="btn primary" data-action="accept" data-id="${escapeHTML(p.id)}">Terima</button>
+    <button class="btn" data-action="decline" data-id="${escapeHTML(p.id)}">Tolak</button>`;
   }
-
-  if (person.status === "sent") {
-    return `<button class="action-btn pending" data-action="cancel" data-id="${escapeHTML(person.id)}">Permintaan terkirim</button>`;
+  if (status === "sent") {
+    return `<button class="btn" data-action="cancel" data-id="${escapeHTML(p.id)}">Batalkan Permintaan</button>`;
   }
-
-  return `<button class="action-btn primary" data-action="add" data-id="${escapeHTML(person.id)}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-    Tambah Teman
-  </button>`;
+  return `<button class="btn primary" data-action="add" data-id="${escapeHTML(p.id)}">＋ Tambah Teman</button>`;
 }
-
-function renderPerson(person) {
-  return `
-    <article class="person-card">
-      <div class="person-top">
-        <div class="avatar">${escapeHTML(person.initials || person.name.slice(0, 1))}</div>
-        <div class="person-info">
-          <div class="person-name">${escapeHTML(person.name)}</div>
-          <div class="person-handle">${escapeHTML(person.handle)}</div>
-        </div>
-      </div>
-      <p class="person-bio">${escapeHTML(person.bio || "Pengguna OER")}</p>
-      <div class="person-actions">${getAction(person)}</div>
-    </article>`;
+function card(p) {
+  const username = p.username ? "@" + p.username : "Pengguna OER";
+  return `<article class="person">
+    <div class="person-top">
+      <div class="avatar">${escapeHTML(initials(p))}</div>
+      <div class="info"><div class="name">${escapeHTML(personName(p))}</div><div class="handle">${escapeHTML(username)}</div></div>
+    </div>
+    <p class="bio">Pengguna OER</p>
+    <div class="actions">${buttonFor(p)}</div>
+  </article>`;
 }
-
-function updateCounts() {
-  $("#friendsCount").textContent = people.filter(p => p.status === "friend").length;
-  $("#requestsCount").textContent = people.filter(p => p.status === "incoming").length;
-  $("#sentCount").textContent = people.filter(p => p.status === "sent").length;
-}
-
 function render() {
-  const filtered = getTabPeople();
-  const info = tabInfo[activeTab];
-
-  $("#sectionTitle").textContent = info.title;
-  $("#resultCount").textContent = filtered.length + " orang";
-  peopleGrid.innerHTML = filtered.map(renderPerson).join("");
-  emptyState.hidden = filtered.length > 0;
-
-  $("#emptyTitle").textContent = info.emptyTitle;
-  $("#emptyDescription").textContent = info.emptyDescription;
-  $("#discoverButton").hidden = activeTab === "discover";
-
-  document.querySelectorAll("[data-tab]").forEach(button => {
-    const selected = button.dataset.tab === activeTab;
-    button.classList.toggle("active", selected);
-    button.setAttribute("aria-selected", String(selected));
+  const rows = filteredPeople();
+  const counts = {
+    friends: profiles.filter(p => p.id !== user.id && relationStatus(p.id) === "friend").length,
+    requests: profiles.filter(p => p.id !== user.id && relationStatus(p.id) === "incoming").length,
+    sent: profiles.filter(p => p.id !== user.id && relationStatus(p.id) === "sent").length
+  };
+  $("#friendsCount").textContent = counts.friends;
+  $("#requestsCount").textContent = counts.requests;
+  $("#sentCount").textContent = counts.sent;
+  $("#sectionTitle").textContent = labels[tab][0];
+  $("#resultCount").textContent = rows.length + " orang";
+  grid.innerHTML = rows.map(card).join("");
+  empty.hidden = rows.length > 0;
+  $("#emptyTitle").textContent = labels[tab][1];
+  $("#emptyDescription").textContent = labels[tab][2];
+  $("#discoverButton").hidden = tab === "discover";
+  document.querySelectorAll("[data-tab]").forEach(b => {
+    b.classList.toggle("active", b.dataset.tab === tab);
+    b.setAttribute("aria-selected", String(b.dataset.tab === tab));
   });
-
-  updateCounts();
 }
-
-function switchTab(tab) {
-  activeTab = tab;
-  searchInput.value = "";
-  render();
-}
-
-document.querySelectorAll("[data-tab]").forEach(button => {
-  button.addEventListener("click", () => switchTab(button.dataset.tab));
-});
-
-searchInput.addEventListener("input", render);
-
-peopleGrid.addEventListener("click", event => {
-  const button = event.target.closest("[data-action]");
-  if (!button) return;
-
-  const person = people.find(item => item.id === button.dataset.id);
-  if (!person) return;
-
-  switch (button.dataset.action) {
-    case "add":
-      person.status = "sent";
-      showToast("Permintaan pertemanan berhasil dibuat pada demo.");
-      break;
-
-    case "accept":
-      person.status = "friend";
-      showToast("Permintaan pertemanan diterima pada demo.");
-      break;
-
-    case "decline":
-      people.splice(people.indexOf(person), 1);
-      showToast("Permintaan dihapus dari demo.");
-      break;
-
-    case "cancel":
-      person.status = "discover";
-      showToast("Permintaan dibatalkan pada demo.");
-      break;
-
-    case "remove":
-      if (confirm("Hapus " + person.name + " dari daftar teman demo?")) {
-        person.status = "discover";
-        showToast("Teman dihapus dari demo.");
-      }
-      break;
-
-    case "chat":
-      showToast("Chat akan tersedia setelah halaman teman terhubung ke sistem chat OER.");
+async function loadData() {
+  if (busy) return;
+  busy = true;
+  $("#reloadBtn").disabled = true;
+  $("#resultCount").textContent = "Memuat...";
+  $("#pageNotice").hidden = true;
+  try {
+    const { data: authData, error: authError } = await db.auth.getUser();
+    if (authError) throw authError;
+    user = authData.user;
+    if (!user) {
+      showToast("Silakan login terlebih dahulu.");
+      setTimeout(() => location.href = "home.html", 900);
       return;
+    }
+
+    const { data: profileRows, error: profileError } = await db
+      .from("profiles")
+      .select("id, username, display_name, share_profile")
+      .or(`share_profile.eq.true,id.eq.${user.id}`)
+      .limit(500);
+
+    if (profileError) throw profileError;
+    profiles = profileRows || [];
+
+    const { data: relationRows, error: relationError } = await db
+      .from("friend_requests")
+      .select("id, sender_id, receiver_id, status, created_at");
+
+    if (relationError) throw relationError;
+    relations = relationRows || [];
+    render();
+  } catch (err) {
+    console.error("OER friends:", err);
+    $("#resultCount").textContent = "Gagal memuat";
+    $("#pageNotice").hidden = false;
+    $("#pageNotice").textContent =
+      "Gagal memuat teman: " + (err.message || "Periksa tabel profiles, friend_requests, dan kebijakan RLS di Supabase.");
+    grid.innerHTML = "";
+    empty.hidden = true;
+    showToast("Gagal memuat data teman.");
+  } finally {
+    busy = false;
+    $("#reloadBtn").disabled = false;
   }
-
+}
+async function performAction(action, targetId, button) {
+  if (!user || button.disabled) return;
+  button.disabled = true;
+  try {
+    const relation = relationWith(targetId);
+    if (action === "add") {
+      if (relation) throw new Error("Permintaan pertemanan sudah ada.");
+      const { error } = await db.from("friend_requests").insert({
+        sender_id: user.id,
+        receiver_id: targetId,
+        status: "pending"
+      });
+      if (error) throw error;
+      showToast("Permintaan pertemanan terkirim.");
+    } else if (action === "accept") {
+      if (!relation || relation.receiver_id !== user.id || relation.status !== "pending") {
+        throw new Error("Permintaan tidak ditemukan.");
+      }
+      const { error } = await db.from("friend_requests")
+        .update({ status: "accepted" }).eq("id", relation.id);
+      if (error) throw error;
+      showToast("Permintaan pertemanan diterima.");
+    } else if (action === "decline" || action === "cancel" || action === "remove") {
+      if (!relation) throw new Error("Relasi pertemanan tidak ditemukan.");
+      if (action === "remove" && !confirm("Hapus teman ini dari daftar pertemanan?")) return;
+      const { error } = await db.from("friend_requests")
+        .delete().eq("id", relation.id);
+      if (error) throw error;
+      showToast(action === "remove" ? "Teman dihapus." :
+        action === "cancel" ? "Permintaan dibatalkan." : "Permintaan ditolak.");
+    } else if (action === "chat") {
+      location.href = "chat.html?user=" + encodeURIComponent(targetId);
+      return;
+    }
+    await loadData();
+  } catch (err) {
+    console.error(err);
+    showToast(err.message || "Aksi gagal. Periksa kebijakan database.");
+  } finally {
+    button.disabled = false;
+  }
+}
+document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => {
+  tab = b.dataset.tab;
+  search.value = "";
   render();
+}));
+search.addEventListener("input", render);
+grid.addEventListener("click", e => {
+  const b = e.target.closest("[data-action]");
+  if (b) performAction(b.dataset.action, b.dataset.id, b);
 });
-
-$("#discoverButton").addEventListener("click", () => switchTab("discover"));
-
-$("#backButton").addEventListener("click", () => {
-  window.location.href = "home.html";
+$("#discoverButton").addEventListener("click", () => {
+  tab = "discover"; search.value = ""; render();
 });
+$("#reloadBtn").addEventListener("click", loadData);
 
-render();
+db.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_OUT" || !session) {
+    location.href = "home.html";
+  }
+});
+loadData();
 </script>
 </body>
 </html>
-
