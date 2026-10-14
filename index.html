@@ -749,6 +749,15 @@ $('#globalSearch').addEventListener('keydown',e=>{
 });
 $('#modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal()});
 renderProfile();renderFriends();
+<script>
+document.addEventListener('click', function (event) {
+  const tombolProfil = event.target.closest('[data-page="profile"]');
+
+  if (tombolProfil) {
+    event.preventDefault();
+    window.location.href = 'profile.html';
+  }
+}, true);
 </script>
 </body>
 </html>
