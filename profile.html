@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05070a">
+<title>OER — Profil</title>
+<style>
+:root {
+  --bg: #05070a;
+  --panel: #0b0f14;
+  --panel2: #11161d;
+  --panel3: #171d26;
+  --border: #1e2630;
+  --text: #f1f5f9;
+  --muted: #8b97a8;
+  --cyan: #00a8e8;
+  --cyan-glow: rgba(0, 168, 232, 0.15);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+button, input { font: inherit; }
+button { cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+.sidebar {
+  background: var(--panel); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.sidebar-scroll { flex: 1; overflow-y: auto; padding: 20px 14px; }
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 6px 24px; }
+.brand-logo {
+  width: 40px; height: 40px; border-radius: 13px; background: var(--cyan);
+  display: grid; place-items: center; box-shadow: 0 0 20px var(--cyan-glow);
+}
+.brand-logo svg { width: 24px; height: 24px; }
+.brand-name { font-size: 20px; font-weight: 800; }
+.brand-tag { font-size: 9px; color: var(--muted); letter-spacing: 1.2px; text-transform: uppercase; }
+
+.nav { display: grid; gap: 3px; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 14px;
+  border-radius: 12px; color: var(--muted); font-size: 14px; font-weight: 600;
+}
+.nav-item svg { width: 20px; height: 20px; }
+.nav-item:hover { background: var(--panel2); color: var(--text); }
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(0,168,232,0.15), rgba(0,168,232,0.05));
+  color: var(--cyan); border: 1px solid rgba(0,168,232,0.2);
+}
+
+.main { display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  height: 64px; display: flex; align-items: center;
+  padding: 0 24px; border-bottom: 1px solid var(--border);
+  background: rgba(11,15,20,0.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10;
+}
+.topbar h1 { font-size: 18px; font-weight: 700; }
+
+.content { max-width: 520px; margin: 0 auto; padding: 28px 20px 90px; width: 100%; }
+
+.profile-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px 24px; text-align: center;
+}
+.avatar-wrap {
+  width: 96px; height: 96px; margin: 0 auto 18px; position: relative;
+}
+.avatar {
+  width: 96px; height: 96px; border-radius: 50%; background: var(--panel3);
+  display: grid; place-items: center; font-size: 32px; font-weight: 700; color: var(--cyan);
+  overflow: hidden; border: 3px solid var(--border);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-edit {
+  position: absolute; bottom: 0; right: 0; width: 32px; height: 32px;
+  border-radius: 50%; background: var(--cyan); color: #001018;
+  display: grid; place-items: center; font-size: 14px; border: 2px solid var(--panel);
+}
+.profile-name { font-size: 20px; font-weight: 750; margin-bottom: 4px; }
+.profile-handle { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+.field { margin-bottom: 16px; text-align: left; }
+.field label {
+  display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 7px;
+}
+.field input {
+  width: 100%; height: 46px; padding: 0 14px;
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 12px; color: var(--text); outline: none;
+}
+.field input:focus { border-color: var(--cyan); }
+
+.btn {
+  width: 100%; height: 46px; border-radius: 12px; font-size: 14px; font-weight: 700;
+  margin-top: 8px;
+}
+.btn-primary { background: var(--cyan); color: #001018; }
+.btn-primary:hover { background: #00b8f5; }
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border); color: var(--muted); margin-top: 10px;
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+.btn-danger {
+  background: transparent; border: 1px solid #7f1d1d; color: #f87171; margin-top: 10px;
+}
+.btn-danger:hover { background: rgba(127,29,29,0.15); }
+
+.notice {
+  font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 18px; text-align: left;
+}
+
+.bottom-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
+  background: var(--panel); border-top: 1px solid var(--border);
+  grid-template-columns: repeat(5, 1fr); z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bottom-nav a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; font-size: 10px; color: var(--muted); font-weight: 600;
+}
+.bottom-nav a.active { color: var(--cyan); }
+.bottom-nav svg { width: 20px; height: 20px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(10px);
+  background: var(--panel3); border: 1px solid var(--border); color: white;
+  padding: 12px 18px; border-radius: 12px; font-size: 13px; opacity: 0;
+  pointer-events: none; transition: 0.2s; z-index: 100;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.hidden-input { display: none; }
+
+@media (max-width: 800px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .bottom-nav { display: grid; }
+  .content { padding-bottom: 90px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-scroll">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/></svg>
+        </div>
+        <div>
+          <div class="brand-name">OER</div>
+          <div class="brand-tag">Connect Everything</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="nav-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>Beranda</a>
+        <a class="nav-item" href="chat.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>Chat</a>
+        <a class="nav-item" href="status.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>Status</a>
+        <a class="nav-item" href="friends.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Teman</a>
+        <a class="nav-item active" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>Profil</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><h1>Profil Akun</h1></header>
+
+    <div class="content">
+      <div class="profile-card">
+        <div class="avatar-wrap">
+          <div class="avatar" id="avatarPreview">O</div>
+          <label class="avatar-edit" for="photoInput" title="Ganti foto">✎</label>
+          <input class="hidden-input" type="file" id="photoInput" accept="image/jpeg,image/png,image/webp">
+        </div>
+
+        <div class="profile-name" id="displayName">Pengguna OER</div>
+        <div class="profile-handle" id="displayHandle">@user</div>
+
+        <form id="profileForm">
+          <div class="field">
+            <label for="nameInput">Nama Tampilan</label>
+            <input id="nameInput" type="text" maxlength="60" placeholder="Nama kamu" required>
+          </div>
+          <div class="field">
+            <label for="usernameInput">Username</label>
+            <input id="usernameInput" type="text" maxlength="30" placeholder="username">
+          </div>
+          <div class="field">
+            <label for="waInput">Nomor WhatsApp (opsional)</label>
+            <input id="waInput" type="tel" maxlength="20" placeholder="08xxxxxxxxxx">
+          </div>
+
+          <button class="btn btn-primary" type="submit">Simpan Perubahan</button>
+        </form>
+
+        <button class="btn btn-ghost" id="logoutBtn" type="button">Keluar dari Akun</button>
+        <button class="btn btn-danger" id="clearLocalBtn" type="button">Hapus Data Lokal</button>
+
+        <p class="notice">
+          Data profil disimpan di browser. Jika kamu login via Supabase, sebagian data juga tersimpan di server.
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>Home</a>
+  <a href="chat.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>Chat</a>
+  <a href="status.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>Status</a>
+  <a href="friends.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Teman</a>
+  <a href="profile.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>Profil</a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const toast = document.getElementById('toast');
+let photoData = '';
+let toastTimer;
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('oer_profile') || '{}'); }
+  catch { return {}; }
+}
+
+function saveProfile(data) {
+  try {
+    localStorage.setItem('oer_profile', JSON.stringify(data));
+    return true;
+  } catch {
+    showToast('Penyimpanan penuh');
+    return false;
+  }
+}
+
+function renderProfile() {
+  const p = getProfile();
+  photoData = p.photo || '';
+  const name = p.name || 'Pengguna OER';
+  const username = p.username || 'user';
+
+  document.getElementById('displayName').textContent = name;
+  document.getElementById('displayHandle').textContent = '@' + username;
+  document.getElementById('nameInput').value = p.name || '';
+  document.getElementById('usernameInput').value = p.username || '';
+  document.getElementById('waInput').value = p.whatsapp || '';
+
+  const avatar = document.getElementById('avatarPreview');
+  if (photoData) {
+    avatar.innerHTML = `<img src="${photoData}" alt="Foto profil">`;
+  } else {
+    avatar.textContent = name.trim().slice(0, 1).toUpperCase() || 'O';
+  }
+}
+
+document.getElementById('photoInput').addEventListener('change', async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    showToast('Pilih file gambar');
+    return;
+  }
+  if (file.size > 3 * 1024 * 1024) {
+    showToast('Maksimal 3 MB');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    photoData = reader.result;
+    document.getElementById('avatarPreview').innerHTML = `<img src="${photoData}" alt="Foto profil">`;
+    showToast('Foto dipilih');
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('profileForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('nameInput').value.trim(),
+    username: document.getElementById('usernameInput').value.trim().replace(/^@/, ''),
+    whatsapp: document.getElementById('waInput').value.trim(),
+    photo: photoData
+  };
+  if (!data.name) {
+    showToast('Nama wajib diisi');
+    return;
+  }
+  if (saveProfile(data)) {
+    renderProfile();
+    showToast('Profil disimpan');
+  }
+});
+
+document.getElementById('clearLocalBtn').addEventListener('click', () => {
+  if (!confirm('Hapus semua data lokal (profil, status, chat)?')) return;
+  localStorage.removeItem('oer_profile');
+  localStorage.removeItem('oer_status');
+  // IndexedDB chat akan tetap ada, user bisa clear manual di browser
+  photoData = '';
+  renderProfile();
+  showToast('Data lokal dihapus');
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  // Kalau pakai Supabase, bisa ditambah signOut di sini
+  showToast('Fitur logout akan aktif setelah login Supabase');
+});
+
+renderProfile();
+</script>
+</body>
+</html>
