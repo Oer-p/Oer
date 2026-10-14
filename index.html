@@ -684,13 +684,13 @@
     const SUPABASE_URL = 'https://mkjetsmaozegaqbgfsyk.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_QIxIe-teLAlFNdGX77pMGw_3NZkPJw1';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let supabaseClient = null;
+    let isLoginMode = true;
 
     // ====================== DOM ======================
     const splash = document.getElementById('splash');
     const authScreen = document.getElementById('auth-screen');
     const homeScreen = document.getElementById('home-screen');
-
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const switchLink = document.getElementById('switch-link');
@@ -699,8 +699,6 @@
     const authDesc = document.getElementById('auth-desc');
     const errorMsg = document.getElementById('error-msg');
     const successMsg = document.getElementById('success-msg');
-
-    let isLoginMode = true;
 
     // ====================== HELPERS ======================
     function showError(msg) {
@@ -720,134 +718,160 @@
       successMsg.style.display = 'none';
     }
 
-    function setLoading(btn, loading) {
+    function setLoading(btn, loading, text) {
       if (loading) {
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner"></div>';
       } else {
         btn.disabled = false;
-        btn.innerHTML = isLoginMode ? '<span>Masuk</span>' : '<span>Daftar Sekarang</span>';
+        btn.innerHTML = '<span>' + (text || (isLoginMode ? 'Masuk' : 'Daftar Sekarang')) + '</span>';
       }
     }
 
-    // ====================== UI SWITCH ======================
-    function showSplashThenHome(user) {
-      // Update user info
-      updateUserUI(user);
+    function getClient() {
+      if (!supabaseClient) {
+        if (!window.supabase || !window.supabase.createClient) {
+          throw new Error('Supabase library gagal load. Cek koneksi internet.');
+        }
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+      return supabaseClient;
+    }
 
-      // Show splash for animation, then home
+    // ====================== UI ======================
+    function goToHome(user) {
+      // Update UI user
+      const name = (user && user.user_metadata && user.user_metadata.full_name) || 
+                   (user && user.email ? user.email.split('@')[0] : 'User');
+      const email = (user && user.email) || '';
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = email;
+      document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+
+      // Sembunyikan semua, tampilkan home
+      splash.classList.add('hide');
+      authScreen.style.display = 'none';
+      homeScreen.style.display = 'flex';
+    }
+
+    function goToAuth() {
+      splash.classList.add('hide');
+      homeScreen.style.display = 'none';
+      authScreen.style.display = 'flex';
+    }
+
+    function showLogoThenHome(user) {
+      // Pastikan splash terlihat
       splash.classList.remove('hide');
       authScreen.style.display = 'none';
       homeScreen.style.display = 'none';
 
-      setTimeout(() => {
-        splash.classList.add('hide');
-        setTimeout(() => {
-          homeScreen.style.display = 'flex';
-        }, 600);
-      }, 2200); // tampil logo animasi ~2.2 detik
+      // Setelah 1.6 detik → masuk home
+      setTimeout(function() {
+        goToHome(user);
+      }, 1600);
     }
 
-    function showAuth() {
-      splash.classList.add('hide');
-      homeScreen.style.display = 'none';
-      setTimeout(() => {
-        authScreen.style.display = 'flex';
-      }, 400);
-    }
-
-    function updateUserUI(user) {
-      const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
-      const email = user.email || '';
-      const initial = name.charAt(0).toUpperCase();
-
-      document.getElementById('user-name').textContent = name;
-      document.getElementById('user-email').textContent = email;
-      document.getElementById('user-avatar').textContent = initial;
-    }
-
-    // ====================== AUTH LOGIC ======================
-    async function checkSession() {
+    // ====================== AUTH ======================
+    async function initApp() {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) throw error;
+        const client = getClient();
 
-        if (session?.user) {
-          // Sudah login → langsung splash + home
-          showSplashThenHome(session.user);
+        // Cek session dengan timeout 3 detik
+        let session = null;
+        try {
+          const result = await Promise.race([
+            client.auth.getSession(),
+            new Promise(function(_, reject) {
+              setTimeout(function() { reject(new Error('timeout')); }, 3000);
+            })
+          ]);
+          if (result && result.data && result.data.session) {
+            session = result.data.session;
+          }
+        } catch (e) {
+          console.log('getSession error/timeout:', e.message);
+        }
+
+        if (session && session.user) {
+          // Sudah login → tampil logo dulu lalu home
+          showLogoThenHome(session.user);
         } else {
-          // Belum login
-          showAuth();
+          // Belum login → langsung ke form login
+          goToAuth();
         }
       } catch (err) {
-        console.error('Session check error:', err);
-        showAuth();
+        console.error('Init error:', err);
+        // Apapun errornya → tampilkan form login
+        goToAuth();
       }
     }
 
     // Login
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       clearMessages();
-      const btn = document.getElementById('login-btn');
+      var btn = document.getElementById('login-btn');
       setLoading(btn, true);
 
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
+      var email = document.getElementById('login-email').value.trim();
+      var password = document.getElementById('login-password').value;
 
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        var client = getClient();
+        var result = await client.auth.signInWithPassword({ email: email, password: password });
+        if (result.error) throw result.error;
 
-        // Berhasil login
-        showSplashThenHome(data.user);
+        showLogoThenHome(result.data.user);
       } catch (err) {
+        console.error(err);
         showError(err.message || 'Gagal masuk. Cek email & password.');
-        setLoading(btn, false);
+        setLoading(btn, false, 'Masuk');
       }
     });
 
     // Register
-    registerForm.addEventListener('submit', async (e) => {
+    registerForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       clearMessages();
-      const btn = document.getElementById('reg-btn');
+      var btn = document.getElementById('reg-btn');
       setLoading(btn, true);
 
-      const name = document.getElementById('reg-name').value.trim();
-      const email = document.getElementById('reg-email').value.trim();
-      const password = document.getElementById('reg-password').value;
+      var name = document.getElementById('reg-name').value.trim();
+      var email = document.getElementById('reg-email').value.trim();
+      var password = document.getElementById('reg-password').value;
 
       try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { full_name: name }
-          }
+        var client = getClient();
+        var result = await client.auth.signUp({
+          email: email,
+          password: password,
+          options: { data: { full_name: name } }
         });
-        if (error) throw error;
+        if (result.error) throw result.error;
 
-        // Kalau email confirmation aktif di Supabase, user harus konfirmasi dulu
-        if (data.user && !data.session) {
+        if (result.data.user && !result.data.session) {
+          // Perlu konfirmasi email
           showSuccess('Berhasil daftar! Cek email kamu untuk konfirmasi, lalu login.');
-          setLoading(btn, false);
-          // Switch ke login
-          setTimeout(() => {
+          setLoading(btn, false, 'Daftar Sekarang');
+          setTimeout(function() {
             isLoginMode = true;
             toggleAuthMode();
-          }, 2000);
-        } else if (data.session) {
-          // Langsung login (kalau email confirmation dimatikan)
-          showSplashThenHome(data.user);
+          }, 2500);
+        } else if (result.data.session) {
+          showLogoThenHome(result.data.user);
+        } else {
+          showSuccess('Berhasil daftar! Silakan login.');
+          setLoading(btn, false, 'Daftar Sekarang');
         }
       } catch (err) {
+        console.error(err);
         showError(err.message || 'Gagal daftar.');
-        setLoading(btn, false);
+        setLoading(btn, false, 'Daftar Sekarang');
       }
     });
 
-    // Toggle Login / Register
+    // Toggle Login <-> Daftar
     function toggleAuthMode() {
       clearMessages();
       isLoginMode = !isLoginMode;
@@ -869,32 +893,38 @@
       }
     }
 
-    switchLink.addEventListener('click', (e) => {
+    switchLink.addEventListener('click', function(e) {
       e.preventDefault();
       toggleAuthMode();
     });
 
     // Logout
-    document.getElementById('btn-logout').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      homeScreen.style.display = 'none';
-      showAuth();
+    document.getElementById('btn-logout').addEventListener('click', async function() {
+      try {
+        if (supabaseClient) await supabaseClient.auth.signOut();
+      } catch (e) {}
+      goToAuth();
     });
 
-    // Listen auth state change (optional, untuk multi-tab)
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
-        homeScreen.style.display = 'none';
-        showAuth();
+    // ====================== START ======================
+    // Paksa tampilkan Login paling lambat 3.5 detik
+    setTimeout(function() {
+      if (authScreen.style.display !== 'flex' && homeScreen.style.display !== 'flex') {
+        console.warn('Force show login form');
+        goToAuth();
       }
-    });
+    }, 3500);
 
-    // ====================== INIT ======================
-    // Mulai cek session setelah halaman load
-    window.addEventListener('DOMContentLoaded', () => {
-      // Beri sedikit delay supaya animasi splash terlihat bagus
-      setTimeout(checkSession, 100);
-    });
+    // Mulai aplikasi
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(initApp, 800); // biar animasi logo sempat jalan sebentar
+      });
+    } else {
+      setTimeout(initApp, 800);
+    }
   </script>
+
+
 </body>
 </html>
