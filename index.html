@@ -751,14 +751,35 @@ $('#modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg')closeModal
 renderProfile();renderFriends();
 
 <script>
-document.addEventListener('click', function (event) {
-  const tombolProfil = event.target.closest('[data-page="profile"]');
+document.addEventListener('DOMContentLoaded', function () {
+  const header = document.querySelector('header');
+  if (!header) return;
 
-  if (tombolProfil) {
-    event.preventDefault();
-    window.location.href = './account.html';
+  const accountMenu = document.createElement('div');
+  accountMenu.style.cssText =
+    'display:flex;gap:8px;align-items:center;flex-shrink:0;';
+
+  accountMenu.innerHTML = `
+    <a href="./account.html"
+       style="background:#102527;color:#c8fff0;border:1px solid #285054;padding:10px 12px;border-radius:11px;text-decoration:none;font-size:13px">
+       Login
+    </a>
+    <a href="./account.html"
+       style="background:#c8fff0;color:#05221d;padding:10px 12px;border-radius:11px;text-decoration:none;font-size:13px;font-weight:bold">
+       Daftar
+    </a>
+  `;
+
+  const profileButton = header.querySelector('[data-page="profile"]');
+  if (profileButton) {
+    profileButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = './account.html';
+    });
   }
-}, true);
+
+  header.appendChild(accountMenu);
+});
 </script>
 </body>
 </html>
