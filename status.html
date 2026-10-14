@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080a0d">
+<meta name="description" content="OER Status - bagikan momenmu">
+<title>OER — Status</title>
+<style>
+:root{--bg:#080a0d;--panel:#0d1015;--panel2:#141820;--panel3:#1d232d;--border:#252b35;--text:#f6f7fa;--muted:#929baa;--cyan:#06b9dd;--cyan2:#079bbf}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow:hidden}
+button,input,textarea{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+[hidden]{display:none!important}
+.app{display:grid;grid-template-columns:330px minmax(0,1fr);height:100dvh;min-height:450px;background:var(--bg)}
+.sidebar{min-width:0;display:flex;flex-direction:column;background:linear-gradient(160deg,#0c0f13,#090b0e);border-right:1px solid var(--border);overflow:hidden}
+.sidebar-scroll{flex:1;overflow-y:auto;padding:17px 14px 20px;scrollbar-width:thin;scrollbar-color:#303743 transparent}
+.brand{display:flex;align-items:center;gap:9px;margin:0 9px 18px}
+.brand-logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,#05c4e8,#079ecb);display:grid;place-items:center;flex-shrink:0}
+.brand-logo svg{width:23px;height:23px}.brand-name{font-size:24px;font-weight:800;letter-spacing:-1px}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid transparent;border-radius:28px;height:47px;padding:0 14px;margin-bottom:17px}
+.search-box:focus-within{border-color:#087d96}.search-box svg{width:21px;height:21px;color:#a4adbd;flex-shrink:0}
+.search-box input{width:100%;border:none;outline:none;background:transparent;color:white;font-size:14px;min-width:0}.search-box input::placeholder{color:var(--muted)}
+.menu{display:grid;gap:5px}
+.menu-item{width:100%;display:flex;align-items:center;gap:14px;height:48px;padding:0 16px;background:transparent;border:none;border-radius:17px;text-align:left;color:#a7afbd;font-size:15px;font-weight:600;text-decoration:none}
+.menu-item svg{width:21px;height:21px;flex-shrink:0}
+.menu-item:hover{background:#171c24;color:white}
+.menu-item.active{color:white;background:linear-gradient(110deg,#262d37,#202630)}
+.section{border-top:1px solid var(--border);margin-top:17px;padding-top:17px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 10px;margin-bottom:12px;font-size:15px;font-weight:650}
+.section-heading button{border:none;background:transparent;color:var(--muted);display:grid;place-items:center;padding:3px}
+.section-heading svg{width:19px;height:19px}
+.status-add{display:flex;align-items:center;gap:12px;border:none;background:transparent;text-align:left;width:100%;border-radius:15px;padding:8px 10px}
+.status-add:hover{background:#151a22}
+.add-circle{width:45px;height:45px;flex-shrink:0;border-radius:50%;background:#1c222c;display:grid;place-items:center;color:#bac3d2}
+.add-circle svg{width:22px;height:22px}
+.status-copy strong,.status-copy small{display:block}
+.status-copy strong{font-size:13px;font-weight:600;margin-bottom:4px}
+.status-copy small{font-size:11px;color:var(--muted)}
+.status-list{display:grid;gap:5px}
+.status-person{display:flex;align-items:center;gap:11px;width:100%;border:none;border-radius:13px;background:transparent;padding:8px 10px;text-align:left}
+.status-person:hover{background:#171c24}
+.avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;overflow:hidden;background:#202630;color:#aab5c7;font-weight:700;font-size:14px}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.person-info{min-width:0;flex:1}
+.person-info strong,.person-info small{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.person-info strong{font-size:13px;font-weight:600}
+.person-info small{color:var(--muted);margin-top:4px;font-size:11px}
+.about-oer{margin:18px 0 4px;padding:16px 13px;background:linear-gradient(145deg,#141920,#0e1116);border:1px solid #262d37;border-radius:17px}
+.about-oer-title{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.about-oer-logo{width:32px;height:32px;display:grid;place-items:center;background:#08b7d8;border-radius:10px;color:white;font-weight:800;font-size:15px;flex-shrink:0}
+.about-oer-title strong{font-size:14px;color:#fff}
+.about-oer-title small{display:block;color:#8f9aaa;font-size:10px;margin-top:3px}
+.about-oer-description{font-size:11px;line-height:1.7;color:#a6afbd;margin-bottom:12px}
+.about-oer-features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.about-oer-feature{display:flex;align-items:center;gap:7px;padding:9px 7px;background:#1b212a;border:1px solid #252d38;border-radius:10px;color:#dce2eb;font-size:10px;line-height:1.4;min-width:0}
+.about-oer-feature span{font-size:15px;flex-shrink:0}
+.about-oer-footer{border-top:1px solid #282e38;margin-top:12px;padding-top:10px;color:#768294;font-size:10px;line-height:1.7}
+.sidebar-bottom{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);background:#0b0d11;padding:10px 5px 9px;flex-shrink:0}
+.bottom-link{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:53px;background:transparent;border:none;color:#929bad;font-size:10px;text-decoration:none}
+.bottom-link svg{width:21px;height:21px}
+.bottom-link.active,.bottom-link:hover{color:white}
+.main{display:flex;flex-direction:column;min-width:0;min-height:0;background:radial-gradient(ellipse at 70% 40%,#11151c22,transparent 55%),#080a0d}
+.topbar{height:70px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.topbar-left{display:flex;align-items:center;gap:10px;min-width:0}
+.mobile-brand{display:none}
+.topbar h1{font-size:23px;font-weight:750;letter-spacing:-.6px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:40px;height:40px;border:none;background:transparent;border-radius:50%;display:grid;place-items:center;color:#e1e5ed}
+.icon-btn:hover{background:#1a2029}
+.icon-btn svg{width:22px;height:22px}
+.mobile-back{display:none}
+.page-view{flex:1;min-height:0;overflow-y:auto;padding:26px}
+.page-card{width:100%;max-width:520px;margin:0 auto;padding:24px;background:#10141a;border:1px solid var(--border);border-radius:22px}
+.page-card h2{font-size:21px;margin-bottom:8px}
+.page-subtitle{color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:22px}
+.primary-btn{border:none;border-radius:12px;background:#06a9cc;color:white;font-size:13px;font-weight:650;padding:13px 16px;width:100%}
+.primary-btn:hover{background:#078ba8}
+.notice{color:var(--muted);font-size:11px;line-height:1.7;margin-top:16px}
+.status-item{display:flex;align-items:center;gap:12px;padding:12px 10px;border-radius:14px;margin-bottom:6px;background:transparent}
+.status-item:hover{background:#171c24}
+.status-item .avatar{width:48px;height:48px;font-size:16px}
+.status-item .person-info strong{font-size:14px}
+.status-item .person-info small{font-size:12px;margin-top:3px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-state-icon{width:80px;height:80px;display:grid;place-items:center;margin:0 auto 16px;border-radius:50%;background:#171c24}
+.empty-state-icon svg{width:36px;height:36px;stroke:#909bad}
+.empty-state h3{font-size:16px;color:#b2bac8;margin-bottom:8px}
+.empty-state p{font-size:13px;line-height:1.6;max-width:280px;margin:0 auto}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,15px);background:#202731;border:1px solid #37414f;color:white;border-radius:13px;padding:12px 16px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:1400px){.app{grid-template-columns:345px minmax(0,1fr)}}
+@media(max-width:800px){.app{grid-template-columns:280px minmax(0,1fr)}.sidebar-scroll{padding-left:11px;padding-right:11px}.topbar{padding:0 14px}}
+@media(max-width:560px){
+ body{overflow:hidden}.app{display:block;position:relative;height:100dvh;min-height:0}
+ .sidebar{position:absolute;inset:0;z-index:2;width:100%;height:100%;border-right:none;display:none}
+ .main{display:flex;position:absolute;inset:0;width:100%;height:100%}
+ .sidebar-scroll{padding:14px 12px 16px}.brand{margin:0 5px 16px}
+ .brand-logo{width:34px;height:34px;border-radius:10px}.brand-name{font-size:23px}
+ .search-box{height:45px;margin-bottom:14px}.menu-item{height:45px;border-radius:15px}
+ .section{margin-top:13px;padding-top:14px}.topbar{height:61px;padding:0 9px;gap:4px}.topbar h1{font-size:18px}
+ .topbar-actions{gap:0}.icon-btn{width:35px;height:35px}.mobile-back{display:grid;width:32px}
+ .mobile-brand{display:grid;place-items:center;width:29px;height:29px;border-radius:8px;background:#08b8d8;flex-shrink:0}.mobile-brand svg{width:20px;height:20px}
+ .page-view{padding:15px 10px}.page-card{padding:18px 14px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="sidebar-scroll">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/>
+          </svg>
+        </div>
+        <span class="brand-name">OER</span>
+      </div>
+
+      <label class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true">
+          <circle cx="10.8" cy="10.8" r="7.2"/><path d="m16.2 16.2 5 5"/>
+        </svg>
+        <input type="search" placeholder="Cari chat..." autocomplete="off" aria-label="Cari chat" disabled>
+      </label>
+
+      <nav class="menu" aria-label="Navigasi utama">
+        <a class="menu-item" href="chat.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
+          </svg>
+          Chat
+        </a>
+
+        <a class="menu-item active" href="status.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/>
+          </svg>
+          Status
+        </a>
+
+        <a class="menu-item" href="friends.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Teman
+        </a>
+      </nav>
+
+      <section class="section">
+        <div class="section-heading">
+          <span>Status</span>
+        </div>
+        <button class="status-add" id="addStatusSidebar">
+          <span class="add-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </span>
+          <span class="status-copy">
+            <strong>Tambah Status</strong>
+            <small>Bagikan momenmu</small>
+          </span>
+        </button>
+        <div class="status-list" id="statusListSidebar"></div>
+      </section>
+
+      <section class="about-oer">
+        <div class="about-oer-title">
+          <div class="about-oer-logo">O</div>
+          <div>
+            <strong>Tentang OER</strong>
+            <small>Ruang komunikasi digital</small>
+          </div>
+        </div>
+        <p class="about-oer-description">OER adalah platform komunikasi untuk mengirim pesan dan berbagi berbagai jenis file dengan mudah.</p>
+        <div class="about-oer-features">
+          <div class="about-oer-feature"><span>💬</span><div>Pesan teks</div></div>
+          <div class="about-oer-feature"><span>📦</span><div>Aplikasi yang dapat diinstal</div></div>
+          <div class="about-oer-feature"><span>📄</span><div>Dokumen dan file</div></div>
+          <div class="about-oer-feature"><span>🖼️</span><div>Foto JPG</div></div>
+          <div class="about-oer-feature"><span>🎬</span><div>Video MP4</div></div>
+          <div class="about-oer-feature"><span>🎵</span><div>Musik MP3</div></div>
+        </div>
+        <div class="about-oer-footer">
+          OER — Berbagi pesan, file, dan momen dalam satu tempat.<br>© 2026 OER. Semua hak dilindungi.
+        </div>
+      </section>
+    </div>
+
+    <footer class="sidebar-bottom">
+      <a class="bottom-link" href="chat.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/>
+        </svg>
+        Home
+      </a>
+      <a class="bottom-link" href="chat.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>
+        </svg>
+        Notifikasi
+      </a>
+      <a class="bottom-link" href="chat.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="m19.4 15 .1.1 1.4 1.1-1.5 2.6-1.7-.6a8 8 0 0 1-1.7 1l-.3 1.8h-3l-.3-1.8a8 8 0 0 1-1.7-1l-1.7.6-1.5-2.6 1.4-1.1a8 8 0 0 1 0-2l-1.4-1.1 1.5-2.6 1.7.6a8 8 0 0 1 1.7-1l.3-1.8h3l.3 1.8a8 8 0 0 1 1.7 1l1.7-.6 1.5 2.6-1.4 1.1a8 8 0 0 1 0 2Z" transform="translate(-1 -1)"/>
+        </svg>
+        Pengaturan
+      </a>
+    </footer>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <a class="icon-btn mobile-back" href="chat.html" aria-label="Kembali">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </a>
+        <div class="mobile-brand" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/>
+          </svg>
+        </div>
+        <h1>Status</h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="moreButton" aria-label="Menu lainnya">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="page-view">
+      <div class="page-card">
+        <h2>Status OER</h2>
+        <p class="page-subtitle">Bagikan momen dan lihat status teman.</p>
+
+        <button class="primary-btn" id="createStatus">+ Buat Status</button>
+
+        <div id="statusList" style="margin-top:20px"></div>
+
+        <p class="notice">
+          Status yang dibuat saat ini hanya tersimpan di perangkat ini selama sesi terbuka.
+          Agar status bisa dilihat pengguna lain, OER perlu dihubungkan ke server/backend.
+        </p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+const $ = selector => document.querySelector(selector);
+const toast = $("#toast");
+let toastTimer = null;
+let statusItems = [];
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[char]));
+}
+
+function initials(name) {
+  return String(name || "OER").trim().split(/\s+/).slice(0, 2).map(part => part[0] || "").join("").toUpperCase();
+}
+
+function avatarHTML(person) {
+  const photo = person.photo
+    ? `<img src="${escapeHTML(person.photo)}" alt="">`
+    : `<span>${escapeHTML(initials(person.name))}</span>`;
+  return `<div class="avatar">${photo}</div>`;
+}
+
+function getSavedProfile() {
+  try {
+    return JSON.parse(localStorage.getItem("oer_profile") || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function loadStatuses() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("oer_status") || "[]");
+    statusItems = Array.isArray(saved) ? saved : [];
+  } catch {
+    statusItems = [];
+  }
+}
+
+function saveStatuses() {
+  try {
+    localStorage.setItem("oer_status", JSON.stringify(statusItems));
+  } catch {
+    showToast("Gagal menyimpan status (penyimpanan penuh).");
+  }
+}
+
+function renderStatuses() {
+  const list = $("#statusList");
+  const sidebarList = $("#statusListSidebar");
+
+  if (!statusItems.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/>
+          </svg>
+        </div>
+        <h3>Belum ada status</h3>
+        <p>Buat status pertama kamu untuk membagikan momen.</p>
+      </div>
+    `;
+    if (sidebarList) sidebarList.innerHTML = "";
+    return;
+  }
+
+  const html = statusItems.map(item => `
+    <div class="status-item">
+      ${avatarHTML(item)}
+      <span class="person-info">
+        <strong>${escapeHTML(item.name)}</strong>
+        <small>${escapeHTML(item.text)}</small>
+      </span>
+    </div>
+  `).join("");
+
+  list.innerHTML = html;
+  if (sidebarList) sidebarList.innerHTML = html;
+}
+
+function createStatus() {
+  const profile = getSavedProfile();
+  const text = prompt("Tulis status kamu:");
+  if (text === null || !text.trim()) return;
+
+  statusItems.unshift({
+    id: String(Date.now()),
+    name: profile.name || "Saya",
+    photo: profile.photo || "",
+    text: text.trim(),
+    time: new Date().toLocaleString("id-ID")
+  });
+
+  saveStatuses();
+  renderStatuses();
+  showToast("Status ditambahkan.");
+}
+
+$("#createStatus").addEventListener("click", createStatus);
+$("#addStatusSidebar")?.addEventListener("click", createStatus);
+$("#moreButton").addEventListener("click", () => showToast("Menu OER"));
+
+loadStatuses();
+renderStatuses();
+</script>
+</body>
+</html>
