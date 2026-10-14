@@ -133,7 +133,13 @@ button,input,textarea{font:inherit}button{cursor:pointer;color:inherit}button:fo
 </a>
        
         <button class="menu-item" data-page="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>Status</button>
-        <button class="menu-item" data-page="friends"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>Teman</button>
+        
+<button aria-label="Buka teman" type="button" onclick="window.location.href='friends.html'">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="m9 18 6-6-6-6"/>
+  </svg>
+</button>
+       
       </nav>
       <section class="section">
         <div class="section-heading"><span>Status</span><button aria-label="Buka status" data-page="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button></div>
