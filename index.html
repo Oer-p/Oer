@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -7,2325 +6,279 @@
 <meta name="theme-color" content="#080a0d">
 <meta name="description" content="OER Chat - ruang percakapan modern">
 <title>OER — Chat</title>
-
 <style>
-:root {
-  --bg: #080a0d;
-  --panel: #0d1015;
-  --panel2: #141820;
-  --panel3: #1d232d;
-  --border: #252b35;
-  --text: #f6f7fa;
-  --muted: #929baa;
-  --cyan: #06b9dd;
-  --cyan2: #079bbf;
-  --radius: 22px;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
-               Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-button, input, textarea {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-  color: inherit;
-}
-
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 3px;
-}
-
-.app {
-  display: grid;
-  grid-template-columns: 350px minmax(0, 1fr);
-  height: 100dvh;
-  min-height: 450px;
-  background: var(--bg);
-}
-
-/* SIDEBAR */
-
-.sidebar {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(160deg, #0c0f13, #090b0e);
-  border-right: 1px solid var(--border);
-  overflow: hidden;
-}
-
-.sidebar-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 22px 17px 20px;
-  scrollbar-width: thin;
-  scrollbar-color: #303743 transparent;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  margin: 2px 13px 28px;
-}
-
-.brand-logo {
-  width: 43px;
-  height: 43px;
-  border-radius: 13px;
-  background: linear-gradient(145deg, #05c4e8, #079ecb);
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 20px #00bce51a;
-}
-
-.brand-logo svg {
-  width: 27px;
-  height: 27px;
-}
-
-.brand-name {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -1.1px;
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--panel2);
-  border: 1px solid transparent;
-  border-radius: 30px;
-  height: 55px;
-  padding: 0 17px;
-  margin-bottom: 24px;
-  transition: border .2s;
-}
-
-.search-box:focus-within {
-  border-color: #087d96;
-}
-
-.search-box svg {
-  width: 23px;
-  height: 23px;
-  color: #a4adbd;
-  flex-shrink: 0;
-}
-
-.search-box input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: white;
-  font-size: 15px;
-  min-width: 0;
-}
-
-.search-box input::placeholder {
-  color: var(--muted);
-}
-
-.menu {
-  display: grid;
-  gap: 6px;
-}
-
-.menu-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 17px;
-  height: 57px;
-  padding: 0 20px;
-  background: transparent;
-  border: none;
-  border-radius: 24px;
-  text-align: left;
-  color: #a7afbd;
-  font-size: 16px;
-  font-weight: 600;
-  transition: background .2s, color .2s;
-}
-
-.menu-item svg {
-  width: 23px;
-  height: 23px;
-  flex-shrink: 0;
-}
-
-.menu-item:hover {
-  background: #171c24;
-  color: white;
-}
-
-.menu-item.active {
-  color: white;
-  background: linear-gradient(110deg, #262d37, #202630);
-}
-
-.menu-item.active svg {
-  color: white;
-}
-
-.section {
-  border-top: 1px solid var(--border);
-  margin-top: 21px;
-  padding-top: 22px;
-}
-
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 0 13px;
-  margin-bottom: 18px;
-  font-size: 17px;
-  font-weight: 650;
-}
-
-.section-heading button {
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  padding: 3px;
-}
-
-.section-heading svg {
-  width: 21px;
-  height: 21px;
-}
-
-.status-add {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  border: none;
-  background: transparent;
-  text-align: left;
-  width: 100%;
-  border-radius: 16px;
-  padding: 9px 12px;
-}
-
-.status-add:hover {
-  background: #151a22;
-}
-
-.add-circle {
-  width: 53px;
-  height: 53px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: #1c222c;
-  display: grid;
-  place-items: center;
-  color: #bac3d2;
-}
-
-.add-circle svg {
-  width: 25px;
-  height: 25px;
-}
-
-.status-copy strong,
-.status-copy small {
-  display: block;
-}
-
-.status-copy strong {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-.status-copy small {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.status-list,
-.friend-list {
-  display: grid;
-  gap: 8px;
-}
-
-.status-person,
-.friend-person {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  border: none;
-  border-radius: 14px;
-  background: transparent;
-  padding: 9px 12px;
-  text-align: left;
-}
-
-.status-person:hover,
-.friend-person:hover {
-  background: #171c24;
-}
-
-.avatar {
-  width: 43px;
-  height: 43px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: #202630;
-  color: #aab5c7;
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.person-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.person-info strong,
-.person-info small {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.person-info strong {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.person-info small {
-  color: var(--muted);
-  margin-top: 5px;
-  font-size: 12px;
-}
-
-.empty-friends {
-  text-align: center;
-  padding: 28px 15px 22px;
-  color: var(--muted);
-}
-
-.empty-friends-icon {
-  width: 76px;
-  height: 76px;
-  display: grid;
-  place-items: center;
-  margin: 0 auto 17px;
-  border-radius: 50%;
-  background: #171c24;
-}
-
-.empty-friends-icon svg {
-  width: 39px;
-  height: 39px;
-  stroke: #909bad;
-}
-
-.empty-friends strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #b2bac8;
-  margin-bottom: 9px;
-}
-
-.empty-friends p {
-  font-size: 12px;
-  line-height: 1.7;
-  max-width: 220px;
-  margin: auto;
-}
-
-.sidebar-bottom {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--border);
-  background: #0b0d11;
-  padding: 15px 5px 13px;
-  flex-shrink: 0;
-}
-
-.bottom-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 60px;
-  background: transparent;
-  border: none;
-  color: #929bad;
-  font-size: 11px;
-}
-
-.bottom-link svg {
-  width: 22px;
-  height: 22px;
-}
-
-.bottom-link.active,
-.bottom-link:hover {
-  color: white;
-}
-
-/* MAIN CHAT */
-
-.main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  background:
-    radial-gradient(ellipse at 70% 40%, #11151c22, transparent 55%),
-    #080a0d;
-}
-
-.topbar {
-  height: 79px;
-  padding: 0 25px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.mobile-brand {
-  display: none;
-}
-
-.topbar h1 {
-  font-size: 26px;
-  font-weight: 750;
-  letter-spacing: -.7px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.icon-btn {
-  width: 42px;
-  height: 42px;
-  border: none;
-  background: transparent;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: #e1e5ed;
-}
-
-.icon-btn:hover {
-  background: #1a2029;
-}
-
-.icon-btn svg {
-  width: 24px;
-  height: 24px;
-}
-
-.mobile-back {
-  display: none;
-}
-
-.chat-area {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.empty-chat {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 35px 20px;
-  text-align: center;
-}
-
-.chat-art {
-  width: 155px;
-  height: 145px;
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.bubble-art {
-  position: absolute;
-  border-radius: 45% 45% 45% 12%;
-  background: linear-gradient(145deg, #303744, #151a22);
-  display: grid;
-  place-items: center;
-}
-
-.bubble-art.back {
-  width: 108px;
-  height: 105px;
-  top: 0;
-  left: 10px;
-  transform: rotate(-5deg);
-}
-
-.bubble-art.front {
-  width: 108px;
-  height: 94px;
-  right: 0;
-  bottom: 4px;
-  border-radius: 42% 42% 12% 42%;
-  border: 1px solid #3c4554;
-}
-
-.dots {
-  display: flex;
-  gap: 9px;
-}
-
-.dots i {
-  width: 11px;
-  height: 11px;
-  background: #8792a5;
-  border-radius: 50%;
-}
-
-.empty-chat h2 {
-  font-size: 24px;
-  letter-spacing: -.5px;
-  margin-bottom: 13px;
-}
-
-.empty-chat p {
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--muted);
-  max-width: 360px;
-}
-
-.messages {
-  padding: 24px clamp(14px, 5%, 60px);
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-}
-
-.message {
-  align-self: flex-end;
-  max-width: min(78%, 470px);
-  min-width: 65px;
-  background: #087e9b;
-  padding: 12px 15px 8px;
-  border-radius: 17px 17px 4px 17px;
-  overflow-wrap: anywhere;
-  font-size: 14px;
-  line-height: 1.55;
-}
-
-.message-time {
-  font-size: 10px;
-  text-align: right;
-  margin-top: 5px;
-  color: #d5edf3;
-}
-
-.message.attachment {
-  background: #18212b;
-  border: 1px solid #2c3947;
-}
-
-.message.attachment .message-time {
-  color: #9eacbd;
-}
-
-.message-file {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  margin-bottom: 5px;
-}
-
-.message-file-icon {
-  width: 41px;
-  height: 41px;
-  border-radius: 12px;
-  background: #283342;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
-
-.message-file-icon svg {
-  width: 22px;
-  height: 22px;
-}
-
-.message-file-name {
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.message-file-type {
-  font-size: 11px;
-  color: #9da9bb;
-  margin-top: 4px;
-}
-
-.message-media {
-  display: block;
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 11px;
-  margin-bottom: 8px;
-}
-
-.message audio {
-  max-width: 100%;
-  width: 280px;
-}
-
-.message-download {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  margin-top: 8px;
-  text-decoration: none;
-  color: #bceeff;
-  font-size: 12px;
-}
-
-/* COMPOSER */
-
-.composer-wrap {
-  padding: 0 17px 18px;
-  flex-shrink: 0;
-}
-
-.composer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 61px;
-  padding: 7px 9px;
-  border: 1px solid #292f39;
-  border-radius: 35px;
-  background: linear-gradient(115deg, #171c24, #11151b);
-}
-
-.composer textarea {
-  resize: none;
-  min-width: 0;
-  flex: 1;
-  max-height: 110px;
-  padding: 11px 2px;
-  background: transparent;
-  color: white;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.composer textarea::placeholder {
-  color: #8c97a9;
-}
-
-.send-btn {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 50%;
-  background: #28303b;
-  color: white;
-  transition: background .2s;
-}
-
-.send-btn:hover {
-  background: var(--cyan2);
-}
-
-.send-btn svg {
-  width: 22px;
-  height: 22px;
-}
-
-.attachments {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 9px;
-  padding: 13px 8px 12px;
-  border-radius: 26px;
-  background: linear-gradient(120deg, #101318, #0c0f13);
-}
-
-.attach-btn {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 7px;
-  padding: 2px 0 3px;
-  border: none;
-  background: transparent;
-  min-width: 0;
-}
-
-.attach-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 17px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(145deg, #202733, #171c24);
-  color: #aeb9ca;
-  border: 1px solid #222a35;
-  transition: background .2s, color .2s;
-}
-
-.attach-btn:hover .attach-icon {
-  background: #153744;
-  color: #55dfff;
-}
-
-.attach-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.attach-btn strong {
-  font-size: 12px;
-  font-weight: 550;
-}
-
-.attach-btn small {
-  color: #8994a6;
-  font-size: 10px;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
-.hidden-input {
-  display: none;
-}
-
-/* PROFIL DAN HALAMAN LAIN */
-
-.page-view {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding: 30px;
-}
-
-.page-card {
-  width: 100%;
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 26px;
-  background: #10141a;
-  border: 1px solid var(--border);
-  border-radius: 24px;
-}
-
-.page-card h2 {
-  font-size: 22px;
-  margin-bottom: 9px;
-}
-
-.page-subtitle {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-  margin-bottom: 25px;
-}
-
-.profile-photo-area {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 25px;
-}
-
-.profile-photo {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: #202630;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  color: #aeb8c8;
-  flex-shrink: 0;
-}
-
-.profile-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-photo svg {
-  width: 39px;
-  height: 39px;
-}
-
-.upload-label {
-  display: inline-flex;
-  padding: 10px 14px;
-  background: #1e2630;
-  border: 1px solid #303a48;
-  border-radius: 12px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.upload-help {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 9px;
-}
-
-.field {
-  margin-bottom: 19px;
-}
-
-.field label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 9px;
-}
-
-.field input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 13px;
-  background: #0b0e13;
-  color: white;
-  border: 1px solid #29303a;
-  outline: none;
-}
-
-.field input:focus {
-  border-color: #0785a1;
-}
-
-.primary-btn {
-  border: none;
-  border-radius: 13px;
-  background: #06a9cc;
-  color: white;
-  font-size: 14px;
-  font-weight: 650;
-  padding: 14px 18px;
-  width: 100%;
-}
-
-.primary-btn:hover {
-  background: #078ba8;
-}
-
-.secondary-btn {
-  border: 1px solid #343c49;
-  background: #1a2029;
-  color: white;
-  border-radius: 12px;
-  padding: 11px 15px;
-  font-size: 13px;
-}
-
-.notice {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
-  margin-top: 18px;
-}
-
-.page-empty {
-  flex: 1;
-  min-height: 280px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 30px;
-}
-
-.page-empty .empty-friends-icon {
-  width: 90px;
-  height: 90px;
-}
-
-.page-empty h2 {
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-
-.page-empty p {
-  color: var(--muted);
-  max-width: 360px;
-  line-height: 1.7;
-  font-size: 14px;
-}
-
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 25px;
-  transform: translate(-50%, 15px);
-  background: #202731;
-  border: 1px solid #37414f;
-  color: white;
-  border-radius: 14px;
-  padding: 13px 18px;
-  font-size: 13px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .2s, transform .2s;
-  z-index: 20;
-  max-width: calc(100vw - 32px);
-  text-align: center;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
-@media (min-width: 1400px) {
-  .app {
-    grid-template-columns: 360px minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 800px) {
-  .app {
-    grid-template-columns: 290px minmax(0, 1fr);
-  }
-
-  .sidebar-scroll {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-
-  .brand {
-    margin-left: 8px;
-  }
-
-  .topbar {
-    padding: 0 15px;
-  }
-
-  .composer-wrap {
-    padding: 0 10px 12px;
-  }
-
-  .attach-icon {
-    width: 45px;
-    height: 45px;
-  }
-}
-
-@media (max-width: 560px) {
-  body {
-    overflow: hidden;
-  }
-
-  .app {
-    display: block;
-    position: relative;
-    height: 100dvh;
-    min-height: 0;
-  }
-
-  .sidebar {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    border-right: none;
-    display: flex;
-  }
-
-  .main {
-    display: none;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .app.chat-open .sidebar {
-    display: none;
-  }
-
-  .app.chat-open .main {
-    display: flex;
-  }
-
-  .sidebar-scroll {
-    padding: 16px 14px 18px;
-  }
-
-  .brand {
-    margin: 0 6px 20px;
-  }
-
-  .brand-logo {
-    width: 39px;
-    height: 39px;
-    border-radius: 12px;
-  }
-
-  .brand-name {
-    font-size: 25px;
-  }
-
-  .search-box {
-    height: 49px;
-    margin-bottom: 17px;
-  }
-
-  .menu-item {
-    height: 49px;
-    border-radius: 17px;
-  }
-
-  .section {
-    margin-top: 16px;
-    padding-top: 17px;
-  }
-
-  .topbar {
-    height: 65px;
-    padding: 0 10px;
-    gap: 5px;
-  }
-
-  .topbar h1 {
-    font-size: 20px;
-  }
-
-  .topbar-actions {
-    gap: 1px;
-  }
-
-  .icon-btn {
-    width: 37px;
-    height: 37px;
-  }
-
-  .mobile-back {
-    display: grid;
-    width: 35px;
-  }
-
-  .mobile-brand {
-    display: grid;
-    place-items: center;
-    width: 31px;
-    height: 31px;
-    border-radius: 9px;
-    background: #08b8d8;
-    flex-shrink: 0;
-  }
-
-  .mobile-brand svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .empty-chat {
-    padding: 20px 15px;
-  }
-
-  .chat-art {
-    transform: scale(.82);
-    margin-top: -8px;
-    margin-bottom: 6px;
-  }
-
-  .empty-chat h2 {
-    font-size: 21px;
-  }
-
-  .empty-chat p {
-    font-size: 13px;
-  }
-
-  .messages {
-    padding: 16px 12px;
-  }
-
-  .composer-wrap {
-    padding: 0 8px max(8px, env(safe-area-inset-bottom));
-  }
-
-  .composer {
-    min-height: 53px;
-    padding: 5px 7px 5px 12px;
-  }
-
-  .composer textarea {
-    font-size: 14px;
-    padding: 8px 0;
-  }
-
-  .send-btn {
-    width: 39px;
-    height: 39px;
-  }
-
-  .attachments {
-    gap: 2px;
-    padding: 9px 3px 7px;
-    border-radius: 20px;
-    margin-top: 7px;
-  }
-
-  .attach-btn {
-    gap: 5px;
-  }
-
-  .attach-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
-  }
-
-  .attach-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .attach-btn strong {
-    font-size: 10px;
-  }
-
-  .attach-btn small {
-    font-size: 9px;
-  }
-
-  .page-view {
-    padding: 18px 12px;
-  }
-
-  .page-card {
-    padding: 20px 16px;
-  }
-}
-
-@media (max-height: 600px) {
-  .sidebar-scroll {
-    padding-top: 10px;
-  }
-
-  .brand {
-    margin-bottom: 12px;
-  }
-
-  .search-box {
-    margin-bottom: 12px;
-  }
-
-  .menu-item {
-    height: 43px;
-  }
-
-  .section {
-    margin-top: 12px;
-    padding-top: 12px;
-  }
-
-  .empty-friends {
-    padding-top: 14px;
-  }
-
-  .empty-friends-icon {
-    width: 52px;
-    height: 52px;
-    margin-bottom: 10px;
-  }
-
-  .empty-friends-icon svg {
-    width: 29px;
-    height: 29px;
-  }
-
-  .composer-wrap {
-    padding-bottom: 7px;
-  }
-
-  .attachments {
-    padding-top: 7px;
-    padding-bottom: 6px;
-  }
-
-  .attach-icon {
-    width: 39px;
-    height: 39px;
-  }
-}
+:root{--bg:#080a0d;--panel:#0d1015;--panel2:#141820;--panel3:#1d232d;--border:#252b35;--text:#f6f7fa;--muted:#929baa;--cyan:#06b9dd;--cyan2:#079bbf}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow:hidden}
+button,input,textarea{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+[hidden]{display:none!important}
+.app{display:grid;grid-template-columns:330px minmax(0,1fr);height:100dvh;min-height:450px;background:var(--bg)}
+.sidebar{min-width:0;display:flex;flex-direction:column;background:linear-gradient(160deg,#0c0f13,#090b0e);border-right:1px solid var(--border);overflow:hidden}
+.sidebar-scroll{flex:1;overflow-y:auto;padding:17px 14px 20px;scrollbar-width:thin;scrollbar-color:#303743 transparent}
+.brand{display:flex;align-items:center;gap:9px;margin:0 9px 18px}
+.brand-logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,#05c4e8,#079ecb);display:grid;place-items:center;flex-shrink:0}
+.brand-logo svg{width:23px;height:23px}.brand-name{font-size:24px;font-weight:800;letter-spacing:-1px}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid transparent;border-radius:28px;height:47px;padding:0 14px;margin-bottom:17px}
+.search-box:focus-within{border-color:#087d96}.search-box svg{width:21px;height:21px;color:#a4adbd;flex-shrink:0}
+.search-box input{width:100%;border:none;outline:none;background:transparent;color:white;font-size:14px;min-width:0}.search-box input::placeholder{color:var(--muted)}
+.menu{display:grid;gap:5px}.menu-item{width:100%;display:flex;align-items:center;gap:14px;height:48px;padding:0 16px;background:transparent;border:none;border-radius:17px;text-align:left;color:#a7afbd;font-size:15px;font-weight:600}
+.menu-item svg{width:21px;height:21px;flex-shrink:0}.menu-item:hover{background:#171c24;color:white}.menu-item.active{color:white;background:linear-gradient(110deg,#262d37,#202630)}
+.section{border-top:1px solid var(--border);margin-top:17px;padding-top:17px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 10px;margin-bottom:12px;font-size:15px;font-weight:650}
+.section-heading button{border:none;background:transparent;color:var(--muted);display:grid;place-items:center;padding:3px}.section-heading svg{width:19px;height:19px}
+.status-add{display:flex;align-items:center;gap:12px;border:none;background:transparent;text-align:left;width:100%;border-radius:15px;padding:8px 10px}.status-add:hover{background:#151a22}
+.add-circle{width:45px;height:45px;flex-shrink:0;border-radius:50%;background:#1c222c;display:grid;place-items:center;color:#bac3d2}.add-circle svg{width:22px;height:22px}
+.status-copy strong,.status-copy small{display:block}.status-copy strong{font-size:13px;font-weight:600;margin-bottom:4px}.status-copy small{font-size:11px;color:var(--muted)}
+.status-list,.friend-list{display:grid;gap:5px}.status-person,.friend-person{display:flex;align-items:center;gap:11px;width:100%;border:none;border-radius:13px;background:transparent;padding:8px 10px;text-align:left}
+.status-person:hover,.friend-person:hover{background:#171c24}
+.avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;overflow:hidden;background:#202630;color:#aab5c7;font-weight:700;font-size:14px}
+.avatar img{width:100%;height:100%;object-fit:cover}.person-info{min-width:0;flex:1}.person-info strong,.person-info small{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.person-info strong{font-size:13px;font-weight:600}.person-info small{color:var(--muted);margin-top:4px;font-size:11px}
+.empty-friends{text-align:center;padding:22px 12px;color:var(--muted)}.empty-friends-icon{width:65px;height:65px;display:grid;place-items:center;margin:0 auto 13px;border-radius:50%;background:#171c24}.empty-friends-icon svg{width:34px;height:34px;stroke:#909bad}
+.empty-friends strong{display:block;font-size:13px;font-weight:500;color:#b2bac8;margin-bottom:8px}.empty-friends p{font-size:11px;line-height:1.7;max-width:220px;margin:auto}
+.about-oer{margin:18px 0 4px;padding:16px 13px;background:linear-gradient(145deg,#141920,#0e1116);border:1px solid #262d37;border-radius:17px}
+.about-oer-title{display:flex;align-items:center;gap:9px;margin-bottom:11px}.about-oer-logo{width:32px;height:32px;display:grid;place-items:center;background:#08b7d8;border-radius:10px;color:white;font-weight:800;font-size:15px;flex-shrink:0}
+.about-oer-title strong{font-size:14px;color:#fff}.about-oer-title small{display:block;color:#8f9aaa;font-size:10px;margin-top:3px}
+.about-oer-description{font-size:11px;line-height:1.7;color:#a6afbd;margin-bottom:12px}
+.about-oer-features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.about-oer-feature{display:flex;align-items:center;gap:7px;padding:9px 7px;background:#1b212a;border:1px solid #252d38;border-radius:10px;color:#dce2eb;font-size:10px;line-height:1.4;min-width:0}
+.about-oer-feature span{font-size:15px;flex-shrink:0}
+.about-oer-footer{border-top:1px solid #282e38;margin-top:12px;padding-top:10px;color:#768294;font-size:10px;line-height:1.7}
+.sidebar-bottom{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);background:#0b0d11;padding:10px 5px 9px;flex-shrink:0}
+.bottom-link{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:53px;background:transparent;border:none;color:#929bad;font-size:10px}
+.bottom-link svg{width:21px;height:21px}.bottom-link.active,.bottom-link:hover{color:white}
+.main{display:flex;flex-direction:column;min-width:0;min-height:0;background:radial-gradient(ellipse at 70% 40%,#11151c22,transparent 55%),#080a0d}
+.topbar{height:70px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.topbar-left{display:flex;align-items:center;gap:10px;min-width:0}.mobile-brand{display:none}
+.topbar h1{font-size:23px;font-weight:750;letter-spacing:-.6px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.topbar-actions{display:flex;align-items:center;gap:8px}.icon-btn{width:40px;height:40px;border:none;background:transparent;border-radius:50%;display:grid;place-items:center;color:#e1e5ed}
+.icon-btn:hover{background:#1a2029}.icon-btn svg{width:22px;height:22px}.mobile-back{display:none}
+.chat-area{flex:1;min-height:0;overflow-y:auto;position:relative;display:flex;flex-direction:column}
+.empty-chat{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:30px 20px;text-align:center}
+.chat-art{width:145px;height:135px;position:relative;margin-bottom:18px}.bubble-art{position:absolute;border-radius:45% 45% 45% 12%;background:linear-gradient(145deg,#303744,#151a22);display:grid;place-items:center}
+.bubble-art.back{width:100px;height:97px;top:0;left:8px;transform:rotate(-5deg)}.bubble-art.front{width:100px;height:87px;right:0;bottom:4px;border-radius:42% 42% 12% 42%;border:1px solid #3c4554}
+.dots{display:flex;gap:8px}.dots i{width:10px;height:10px;background:#8792a5;border-radius:50%}
+.empty-chat h2{font-size:23px;letter-spacing:-.5px;margin-bottom:11px}.empty-chat p{font-size:14px;line-height:1.65;color:var(--muted);max-width:360px}
+.messages{padding:22px clamp(14px,5%,60px);display:flex;flex-direction:column;gap:12px}
+.message{align-self:flex-end;max-width:min(78%,470px);min-width:65px;background:#087e9b;padding:11px 14px 8px;border-radius:17px 17px 4px 17px;overflow-wrap:anywhere;font-size:14px;line-height:1.55}
+.message-time{font-size:10px;text-align:right;margin-top:5px;color:#d5edf3}.message.attachment{background:#18212b;border:1px solid #2c3947}.message.attachment .message-time{color:#9eacbd}
+.message-file{display:flex;align-items:center;gap:10px;margin-bottom:5px}.message-file-icon{width:40px;height:40px;border-radius:11px;background:#283342;display:grid;place-items:center;flex-shrink:0;font-size:20px}
+.message-file-name{font-size:13px;font-weight:600}.message-file-type{font-size:11px;color:#9da9bb;margin-top:4px}
+.message-media{display:block;max-width:100%;max-height:300px;border-radius:11px;margin-bottom:8px}.message audio{max-width:100%;width:280px}
+.message-download{display:inline-flex;gap:6px;align-items:center;margin-top:8px;text-decoration:none;color:#bceeff;font-size:12px}
+.composer-wrap{padding:0 16px 16px;flex-shrink:0}.composer{display:flex;align-items:center;gap:9px;min-height:58px;padding:6px 8px;border:1px solid #292f39;border-radius:32px;background:linear-gradient(115deg,#171c24,#11151b)}
+.composer textarea{resize:none;min-width:0;flex:1;max-height:110px;padding:10px 2px;background:transparent;color:white;border:none;outline:none;font-size:14px;line-height:1.5}
+.composer textarea::placeholder{color:#8c97a9}.send-btn{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;border:none;border-radius:50%;background:#28303b;color:white}
+.send-btn:hover{background:var(--cyan2)}.send-btn svg{width:21px;height:21px}
+.attachments{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:8px;padding:11px 7px 9px;border-radius:23px;background:linear-gradient(120deg,#101318,#0c0f13)}
+.attach-btn{display:flex;align-items:center;flex-direction:column;gap:6px;padding:2px 0;border:none;background:transparent;min-width:0}
+.attach-icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#202733,#171c24);color:#aeb9ca;border:1px solid #222a35}
+.attach-btn:hover .attach-icon{background:#153744;color:#55dfff}.attach-icon svg{width:22px;height:22px}.attach-btn strong{font-size:11px;font-weight:550}.attach-btn small{color:#8994a6;font-size:10px;text-align:center;overflow-wrap:anywhere}
+.hidden-input{display:none}
+.page-view{flex:1;min-height:0;overflow-y:auto;padding:26px}.page-card{width:100%;max-width:520px;margin:0 auto;padding:24px;background:#10141a;border:1px solid var(--border);border-radius:22px}
+.page-card h2{font-size:21px;margin-bottom:8px}.page-subtitle{color:var(--muted);font-size:12px;line-height:1.6;margin-bottom:22px}
+.profile-photo-area{display:flex;align-items:center;gap:16px;margin-bottom:23px}.profile-photo{width:82px;height:82px;border-radius:50%;background:#202630;overflow:hidden;display:grid;place-items:center;color:#aeb8c8;flex-shrink:0}
+.profile-photo img{width:100%;height:100%;object-fit:cover}.profile-photo svg{width:36px;height:36px}
+.upload-label{display:inline-flex;padding:10px 13px;background:#1e2630;border:1px solid #303a48;border-radius:11px;font-size:12px;cursor:pointer}
+.upload-help{color:var(--muted);font-size:10px;margin-top:8px}.field{margin-bottom:17px}.field label{display:block;font-size:12px;font-weight:600;margin-bottom:8px}
+.field input{width:100%;padding:13px;border-radius:12px;background:#0b0e13;color:white;border:1px solid #29303a;outline:none}.field input:focus{border-color:#0785a1}
+.primary-btn{border:none;border-radius:12px;background:#06a9cc;color:white;font-size:13px;font-weight:650;padding:13px 16px;width:100%}.primary-btn:hover{background:#078ba8}
+.secondary-btn{border:1px solid #343c49;background:#1a2029;color:white;border-radius:11px;padding:10px 14px;font-size:12px}
+.notice{color:var(--muted);font-size:11px;line-height:1.7;margin-top:16px}
+.page-empty{flex:1;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px}
+.page-empty .empty-friends-icon{width:80px;height:80px}.page-empty h2{font-size:21px;margin-bottom:9px}.page-empty p{color:var(--muted);max-width:360px;line-height:1.7;font-size:13px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,15px);background:#202731;border:1px solid #37414f;color:white;border-radius:13px;padding:12px 16px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:1400px){.app{grid-template-columns:345px minmax(0,1fr)}}
+@media(max-width:800px){.app{grid-template-columns:280px minmax(0,1fr)}.sidebar-scroll{padding-left:11px;padding-right:11px}.topbar{padding:0 14px}.composer-wrap{padding:0 10px 12px}.attach-icon{width:43px;height:43px}}
+@media(max-width:560px){
+ body{overflow:hidden}.app{display:block;position:relative;height:100dvh;min-height:0}
+ .sidebar{position:absolute;inset:0;z-index:2;width:100%;height:100%;border-right:none;display:flex}
+ .main{display:none;position:absolute;inset:0;width:100%;height:100%}
+ .app.chat-open .sidebar{display:none}.app.chat-open .main{display:flex}
+ .sidebar-scroll{padding:14px 12px 16px}.brand{margin:0 5px 16px}
+ .brand-logo{width:34px;height:34px;border-radius:10px}.brand-name{font-size:23px}
+ .search-box{height:45px;margin-bottom:14px}.menu-item{height:45px;border-radius:15px}
+ .section{margin-top:13px;padding-top:14px}.topbar{height:61px;padding:0 9px;gap:4px}.topbar h1{font-size:18px}
+ .topbar-actions{gap:0}.icon-btn{width:35px;height:35px}.mobile-back{display:grid;width:32px}
+ .mobile-brand{display:grid;place-items:center;width:29px;height:29px;border-radius:8px;background:#08b8d8;flex-shrink:0}.mobile-brand svg{width:20px;height:20px}
+ .empty-chat{padding:18px 14px}.chat-art{transform:scale(.8);margin-top:-8px;margin-bottom:4px}
+ .empty-chat h2{font-size:20px}.empty-chat p{font-size:12px}.messages{padding:14px 11px}
+ .composer-wrap{padding:0 7px max(7px,env(safe-area-inset-bottom))}.composer{min-height:50px;padding:5px 6px 5px 11px}
+ .composer textarea{font-size:13px;padding:7px 0}.send-btn{width:37px;height:37px}
+ .attachments{gap:1px;padding:8px 2px 6px;border-radius:18px;margin-top:6px}.attach-btn{gap:4px}
+ .attach-icon{width:37px;height:37px;border-radius:12px}.attach-icon svg{width:19px;height:19px}
+ .attach-btn strong{font-size:9px}.attach-btn small{font-size:8px}
+ .page-view{padding:15px 10px}.page-card{padding:18px 14px}
+ .about-oer{margin-top:15px}
+}
+@media(max-height:600px){.sidebar-scroll{padding-top:9px}.brand{margin-bottom:10px}.search-box{margin-bottom:10px}.menu-item{height:40px}.section{margin-top:10px;padding-top:10px}.empty-friends{padding-top:12px}.empty-friends-icon{width:48px;height:48px;margin-bottom:8px}.empty-friends-icon svg{width:27px;height:27px}.composer-wrap{padding-bottom:6px}.attachments{padding-top:6px;padding-bottom:5px}.attach-icon{width:36px;height:36px}}
 </style>
 </head>
-
 <body>
 <div class="app" id="app">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-    
-    </div>
-
-    <footer class="sidebar-bottom">
-      
-
+    <div class="sidebar-scroll">
       <div class="brand">
-        <div class="brand-logo">
-          <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z"
-              fill="white"/>
-          </svg>
-        </div>
+        <div class="brand-logo"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/></svg></div>
         <span class="brand-name">OER</span>
       </div>
-
-      <label class="search-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2.3" aria-hidden="true">
-          <circle cx="10.8" cy="10.8" r="7.2"/>
-          <path d="m16.2 16.2 5 5"/>
-        </svg>
-        <input id="searchInput" type="search"
-          placeholder="Cari chat..." autocomplete="off"
-          aria-label="Cari chat">
-      </label>
-
+      <label class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7.2"/><path d="m16.2 16.2 5 5"/></svg><input id="searchInput" type="search" placeholder="Cari chat..." autocomplete="off" aria-label="Cari chat"></label>
       <nav class="menu" aria-label="Navigasi utama">
-        <button class="menu-item active" data-page="chat">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" aria-hidden="true">
-            <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8
-              8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7
-              A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6
-              8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
-          </svg>
-          Chat
-        </button>
-
-        <button class="menu-item" data-page="status">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="12" r="5.5"/>
-            <circle cx="12" cy="12" r="2"/>
-          </svg>
-          Status
-        </button>
-
-        <button class="menu-item" data-page="friends">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" aria-hidden="true">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.9
-              M16 3.1a4 4 0 0 1 0 7.8"/>
-          </svg>
-          Teman
-        </button>
+        <button class="menu-item active" data-page="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>Chat</button>
+        <button class="menu-item" data-page="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>Status</button>
+        <button class="menu-item" data-page="friends"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>Teman</button>
       </nav>
-
       <section class="section">
-        <div class="section-heading">
-          <span>Status</span>
-          <button aria-label="Buka status" data-page="status">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
-        </div>
-
-        <button class="status-add" id="addStatus">
-          <span class="add-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
-          </span>
-          <span class="status-copy">
-            <strong>Tambah Status</strong>
-            <small>Bagikan momenmu</small>
-          </span>
-        </button>
-
+        <div class="section-heading"><span>Status</span><button aria-label="Buka status" data-page="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button></div>
+        <button class="status-add" id="addStatus"><span class="add-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span><span class="status-copy"><strong>Tambah Status</strong><small>Bagikan momenmu</small></span></button>
         <div class="status-list" id="statusList"></div>
       </section>
-
       <section class="section">
-        <div class="section-heading">
-          <span>Teman Chat</span>
-          <button aria-label="Buka teman" data-page="friends">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
-        </div>
-
+        <div class="section-heading"><span>Teman Chat</span><button aria-label="Buka teman" data-page="friends"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button></div>
         <div class="friend-list" id="friendList"></div>
-
-        <div class="empty-friends" id="emptyFriends">
-          <div class="empty-friends-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="1.8" aria-hidden="true">
-              <circle cx="9" cy="7" r="3.5"/>
-              <path d="M2 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/>
-              <path d="M16 4a3.5 3.5 0 0 1 0 7
-                M19 14a5 5 0 0 1 3 4.5V20"/>
-            </svg>
-          </div>
-          <strong>Belum ada teman chat</strong>
-          <p>Tambahkan teman untuk mulai mengobrol di sini.</p>
+        <div class="empty-friends" id="emptyFriends"><div class="empty-friends-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="3.5"/><path d="M2 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/><path d="M16 4a3.5 3.5 0 0 1 0 7M19 14a5 5 0 0 1 3 4.5V20"/></svg></div><strong>Belum ada teman chat</strong><p>Tambahkan teman untuk mulai mengobrol di sini.</p></div>
+      </section>
+      <section class="about-oer">
+        <div class="about-oer-title"><div class="about-oer-logo">O</div><div><strong>Tentang OER</strong><small>Ruang komunikasi digital</small></div></div>
+        <p class="about-oer-description">OER adalah platform komunikasi untuk mengirim pesan dan berbagi berbagai jenis file dengan mudah.</p>
+        <div class="about-oer-features">
+          <div class="about-oer-feature"><span>💬</span><div>Pesan teks</div></div>
+          <div class="about-oer-feature"><span>📦</span><div>Aplikasi yang dapat diinstal</div></div>
+          <div class="about-oer-feature"><span>📄</span><div>Dokumen dan file</div></div>
+          <div class="about-oer-feature"><span>🖼️</span><div>Foto JPG</div></div>
+          <div class="about-oer-feature"><span>🎬</span><div>Video MP4</div></div>
+          <div class="about-oer-feature"><span>🎵</span><div>Musik MP3</div></div>
         </div>
+        <div class="about-oer-footer">OER — Berbagi pesan, file, dan momen dalam satu tempat.<br>© 2026 OER. Semua hak dilindungi.</div>
       </section>
     </div>
-     
-<!-- TENTANG OER -->
-<section class="about-oer">
-  <div class="about-oer-title">
-    <div class="about-oer-logo">O</div>
-    <div>
-      <strong>Tentang OER</strong>
-      <small>Ruang komunikasi digital</small>
-    </div>
-  </div>
-
-  <p class="about-oer-description">
-    OER adalah platform komunikasi untuk mengirim pesan
-    dan berbagi berbagai jenis file dengan mudah.
-  </p>
-
-  <div class="about-oer-features">
-    <div class="about-oer-feature">
-      <span>💬</span>
-      <div>Pesan teks</div>
-    </div>
-
-    <div class="about-oer-feature">
-      <span>📦</span>
-      <div>Aplikasi yang dapat diinstal</div>
-    </div>
-
-    <div class="about-oer-feature">
-      <span>📄</span>
-      <div>Dokumen dan file</div>
-    </div>
-
-    <div class="about-oer-feature">
-      <span>🖼️</span>
-      <div>Foto JPG</div>
-    </div>
-
-    <div class="about-oer-feature">
-      <span>🎬</span>
-      <div>Video MP4</div>
-    </div>
-
-    <div class="about-oer-feature">
-      <span>🎵</span>
-      <div>Musik MP3</div>
-    </div>
-  </div>
-
-  <div class="about-oer-footer">
-    OER — Berbagi pesan, file, dan momen dalam satu tempat.
-    <br>
-    © 2026 OER. Semua hak dilindungi.
-  </div>
-</section>
-      
     <footer class="sidebar-bottom">
-      <button class="bottom-link active" data-page="chat">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" aria-hidden="true">
-          <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/>
-        </svg>
-        Home
-      </button>
-
-      <button class="bottom-link" data-page="notifications">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" aria-hidden="true">
-          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
-          <path d="M10 21h4"/>
-        </svg>
-        Notifikasi
-      </button>
-
-      <button class="bottom-link" data-page="profile">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="m19.4 15 .1.1 1.4 1.1-1.5 2.6-1.7-.6
-            a8 8 0 0 1-1.7 1l-.3 1.8h-3l-.3-1.8
-            a8 8 0 0 1-1.7-1l-1.7.6-1.5-2.6 1.4-1.1
-            a8 8 0 0 1 0-2l-1.4-1.1 1.5-2.6 1.7.6
-            a8 8 0 0 1 1.7-1l.3-1.8h3l.3 1.8
-            a8 8 0 0 1 1.7 1l1.7-.6 1.5 2.6-1.4 1.1
-            a8 8 0 0 1 0 2Z" transform="translate(-1 -1)"/>
-        </svg>
-        Pengaturan
-      </button>
+      <button class="bottom-link active" data-page="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/></svg>Home</button>
+      <button class="bottom-link" data-page="notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>Notifikasi</button>
+      <button class="bottom-link" data-page="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.5 2.6-1.7-.6a8 8 0 0 1-1.7 1l-.3 1.8h-3l-.3-1.8a8 8 0 0 1-1.7-1l-1.7.6-1.5-2.6 1.4-1.1a8 8 0 0 1 0-2l-1.4-1.1 1.5-2.6 1.7.6a8 8 0 0 1 1.7-1l.3-1.8h3l.3 1.8a8 8 0 0 1 1.7 1l1.7-.6 1.5 2.6-1.4 1.1a8 8 0 0 1 0 2Z" transform="translate(-1 -1)"/></svg>Pengaturan</button>
     </footer>
   </aside>
-
-  <!-- MAIN -->
   <main class="main">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="icon-btn mobile-back" id="backButton"
-          aria-label="Kembali">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-        </button>
-
-        <div class="mobile-brand" aria-hidden="true">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z"
-              fill="white"/>
-          </svg>
-        </div>
-
-        <h1 id="pageTitle">Chat</h1>
-      </div>
-
-      <div class="topbar-actions">
-        <button class="icon-btn" id="topSearchBtn"
-          aria-label="Cari teman atau chat">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.2"><circle cx="10.8" cy="10.8" r="7.2"/>
-            <path d="m16.2 16.2 5 5"/></svg>
-        </button>
-
-        <button class="icon-btn" id="moreButton" aria-label="Menu lainnya">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="12" cy="5" r="1.8"/>
-            <circle cx="12" cy="12" r="1.8"/>
-            <circle cx="12" cy="19" r="1.8"/>
-          </svg>
-        </button>
-      </div>
+    <header class="topbar"><div class="topbar-left">
+      <button class="icon-btn mobile-back" id="backButton" aria-label="Kembali"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
+      <div class="mobile-brand" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/></svg></div>
+      <h1 id="pageTitle">Chat</h1></div>
+      <div class="topbar-actions"><button class="icon-btn" id="topSearchBtn" aria-label="Cari teman atau chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="10.8" cy="10.8" r="7.2"/><path d="m16.2 16.2 5 5"/></svg></button><button class="icon-btn" id="moreButton" aria-label="Menu lainnya"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg></button></div>
     </header>
-
     <section class="chat-area" id="chatArea">
-      <div class="empty-chat" id="emptyChat">
-        <div class="chat-art" aria-hidden="true">
-          <div class="bubble-art back"></div>
-          <div class="bubble-art front">
-            <div class="dots"><i></i><i></i><i></i></div>
-          </div>
-        </div>
-        <h2 id="emptyTitle">Mulai Percakapan</h2>
-        <p id="emptyDescription">
-          Pilih teman dari daftar di samping untuk mulai chat.
-        </p>
-      </div>
-
+      <div class="empty-chat" id="emptyChat"><div class="chat-art" aria-hidden="true"><div class="bubble-art back"></div><div class="bubble-art front"><div class="dots"><i></i><i></i><i></i></div></div></div><h2 id="emptyTitle">Mulai Percakapan</h2><p id="emptyDescription">Pilih teman dari daftar di samping untuk mulai chat.</p></div>
       <div class="messages" id="messages" hidden></div>
     </section>
-
     <section class="composer-wrap" id="composerWrap">
-      <form class="composer" id="messageForm">
-        <textarea id="messageInput" rows="1"
-          placeholder="Ketik pesan..."
-          aria-label="Ketik pesan"></textarea>
-
-        <button class="send-btn" type="submit" aria-label="Kirim pesan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m22 2-7 20-4-9-9-4Z"/>
-            <path d="M22 2 11 13"/>
-          </svg>
-        </button>
-      </form>
-
+      <form class="composer" id="messageForm"><textarea id="messageInput" rows="1" placeholder="Ketik pesan..." aria-label="Ketik pesan"></textarea><button class="send-btn" type="submit" aria-label="Kirim pesan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button></form>
       <div class="attachments">
-        <button class="attach-btn" data-file="appFile">
-          <span class="attach-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-              <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-              <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-              <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-            </svg>
-          </span>
-          <strong>Aplikasi</strong>
-          <small>Instal di perangkat</small>
-        </button>
-
-        <button class="attach-btn" data-file="videoFile">
-          <span class="attach-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.1"><rect x="3" y="6" width="12" height="12" rx="2"/>
-              <path d="m15 10 6-4v12l-6-4"/></svg>
-          </span>
-          <strong>Video</strong>
-          <small>MP4</small>
-        </button>
-
-        <button class="attach-btn" data-file="photoFile">
-          <span class="attach-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <path d="m21 15-5-5L5 21"/></svg>
-          </span>
-          <strong>Foto</strong>
-          <small>JPG</small>
-        </button>
-
-        <button class="attach-btn" data-file="musicFile">
-          <span class="attach-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M9 18V5l12-2v13"/>
-              <circle cx="6" cy="18" r="3"/>
-              <circle cx="18" cy="16" r="3"/>
-            </svg>
-          </span>
-          <strong>Musik</strong>
-          <small>MP3</small>
-        </button>
-
-        <button class="attach-btn" data-file="documentFile">
-          <span class="attach-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16
-              a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
-              <path d="M14 2v6h6M8 13h8M8 17h8"/></svg>
-          </span>
-          <strong>Dokumen</strong>
-          <small>File</small>
-        </button>
+        <button class="attach-btn" data-file="appFile"><span class="attach-icon"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><strong>Aplikasi</strong><small>File instalasi</small></button>
+        <button class="attach-btn" data-file="videoFile"><span class="attach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><rect x="3" y="6" width="12" height="12" rx="2"/><path d="m15 10 6-4v12l-6-4"/></svg></span><strong>Video</strong><small>MP4</small></button>
+        <button class="attach-btn" data-file="photoFile"><span class="attach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span><strong>Foto</strong><small>JPG</small></button>
+        <button class="attach-btn" data-file="musicFile"><span class="attach-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span><strong>Musik</strong><small>MP3</small></button>
+        <button class="attach-btn" data-file="documentFile"><span class="attach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg></span><strong>Dokumen</strong><small>File lain</small></button>
       </div>
-
-      <input class="hidden-input" id="appFile" type="file"
-        accept=".apk,.aab,.ipa,.exe,.msi,.dmg,.zip">
-      <input class="hidden-input" id="videoFile" type="file"
-        accept="video/mp4,.mp4,video/*">
-      <input class="hidden-input" id="photoFile" type="file"
-        accept="image/jpeg,.jpg,.jpeg,image/png,image/webp">
-      <input class="hidden-input" id="musicFile" type="file"
-        accept="audio/mpeg,.mp3,audio/*">
+      <input class="hidden-input" id="appFile" type="file" accept=".apk,.aab,.ipa,.exe,.msi,.dmg,.zip">
+      <input class="hidden-input" id="videoFile" type="file" accept="video/mp4,.mp4,video/*">
+      <input class="hidden-input" id="photoFile" type="file" accept="image/jpeg,.jpg,.jpeg,image/png,image/webp">
+      <input class="hidden-input" id="musicFile" type="file" accept="audio/mpeg,.mp3,audio/*">
       <input class="hidden-input" id="documentFile" type="file">
     </section>
-
-    <!-- VIEW HALAMAN LAIN -->
     <section class="page-view" id="pageView" hidden></section>
   </main>
 </div>
-
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <script>
 "use strict";
-
-const $ = (selector) => document.querySelector(selector);
-
-const app = $("#app");
-const pageTitle = $("#pageTitle");
-const chatArea = $("#chatArea");
-const emptyChat = $("#emptyChat");
-const messages = $("#messages");
-const composerWrap = $("#composerWrap");
-const pageView = $("#pageView");
-const messageInput = $("#messageInput");
-const searchInput = $("#searchInput");
-const toast = $("#toast");
-
-let currentPage = "chat";
-let currentChat = null;
-let toastTimer = null;
-let profilePhotoData = "";
-let statusItems = [];
-
-/*
-  Data kontak sengaja dikosongkan terlebih dahulu.
-  Daftar teman dan pesan asli membutuhkan sistem akun,
-  database, serta server/backend.
-*/
-
-let friends = [];
-
-const pageNames = {
-  chat: "Chat",
-  status: "Status",
-  friends: "Teman",
-  notifications: "Notifikasi",
-  profile: "Profil"
-};
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
+const $=selector=>document.querySelector(selector);
+const app=$("#app"),pageTitle=$("#pageTitle"),chatArea=$("#chatArea"),emptyChat=$("#emptyChat"),messages=$("#messages"),composerWrap=$("#composerWrap"),pageView=$("#pageView"),messageInput=$("#messageInput"),searchInput=$("#searchInput"),toast=$("#toast");
+let currentPage="chat",currentChat=null,toastTimer=null,profilePhotoData="",statusItems=[];
+let friends=[]; // Kontak sengaja kosong; chat antarperangkat memerlukan backend.
+const pageNames={chat:"Chat",status:"Status",friends:"Teman",notifications:"Notifikasi",profile:"Pengaturan"};
+function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2800)}
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]))}
+function initials(name){return String(name||"OER").trim().split(/\s+/).slice(0,2).map(part=>part[0]||"").join("").toUpperCase()}
+function avatarHTML(person){const photo=person.photo?`<img src="${escapeHTML(person.photo)}" alt="">`:`<span>${escapeHTML(initials(person.name))}</span>`;return `<div class="avatar">${photo}</div>`}
+function renderFriends(filter=""){
+ const query=filter.trim().toLowerCase(),results=friends.filter(friend=>friend.name.toLowerCase().includes(query));
+ $("#friendList").innerHTML=results.map(friend=>`<button class="friend-person" data-friend-id="${escapeHTML(friend.id)}">${avatarHTML(friend)}<span class="person-info"><strong>${escapeHTML(friend.name)}</strong><small>${escapeHTML(friend.lastMessage||"Mulai percakapan")}</small></span></button>`).join("");
+ $("#emptyFriends").hidden=results.length>0;
+ $("#emptyFriends").querySelector("strong").textContent=query&&results.length===0?"Teman tidak ditemukan":"Belum ada teman chat";
+ $("#emptyFriends").querySelector("p").textContent=query&&results.length===0?"Coba kata pencarian lain.":"Tambahkan teman untuk mulai mengobrol di sini.";
 }
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, (char) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+function renderStatuses(){$("#statusList").innerHTML=statusItems.map(item=>`<button class="status-person" data-status-id="${escapeHTML(item.id)}">${avatarHTML(item)}<span class="person-info"><strong>${escapeHTML(item.name)}</strong><small>${escapeHTML(item.text||"Status terbaru")}</small></span></button>`).join("")}
+function setPage(page){
+ currentPage=page;currentChat=null;document.querySelectorAll("[data-page]").forEach(button=>button.classList.toggle("active",button.dataset.page===page));
+ pageTitle.textContent=pageNames[page]||"OER";pageView.hidden=true;chatArea.hidden=false;composerWrap.hidden=false;emptyChat.hidden=false;messages.hidden=true;messages.innerHTML="";
+ if(page==="chat"){ $("#emptyTitle").textContent="Mulai Percakapan";$("#emptyDescription").textContent="Pilih teman dari daftar di samping untuk mulai chat.";if(innerWidth<=560)app.classList.remove("chat-open");return}
+ chatArea.hidden=true;composerWrap.hidden=true;pageView.hidden=false;
+ if(page==="profile")renderProfilePage();else if(page==="friends")renderFriendsPage();else if(page==="status")renderStatusPage();else if(page==="notifications")renderNotificationsPage();
 }
-
-function initials(name) {
-  return String(name || "OER")
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map(part => part[0] || "")
-    .join("")
-    .toUpperCase();
+function openChat(friendId){
+ const friend=friends.find(item=>item.id===friendId);if(!friend)return;currentChat=friend;currentPage="chat";pageTitle.textContent=friend.name;
+ pageView.hidden=true;chatArea.hidden=false;composerWrap.hidden=false;emptyChat.hidden=true;messages.hidden=false;messages.innerHTML="";
+ (friend.messages||[]).forEach(renderMessage);app.classList.add("chat-open");messageInput.focus();
 }
-
-function avatarHTML(person, extraClass = "") {
-  const photo = person.photo
-    ? `<img src="${escapeHTML(person.photo)}" alt="">`
-    : `<span>${escapeHTML(initials(person.name))}</span>`;
-
-  return `<div class="avatar ${extraClass}">${photo}</div>`;
+function renderMessage(message){
+ const article=document.createElement("article");article.className="message";
+ if(message.file){article.classList.add("attachment");const file=message.file,type=file.type||"",url=file.url;
+  if(type.startsWith("image/")&&url){const img=document.createElement("img");img.src=url;img.alt=file.name;img.className="message-media";article.appendChild(img)}
+  else if(type.startsWith("video/")&&url){const video=document.createElement("video");video.src=url;video.controls=true;video.className="message-media";article.appendChild(video)}
+  else if(type.startsWith("audio/")&&url){const audio=document.createElement("audio");audio.src=url;audio.controls=true;article.appendChild(audio)}
+  else{const row=document.createElement("div");row.className="message-file";const icon=document.createElement("div");icon.className="message-file-icon";icon.textContent="↗";const info=document.createElement("div");const name=document.createElement("div");name.className="message-file-name";name.textContent=file.name;const size=document.createElement("div");size.className="message-file-type";size.textContent=formatSize(file.size);info.append(name,size);row.append(icon,info);article.appendChild(row)}
+  if(url){const link=document.createElement("a");link.className="message-download";link.href=url;link.download=file.name;link.textContent="Unduh file";article.appendChild(link)}
+ }
+ if(message.text){const text=document.createElement("div");text.textContent=message.text;article.appendChild(text)}
+ const time=document.createElement("div");time.className="message-time";time.textContent=message.time||getTime();article.appendChild(time);messages.appendChild(article);chatArea.scrollTop=chatArea.scrollHeight;
 }
-
-function renderFriends(filter = "") {
-  const query = filter.trim().toLowerCase();
-
-  const results = friends.filter(friend =>
-    friend.name.toLowerCase().includes(query)
-  );
-
-  $("#friendList").innerHTML = results.map(friend => `
-    <button class="friend-person" data-friend-id="${escapeHTML(friend.id)}">
-      ${avatarHTML(friend)}
-      <span class="person-info">
-        <strong>${escapeHTML(friend.name)}</strong>
-        <small>${escapeHTML(friend.lastMessage || "Mulai percakapan")}</small>
-      </span>
-    </button>
-  `).join("");
-
-  $("#emptyFriends").hidden = results.length > 0;
-
-  if (query && results.length === 0) {
-    $("#emptyFriends").querySelector("strong").textContent =
-      "Teman tidak ditemukan";
-    $("#emptyFriends").querySelector("p").textContent =
-      "Coba kata pencarian lain.";
-  } else {
-    $("#emptyFriends").querySelector("strong").textContent =
-      "Belum ada teman chat";
-    $("#emptyFriends").querySelector("p").textContent =
-      "Tambahkan teman untuk mulai mengobrol di sini.";
-  }
+function getTime(){return new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})}
+function formatSize(bytes){if(!bytes)return"File";if(bytes<1024)return bytes+" B";if(bytes<1048576)return(bytes/1024).toFixed(1)+" KB";return(bytes/1048576).toFixed(2)+" MB"}
+function sendTextMessage(text){const clean=text.trim();if(!clean)return;if(!currentChat){showToast("Pilih teman chat terlebih dahulu.");return}const message={text:clean,time:getTime()};currentChat.messages||=[];currentChat.messages.push(message);currentChat.lastMessage=clean;renderMessage(message);renderFriends(searchInput.value)}
+$("#messageForm").addEventListener("submit",event=>{event.preventDefault();const text=messageInput.value;if(!text.trim())return;sendTextMessage(text);messageInput.value="";messageInput.style.height="auto"});
+messageInput.addEventListener("input",()=>{messageInput.style.height="auto";messageInput.style.height=Math.min(messageInput.scrollHeight,110)+"px"});
+messageInput.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();$("#messageForm").requestSubmit()}});
+document.querySelectorAll("[data-file]").forEach(button=>button.addEventListener("click",()=>{if(!currentChat){showToast("Pilih teman chat terlebih dahulu.");return}$("#"+button.dataset.file).click()}));
+const MAX_FILE_SIZE=100*1024*1024;
+["appFile","videoFile","photoFile","musicFile","documentFile"].forEach(inputId=>$("#"+inputId).addEventListener("change",event=>{
+ const input=event.target,file=input.files&&input.files[0];if(!file)return;
+ if(!currentChat){showToast("Pilih teman chat terlebih dahulu.");input.value="";return}
+ if(file.size>MAX_FILE_SIZE){showToast("Ukuran file maksimal 100 MB.");input.value="";return}
+ const isApp=inputId==="appFile",isPhoto=inputId==="photoFile",isVideo=inputId==="videoFile",isMusic=inputId==="musicFile";
+ if(isApp&&!/\.(apk|aab|ipa|exe|msi|dmg|zip)$/i.test(file.name)){showToast("Pilih file aplikasi yang didukung.");input.value="";return}
+ if(isPhoto&&!file.type.startsWith("image/")){showToast("Pilih file gambar yang valid.");input.value="";return}
+ if(isVideo&&!file.type.startsWith("video/")){showToast("Pilih file video yang valid.");input.value="";return}
+ if(isMusic&&!file.type.startsWith("audio/")){showToast("Pilih file musik yang valid.");input.value="";return}
+ const url=URL.createObjectURL(file),message={time:getTime(),text:"",file:{name:file.name,size:file.size,type:file.type||"",url}};
+ currentChat.messages||=[];currentChat.messages.push(message);renderMessage(message);currentChat.lastMessage=file.name;renderFriends(searchInput.value);showToast("File ditambahkan ke pratinjau chat.");input.value="";
+}));
+searchInput.addEventListener("input",()=>renderFriends(searchInput.value));
+$("#topSearchBtn").addEventListener("click",()=>{if(innerWidth<=560&&currentPage==="chat")app.classList.remove("chat-open");searchInput.focus();searchInput.scrollIntoView({behavior:"smooth",block:"nearest"})});
+$("#backButton").addEventListener("click",()=>{app.classList.remove("chat-open");currentChat=null;pageTitle.textContent="Chat"});
+$("#moreButton").addEventListener("click",()=>showToast("Menu OER"));
+document.querySelectorAll("[data-page]").forEach(button=>button.addEventListener("click",()=>setPage(button.dataset.page)));
+$("#friendList").addEventListener("click",event=>{const button=event.target.closest("[data-friend-id]");if(button)openChat(button.dataset.friendId)});
+$("#statusList").addEventListener("click",event=>{const button=event.target.closest("[data-status-id]");if(!button)return;const item=statusItems.find(status=>status.id===button.dataset.statusId);if(item)showToast(item.text||"Status")});
+function renderProfilePage(){
+ pageView.innerHTML=`<div class="page-card"><h2>Pengaturan Profil</h2><p class="page-subtitle">Atur foto profil, nama, dan nomor WhatsApp kamu.</p>
+ <div class="profile-photo-area"><div class="profile-photo" id="profilePreview">${profilePhotoData?`<img src="${escapeHTML(profilePhotoData)}" alt="Foto profil">`:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>`}</div><div><label class="upload-label" for="profilePhotoInput">Upload Foto JPG</label><input class="hidden-input" id="profilePhotoInput" type="file" accept=".jpg,.jpeg,image/jpeg"><p class="upload-help">JPG/JPEG, maksimal 5 MB.</p></div></div>
+ <form id="profileForm"><div class="field"><label for="profileName">Nama</label><input id="profileName" maxlength="60" placeholder="Masukkan nama kamu" required></div><div class="field"><label for="profileWA">Nomor WhatsApp</label><input id="profileWA" type="tel" maxlength="20" placeholder="Contoh: 081234567890"></div><button class="primary-btn" type="submit">Simpan Pengaturan</button></form>
+ <p class="notice">Data profil disimpan di browser perangkat ini. Agar profil, pesan, dan file dapat diterima pengguna lain, OER perlu dihubungkan ke server/backend.</p></div>`;
+ const saved=getSavedProfile();$("#profileName").value=saved.name||"";$("#profileWA").value=saved.whatsapp||"";profilePhotoData=saved.photo||profilePhotoData;
+ $("#profilePhotoInput").addEventListener("change",async event=>{const file=event.target.files?.[0];if(!file)return;if(file.type!=="image/jpeg"){showToast("Gunakan foto berformat JPG/JPEG.");event.target.value="";return}if(file.size>5*1024*1024){showToast("Ukuran foto maksimal 5 MB.");event.target.value="";return}try{profilePhotoData=await fileToDataURL(file);$("#profilePreview").innerHTML=`<img src="${profilePhotoData}" alt="Foto profil">`;showToast("Foto profil dipilih.")}catch{showToast("Foto tidak dapat dibaca.")}});
+ $("#profileForm").addEventListener("submit",event=>{event.preventDefault();const data={name:$("#profileName").value.trim(),whatsapp:$("#profileWA").value.trim(),photo:profilePhotoData};try{localStorage.setItem("oer_profile",JSON.stringify(data));showToast("Pengaturan profil disimpan.")}catch{showToast("Penyimpanan penuh. Gunakan foto lebih kecil.")}});
 }
-
-function renderStatuses() {
-  $("#statusList").innerHTML = statusItems.map(item => `
-    <button class="status-person" data-status-id="${escapeHTML(item.id)}">
-      ${avatarHTML(item)}
-      <span class="person-info">
-        <strong>${escapeHTML(item.name)}</strong>
-        <small>${escapeHTML(item.text || "Status terbaru")}</small>
-      </span>
-    </button>
-  `).join("");
+function fileToDataURL(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)})}
+function getSavedProfile(){try{return JSON.parse(localStorage.getItem("oer_profile")||"{}")}catch{return{}}}
+function renderFriendsPage(){pageView.innerHTML=`<div class="page-empty"><div class="empty-friends-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="3.5"/><path d="M2 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/><path d="M16 4a3.5 3.5 0 0 1 0 7"/></svg></div><h2>Teman OER</h2><p>Daftar teman masih kosong. Penambahan teman dan chat antarperangkat perlu sistem akun serta backend.</p></div>`}
+function renderStatusPage(){
+ pageView.innerHTML=`<div class="page-card"><h2>Status OER</h2><p class="page-subtitle">Bagikan momen dan lihat status teman.</p><button class="primary-btn" id="createStatus">+ Buat Status</button><div id="statusPageList" style="margin-top:18px"></div></div>`;
+ const list=$("#statusPageList");if(!statusItems.length)list.innerHTML='<p class="notice">Belum ada status. Status yang dibuat saat ini hanya tersimpan selama halaman terbuka.</p>';else list.innerHTML=statusItems.map(item=>`<div class="friend-person">${avatarHTML(item)}<span class="person-info"><strong>${escapeHTML(item.name)}</strong><small>${escapeHTML(item.text)}</small></span></div>`).join("");
+ $("#createStatus").addEventListener("click",createStatus);
 }
-
-function setPage(page) {
-  currentPage = page;
-  currentChat = null;
-
-  document.querySelectorAll("[data-page]").forEach(button => {
-    const active = button.dataset.page === page;
-    button.classList.toggle("active", active);
-  });
-
-  pageTitle.textContent = pageNames[page] || "OER";
-  pageView.hidden = true;
-  chatArea.hidden = false;
-  composerWrap.hidden = false;
-
-  $("#emptyChat").hidden = false;
-  messages.hidden = true;
-  messages.innerHTML = "";
-
-  if (page === "chat") {
-    $("#emptyTitle").textContent = "Mulai Percakapan";
-    $("#emptyDescription").textContent =
-      "Pilih teman dari daftar di samping untuk mulai chat.";
-
-    if (window.innerWidth <= 560) {
-      app.classList.remove("chat-open");
-    }
-    return;
-  }
-
-  chatArea.hidden = true;
-  composerWrap.hidden = true;
-  pageView.hidden = false;
-
-  if (page === "profile") {
-    renderProfilePage();
-  } else if (page === "friends") {
-    renderFriendsPage();
-  } else if (page === "status") {
-    renderStatusPage();
-  } else if (page === "notifications") {
-    renderNotificationsPage();
-  }
-}
-
-function openChat(friendId) {
-  const friend = friends.find(item => item.id === friendId);
-  if (!friend) return;
-
-  currentChat = friend;
-  currentPage = "chat";
-  pageTitle.textContent = friend.name;
-
-  pageView.hidden = true;
-  chatArea.hidden = false;
-  composerWrap.hidden = false;
-  emptyChat.hidden = true;
-  messages.hidden = false;
-
-  messages.innerHTML = "";
-
-  (friend.messages || []).forEach(message => {
-    renderMessage(message);
-  });
-
-  app.classList.add("chat-open");
-  messageInput.focus();
-}
-
-function renderMessage(message) {
-  const article = document.createElement("article");
-  article.className = "message";
-
-  if (message.file) {
-    article.classList.add("attachment");
-
-    const file = message.file;
-    const type = file.type || "";
-    const url = file.url;
-
-    if (type.startsWith("image/") && url) {
-      const image = document.createElement("img");
-      image.src = url;
-      image.alt = file.name;
-      image.className = "message-media";
-      article.appendChild(image);
-    } else if (type.startsWith("video/") && url) {
-      const video = document.createElement("video");
-      video.src = url;
-      video.controls = true;
-      video.className = "message-media";
-      article.appendChild(video);
-    } else if (type.startsWith("audio/") && url) {
-      const audio = document.createElement("audio");
-      audio.src = url;
-      audio.controls = true;
-      article.appendChild(audio);
-    } else {
-      const fileRow = document.createElement("div");
-      fileRow.className = "message-file";
-
-      const icon = document.createElement("div");
-      icon.className = "message-file-icon";
-      icon.textContent = "↗";
-
-      const info = document.createElement("div");
-      const name = document.createElement("div");
-      name.className = "message-file-name";
-      name.textContent = file.name;
-
-      const size = document.createElement("div");
-      size.className = "message-file-type";
-      size.textContent = formatSize(file.size);
-
-      info.append(name, size);
-      fileRow.append(icon, info);
-      article.appendChild(fileRow);
-    }
-
-    if (url) {
-      const download = document.createElement("a");
-      download.className = "message-download";
-      download.href = url;
-      download.download = file.name;
-      download.textContent = "Unduh file";
-      article.appendChild(download);
-    }
-  }
-
-  if (message.text) {
-    const text = document.createElement("div");
-    text.textContent = message.text;
-    article.appendChild(text);
-  }
-
-  const time = document.createElement("div");
-  time.className = "message-time";
-  time.textContent = message.time || getTime();
-  article.appendChild(time);
-
-  messages.appendChild(article);
-  chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-function getTime() {
-  return new Date().toLocaleTimeString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
-function formatSize(bytes) {
-  if (!bytes) return "File";
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) {
-    return (bytes / 1024).toFixed(1) + " KB";
-  }
-  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-}
-
-function sendTextMessage(text) {
-  const cleanText = text.trim();
-  if (!cleanText) return;
-
-  if (!currentChat) {
-    showToast("Pilih teman chat terlebih dahulu.");
-    return;
-  }
-
-  const message = { text: cleanText, time: getTime() };
-  currentChat.messages ||= [];
-  currentChat.messages.push(message);
-  currentChat.lastMessage = cleanText;
-
-  renderMessage(message);
-  renderFriends(searchInput.value);
-}
-
-$("#messageForm").addEventListener("submit", event => {
-  event.preventDefault();
-  const text = messageInput.value;
-  if (!text.trim()) return;
-
-  sendTextMessage(text);
-  messageInput.value = "";
-  messageInput.style.height = "auto";
-});
-
-messageInput.addEventListener("input", () => {
-  messageInput.style.height = "auto";
-  messageInput.style.height =
-    Math.min(messageInput.scrollHeight, 110) + "px";
-});
-
-messageInput.addEventListener("keydown", event => {
-  if (event.key === "Enter" && !event.shiftKey) {
-    event.preventDefault();
-    $("#messageForm").requestSubmit();
-  }
-});
-
-/*
-  Lampiran bekerja sebagai pratinjau lokal.
-  File belum terkirim ke perangkat orang lain karena
-  fitur tersebut membutuhkan server/backend.
-*/
-
-document.querySelectorAll("[data-file]").forEach(button => {
-  button.addEventListener("click", () => {
-    if (!currentChat) {
-      showToast("Pilih teman chat terlebih dahulu.");
-      return;
-    }
-
-    $("#" + button.dataset.file).click();
-  });
-});
-
-const MAX_FILE_SIZE = 100 * 1024 * 1024;
-
-["appFile", "videoFile", "photoFile", "musicFile",
- "documentFile"].forEach(inputId => {
-  $("#" + inputId).addEventListener("change", event => {
-    const input = event.target;
-    const file = input.files && input.files[0];
-    if (!file) return;
-
-    if (!currentChat) {
-      showToast("Pilih teman chat terlebih dahulu.");
-      input.value = "";
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      showToast("Ukuran file maksimal 100 MB.");
-      input.value = "";
-      return;
-    }
-
-    const isApp = inputId === "appFile";
-    const isPhoto = inputId === "photoFile";
-    const isVideo = inputId === "videoFile";
-    const isMusic = inputId === "musicFile";
-
-    if (isApp && !/\.(apk|aab|ipa|exe|msi|dmg|zip)$/i.test(file.name)) {
-      showToast("Pilih file aplikasi yang didukung.");
-      input.value = "";
-      return;
-    }
-
-    if (isPhoto && !file.type.startsWith("image/")) {
-      showToast("Pilih file gambar yang valid.");
-      input.value = "";
-      return;
-    }
-
-    if (isVideo && !file.type.startsWith("video/")) {
-      showToast("Pilih file video yang valid.");
-      input.value = "";
-      return;
-    }
-
-    if (isMusic && !file.type.startsWith("audio/")) {
-      showToast("Pilih file musik yang valid.");
-      input.value = "";
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-
-    const message = {
-      time: getTime(),
-      text: "",
-      file: {
-        name: file.name,
-        size: file.size,
-        type: file.type || "",
-        url: url
-      }
-    };
-
-    currentChat.messages ||= [];
-    currentChat.messages.push(message);
-
-    renderMessage(message);
-    currentChat.lastMessage = file.name;
-    renderFriends(searchInput.value);
-
-    showToast("Pratinjau file ditambahkan ke chat.");
-    input.value = "";
-  });
-});
-
-/* PENCARIAN TEMAN */
-
-searchInput.addEventListener("input", () => {
-  renderFriends(searchInput.value);
-});
-
-$("#topSearchBtn").addEventListener("click", () => {
-  if (window.innerWidth <= 560 && currentPage === "chat") {
-    app.classList.remove("chat-open");
-  }
-
-  searchInput.focus();
-  searchInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-});
-
-$("#backButton").addEventListener("click", () => {
-  app.classList.remove("chat-open");
-  currentChat = null;
-  pageTitle.textContent = "Chat";
-});
-
-$("#moreButton").addEventListener("click", () => {
-  showToast("Menu OER");
-});
-
-/* NAVIGASI */
-
-document.querySelectorAll("[data-page]").forEach(button => {
-  button.addEventListener("click", () => {
-    setPage(button.dataset.page);
-  });
-});
-
-$("#friendList").addEventListener("click", event => {
-  const button = event.target.closest("[data-friend-id]");
-  if (button) openChat(button.dataset.friendId);
-});
-
-$("#statusList").addEventListener("click", event => {
-  const button = event.target.closest("[data-status-id]");
-  if (!button) return;
-
-  const status = statusItems.find(item => item.id === button.dataset.statusId);
-  if (status) showToast(status.text || "Status");
-});
-
-/* PROFIL */
-
-function renderProfilePage() {
-  pageView.innerHTML = `
-    <div class="page-card">
-      <h2>Profil OER</h2>
-      <p class="page-subtitle">
-        Atur foto profil, nama, dan nomor WhatsApp kamu.
-      </p>
-
-      <div class="profile-photo-area">
-        <div class="profile-photo" id="profilePreview">
-          ${profilePhotoData
-            ? `<img src="${escapeHTML(profilePhotoData)}" alt="Foto profil">`
-            : `<svg viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
-              </svg>`}
-        </div>
-        <div>
-          <label class="upload-label" for="profilePhotoInput">
-            Upload Foto JPG
-          </label>
-          <input class="hidden-input" id="profilePhotoInput"
-            type="file" accept=".jpg,.jpeg,image/jpeg">
-          <p class="upload-help">JPG/JPEG, maksimal 5 MB.</p>
-        </div>
-      </div>
-
-      <form id="profileForm">
-        <div class="field">
-          <label for="profileName">Nama</label>
-          <input id="profileName" maxlength="60"
-            placeholder="Masukkan nama kamu" required>
-        </div>
-
-        <div class="field">
-          <label for="profileWA">Nomor WhatsApp</label>
-          <input id="profileWA" type="tel" maxlength="20"
-            placeholder="Contoh: 081234567890">
-        </div>
-
-        <button class="primary-btn" type="submit">Simpan Profil</button>
-      </form>
-
-      <p class="notice">
-        Profil ini disimpan di browser perangkat ini.
-        Untuk menampilkan profil ke pengguna lain, OER memerlukan
-        sistem akun dan server.
-      </p>
-    </div>
-  `;
-
-  const saved = getSavedProfile();
-  $("#profileName").value = saved.name || "";
-  $("#profileWA").value = saved.whatsapp || "";
-
-  $("#profilePhotoInput").addEventListener("change", async event => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (!["image/jpeg"].includes(file.type)) {
-      showToast("Gunakan foto berformat JPG/JPEG.");
-      event.target.value = "";
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      showToast("Ukuran foto maksimal 5 MB.");
-      event.target.value = "";
-      return;
-    }
-
-    try {
-      profilePhotoData = await fileToDataURL(file);
-      $("#profilePreview").innerHTML =
-        `<img src="${profilePhotoData}" alt="Foto profil">`;
-      showToast("Foto profil berhasil dipilih.");
-    } catch {
-      showToast("Foto tidak dapat dibaca.");
-    }
-  });
-
-  $("#profileForm").addEventListener("submit", event => {
-    event.preventDefault();
-
-    const data = {
-      name: $("#profileName").value.trim(),
-      whatsapp: $("#profileWA").value.trim(),
-      photo: profilePhotoData
-    };
-
-    try {
-      localStorage.setItem("oer_profile", JSON.stringify(data));
-      showToast("Profil berhasil disimpan.");
-    } catch {
-      showToast("Penyimpanan penuh. Gunakan foto lebih kecil.");
-    }
-  });
-}
-
-function fileToDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-function getSavedProfile() {
-  try {
-    return JSON.parse(localStorage.getItem("oer_profile") || "{}");
-  } catch {
-    return {};
-  }
-}
-
-function renderFriendsPage() {
-  pageView.innerHTML = `
-    <div class="page-empty">
-      <div class="empty-friends-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.8">
-          <circle cx="9" cy="7" r="3.5"/>
-          <path d="M2 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/>
-          <path d="M16 4a3.5 3.5 0 0 1 0 7"/>
-        </svg>
-      </div>
-      <h2>Teman OER</h2>
-      <p>Daftar teman masih kosong. Fitur pencarian dan penambahan
-        teman dapat dihubungkan ke sistem akun OER.</p>
-    </div>
-  `;
-}
-
-function renderStatusPage() {
-  pageView.innerHTML = `
-    <div class="page-card">
-      <h2>Status OER</h2>
-      <p class="page-subtitle">
-        Bagikan momen dan lihat status teman.
-      </p>
-      <button class="primary-btn" id="createStatus">
-        + Buat Status
-      </button>
-      <div id="statusPageList" style="margin-top:20px"></div>
-    </div>
-  `;
-
-  const list = $("#statusPageList");
-
-  if (statusItems.length === 0) {
-    list.innerHTML = `
-      <p class="notice">Belum ada status. Status yang kamu buat
-      akan muncul di halaman ini selama halaman masih terbuka.</p>
-    `;
-  } else {
-    list.innerHTML = statusItems.map(item => `
-      <div class="friend-person">
-        ${avatarHTML(item)}
-        <span class="person-info">
-          <strong>${escapeHTML(item.name)}</strong>
-          <small>${escapeHTML(item.text)}</small>
-        </span>
-      </div>
-    `).join("");
-  }
-
-  $("#createStatus").addEventListener("click", createStatus);
-}
-
-function createStatus() {
-  const profile = getSavedProfile();
-  const text = prompt("Tulis status kamu:");
-
-  if (text === null || !text.trim()) return;
-
-  statusItems.unshift({
-    id: String(Date.now()),
-    name: profile.name || "Saya",
-    photo: profile.photo || "",
-    text: text.trim()
-  });
-
-  renderStatuses();
-
-  if (currentPage === "status") renderStatusPage();
-  showToast("Status ditambahkan.");
-}
-
-$("#addStatus").addEventListener("click", createStatus);
-
-function renderNotificationsPage() {
-  pageView.innerHTML = `
-    <div class="page-empty">
-      <div class="empty-friends-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.8">
-          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
-          <path d="M10 21h4"/>
-        </svg>
-      </div>
-      <h2>Notifikasi</h2>
-      <p>Belum ada notifikasi.</p>
-    </div>
-  `;
-}
-  
-/* Inisialisasi */
-renderFriends();
-renderStatuses();
-setPage("chat");
-/* TENTANG OER DI BAGIAN BAWAH HOME */
-.about-oer {
-  margin-top: 24px;
-  padding: 19px 16px;
-  background: linear-gradient(145deg, #141920, #0e1116);
-  border: 1px solid #262d37;
-  border-radius: 19px;
-}
-
-.about-oer-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.about-oer-logo {
-  width: 35px;
-  height: 35px;
-  display: grid;
-  place-items: center;
-  background: #08b7d8;
-  border-radius: 11px;
-  color: white;
-  font-weight: 800;
-  font-size: 16px;
-}
-
-.about-oer-title strong {
-  font-size: 16px;
-  color: #fff;
-}
-
-.about-oer-title small {
-  display: block;
-  color: #8f9aaa;
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-.about-oer-description {
-  font-size: 12px;
-  line-height: 1.8;
-  color: #a6afbd;
-  margin-bottom: 15px;
-}
-
-.about-oer-features {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.about-oer-feature {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 8px;
-  background: #1b212a;
-  border: 1px solid #252d38;
-  border-radius: 11px;
-  color: #dce2eb;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.about-oer-feature span {
-  font-size: 17px;
-  flex-shrink: 0;
-}
-
-.about-oer-footer {
-  border-top: 1px solid #282e38;
-  margin-top: 14px;
-  padding-top: 12px;
-  color: #768294;
-  font-size: 10px;
-  line-height: 1.7;
-  }
-  
+function createStatus(){const profile=getSavedProfile(),text=prompt("Tulis status kamu:");if(text===null||!text.trim())return;statusItems.unshift({id:String(Date.now()),name:profile.name||"Saya",photo:profile.photo||"",text:text.trim()});renderStatuses();if(currentPage==="status")renderStatusPage();showToast("Status ditambahkan.")}
+$("#addStatus").addEventListener("click",createStatus);
+function renderNotificationsPage(){pageView.innerHTML=`<div class="page-empty"><div class="empty-friends-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></div><h2>Notifikasi</h2><p>Belum ada notifikasi.</p></div>`}
+renderFriends();renderStatuses();setPage("chat");
 </script>
 </body>
 </html>
