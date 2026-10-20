@@ -3,624 +3,1423 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101626">
-  <meta name="description" content="OR Account — identitas digital milik OR.">
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <title>Or Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10182c">
+
+  <title>OeR — Ruang Belajar dan Berbagi</title>
+  <meta name="description" content="OeR adalah ruang belajar dan berbagi untuk menemukan pengetahuan, manfaat, dan inspirasi.">
+
+  <link rel="icon" href="./icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #090d17;
-      --panel: #111827;
-      --line: #273149;
-      --text: #f4f7ff;
-      --muted: #9ca9c2;
-      --blue: #6488ff;
-      --cyan: #00d5ff;
-      --purple: #b45aff;
+      --bg: #0b1020;
+      --surface: #111a30;
+      --surface2: #17233d;
+      --text: #f3f6ff;
+      --muted: #9eacc8;
+      --primary: #7c8cff;
+      --cyan: #48e0d0;
+      --border: rgba(255,255,255,.09);
+      --radius: 22px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 95px;
+    }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, sans-serif;
-      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
       background:
-        radial-gradient(ellipse at 15% 0%, #15304a 0, transparent 42%),
-        radial-gradient(ellipse at 100% 100%, #291641 0, transparent 38%),
+        radial-gradient(ellipse at 15% 0%, rgba(87,101,255,.14), transparent 35%),
         var(--bg);
-      display: grid;
-      place-items: center;
-      padding: 24px 16px;
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
     }
 
-    .app {
-      width: 100%;
-      max-width: 430px;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 36px));
+      margin: auto;
+    }
+
+    /* NAVIGASI */
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,16,32,.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
     }
 
     .brand {
-      text-align: center;
-      margin-bottom: 26px;
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      flex-shrink: 0;
     }
 
-    .logo {
-      width: 82px;
-      height: 82px;
-      border-radius: 25px;
+    .brand-mark {
+      position: relative;
+      width: 43px;
+      height: 43px;
       display: grid;
       place-items: center;
-      margin: 0 auto 15px;
-      background: #121b30;
-      border: 1px solid #34415d;
-      box-shadow: 0 10px 40px #0005;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #8d9aff, #5567e9 65%, #35cfc7);
+      color: #fff;
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      box-shadow: 0 0 28px rgba(124,140,255,.25);
+      animation: logoFloat 3.5s ease-in-out infinite;
     }
 
-    .logo svg { width: 66px; height: 66px; }
-
-    h1 {
-      margin: 0;
-      font-size: 30px;
-      letter-spacing: -.8px;
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border: 1px solid rgba(124,140,255,.38);
+      border-radius: 18px;
+      animation: logoRing 3.5s ease-in-out infinite;
     }
 
-    .gradient {
-      background: linear-gradient(100deg, var(--cyan), var(--blue), var(--purple));
-      background-clip: text;
+    .brand-name {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: -.9px;
+    }
+
+    .brand-name span {
+      color: var(--cyan);
+    }
+
+    .brand-caption {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-top: -5px;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-3px) rotate(-2deg); }
+    }
+
+    @keyframes logoRing {
+      0%, 100% { opacity: .35; transform: scale(1); }
+      50% { opacity: .85; transform: scale(1.07); }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #fff;
+    }
+
+    .nav-links .account-link {
+      background: var(--surface2);
+      color: white;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: white;
+      width: 43px;
+      height: 43px;
+      border-radius: 13px;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 83px 0 65px;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      align-items: center;
+      gap: 55px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 12px;
+      border: 1px solid rgba(72,224,208,.23);
+      background: rgba(72,224,208,.07);
+      color: var(--cyan);
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .7px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--cyan);
+    }
+
+    .hero h1 {
+      font-size: clamp(39px, 5.5vw, 67px);
+      line-height: 1.08;
+      letter-spacing: -3px;
+      font-weight: 900;
+      max-width: 690px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(100deg, #9ba7ff, #48e0d0);
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
     }
 
-    .subtitle {
+    .hero-description {
       color: var(--muted);
-      font-size: 14px;
-      margin-top: 8px;
+      font-size: 15px;
+      line-height: 1.9;
+      max-width: 540px;
+      margin: 22px 0 28px;
     }
 
-    .panel {
-      background: #111827ed;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 22px 70px #0005;
+    /* PENCARIAN */
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 580px;
+      padding: 7px;
+      border: 1px solid rgba(151,164,255,.24);
+      border-radius: 17px;
+      background: rgba(17,26,48,.9);
+      box-shadow: 0 15px 45px rgba(0,0,0,.18);
     }
 
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      padding: 4px;
-      gap: 5px;
-      background: #090e19;
-      border-radius: 12px;
-      margin-bottom: 23px;
-    }
-
-    .tab {
-      padding: 11px 8px;
-      border: 0;
-      border-radius: 9px;
+    .search-icon {
       color: var(--muted);
-      background: transparent;
-      font-weight: 650;
-      cursor: pointer;
+      font-size: 21px;
+      padding-left: 10px;
     }
 
-    .tab.active {
-      color: white;
-      background: #253451;
-    }
-
-    h2 { font-size: 21px; margin: 0 0 7px; }
-    .hint { color: var(--muted); font-size: 13px; margin: 0 0 22px; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      margin: 15px 0 8px;
-      color: #dbe5fa;
-    }
-
-    input {
+    .search-box input {
       width: 100%;
-      padding: 14px;
-      border-radius: 11px;
-      border: 1px solid #303c55;
-      background: #090e19;
-      color: white;
-      font: inherit;
+      min-width: 0;
       outline: none;
+      border: none;
+      background: transparent;
+      color: white;
+      padding: 12px 3px;
+      font-size: 13px;
     }
 
-    input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px #6488ff20;
+    .search-box input::placeholder {
+      color: #8190ad;
     }
 
-    .main-btn, .install-btn, .logout-btn {
-      width: 100%;
-      padding: 14px;
+    .search-box button {
+      flex-shrink: 0;
+      border: none;
       border-radius: 11px;
-      font-weight: 750;
-      font-size: 14px;
+      padding: 12px 19px;
+      background: linear-gradient(135deg, #8290ff, #6674ee);
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
+      transition: transform .2s, opacity .2s;
     }
 
-    .main-btn {
-      margin-top: 23px;
-      border: 0;
-      color: #07101b;
-      background: linear-gradient(100deg, var(--cyan), #7d8bff, var(--purple));
+    .search-box button:hover {
+      transform: translateY(-1px);
+      opacity: .92;
     }
 
-    button:disabled { opacity: .6; cursor: wait; }
+    .search-hints {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 15px;
+      color: var(--muted);
+      font-size: 11px;
+    }
 
-    .install-btn, .logout-btn {
-      margin-top: 12px;
-      border: 1px solid #34415d;
-      background: #172136;
+    .search-hints a {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.025);
+      padding: 5px 10px;
+      border-radius: 99px;
+    }
+
+    .search-hints a:hover {
+      border-color: var(--primary);
       color: white;
     }
 
-    .message {
-      display: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-top: 15px;
-      overflow-wrap: anywhere;
+    /* ILUSTRASI HERO */
+
+    .hero-visual {
+      position: relative;
+      min-height: 325px;
+      display: grid;
+      place-items: center;
     }
 
-    .message.show { display: block; }
-    .message.error { background: #481f2b; color: #ffd5dc; }
-    .message.success { background: #153b32; color: #c8ffea; }
-
-    .profile {
-      display: none;
-      text-align: center;
+    .visual-glow {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(95,108,255,.19);
+      filter: blur(55px);
     }
 
-    .profile.show { display: block; }
-    .profile-id {
-      margin: 22px 0 8px;
+    .visual-card {
+      position: relative;
+      width: min(100%, 320px);
+      padding: 29px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(30,43,75,.95), rgba(15,23,43,.96));
+      box-shadow: 0 28px 70px rgba(0,0,0,.3);
+      transform: rotate(2deg);
+      animation: cardFloat 5s ease-in-out infinite;
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0) rotate(2deg); }
+      50% { transform: translateY(-10px) rotate(0deg); }
+    }
+
+    .visual-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 27px;
+    }
+
+    .visual-mini-logo {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #8d9aff, #35cfc7);
+      color: white;
+      font-weight: 900;
+      font-size: 19px;
+      border-radius: 14px;
+    }
+
+    .visual-status {
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .visual-card h3 {
       font-size: 23px;
-      font-weight: 800;
-      overflow-wrap: anywhere;
+      line-height: 1.35;
+      margin-bottom: 10px;
     }
 
-    .username {
+    .visual-card p {
       color: var(--muted);
+      font-size: 12px;
+    }
+
+    .visual-progress {
+      height: 7px;
+      background: #293653;
+      border-radius: 99px;
+      overflow: hidden;
+      margin: 23px 0 12px;
+    }
+
+    .visual-progress span {
+      display: block;
+      width: 73%;
+      height: 100%;
+      background: linear-gradient(90deg, #7c8cff, #48e0d0);
+      border-radius: inherit;
+      animation: progressGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes progressGlow {
+      from { width: 62%; }
+      to { width: 82%; }
+    }
+
+    .visual-card-bottom {
+      display: flex;
+      justify-content: space-between;
+      color: #9eacc8;
+      font-size: 10px;
+    }
+
+    .floating-tag {
+      position: absolute;
+      padding: 12px 15px;
+      border: 1px solid var(--border);
+      background: #17233d;
+      border-radius: 14px;
+      box-shadow: 0 15px 35px rgba(0,0,0,.2);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tag-one {
+      top: 24px;
+      right: 0;
+      color: var(--cyan);
+    }
+
+    .tag-two {
+      bottom: 21px;
+      left: -5px;
+      color: #b5beff;
+    }
+
+    /* BAGIAN UMUM */
+
+    .section {
+      padding: 45px 0;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .section-kicker {
+      color: var(--cyan);
+      text-transform: uppercase;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+      margin-bottom: 7px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(23px, 3vw, 31px);
+      letter-spacing: -1px;
+      line-height: 1.3;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 7px;
+    }
+
+    .text-link {
+      flex-shrink: 0;
+      color: #b2bcff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .text-link:hover {
+      color: white;
+    }
+
+    /* KARTU JELAJAH */
+
+    .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+
+    .explore-card {
+      position: relative;
+      min-height: 180px;
+      padding: 25px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: linear-gradient(145deg, #141f38, #10182b);
+      border-radius: var(--radius);
+      transition: transform .25s, border-color .25s;
+    }
+
+    .explore-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(124,140,255,.5);
+    }
+
+    .explore-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(124,140,255,.12);
+      font-size: 23px;
       margin-bottom: 20px;
     }
 
-    .security-note {
+    .explore-card:nth-child(2) .explore-icon {
+      background: rgba(72,224,208,.1);
+    }
+
+    .explore-card:nth-child(3) .explore-icon {
+      background: rgba(255,190,110,.1);
+    }
+
+    .explore-card h3 {
+      font-size: 16px;
+      margin-bottom: 7px;
+    }
+
+    .explore-card p {
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.7;
-      text-align: center;
-      margin: 18px 4px 0;
+      line-height: 1.8;
     }
 
-    footer {
-      text-align: center;
-      color: #77839c;
+    .explore-arrow {
+      position: absolute;
+      top: 25px;
+      right: 23px;
+      color: #8190ad;
+      font-size: 20px;
+    }
+
+    /* POSTINGAN */
+
+    .posts-section {
+      padding-top: 58px;
+      padding-bottom: 75px;
+    }
+
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .post-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 20px;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .post-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(124,140,255,.45);
+    }
+
+    .post-image {
+      width: 100%;
+      height: 175px;
+      display: block;
+      object-fit: cover;
+      background: linear-gradient(135deg, #25345b, #162039);
+    }
+
+    .post-placeholder {
+      height: 175px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 70% 30%, rgba(72,224,208,.18), transparent 35%),
+        linear-gradient(135deg, #25345b, #162039);
+      font-size: 40px;
+    }
+
+    .post-content {
+      padding: 19px;
+    }
+
+    .post-meta {
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+
+    .post-card h3 {
+      font-size: 15px;
+      line-height: 1.55;
+      margin-bottom: 9px;
+      overflow-wrap: anywhere;
+    }
+
+    .post-card p {
+      color: var(--muted);
       font-size: 12px;
-      margin-top: 22px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
     }
 
-    [hidden] { display: none !important; }
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: 17px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .post-footer a {
+      color: #b5beff;
+      font-weight: 700;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 38px 22px;
+      text-align: center;
+      border: 1px dashed rgba(255,255,255,.15);
+      background: rgba(255,255,255,.02);
+      border-radius: 20px;
+    }
+
+    .empty-state .empty-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      font-size: 12px;
+      max-width: 440px;
+      margin: auto;
+    }
+
+    /* AJAKAN */
+
+    .cta {
+      margin-bottom: 70px;
+      padding: 36px;
+      border: 1px solid rgba(124,140,255,.22);
+      border-radius: 25px;
+      background:
+        radial-gradient(ellipse at right, rgba(72,224,208,.11), transparent 45%),
+        linear-gradient(120deg, #182448, #111a30);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .cta h2 {
+      font-size: clamp(22px, 3vw, 29px);
+      margin-bottom: 7px;
+    }
+
+    .cta p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .cta-button {
+      flex-shrink: 0;
+      padding: 13px 18px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #8290ff, #6674ee);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    /* FOOTER */
+
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .footer p {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 19px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .notice {
+      margin-top: 13px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* RESPONSIF */
+
+    @media (max-width: 850px) {
+      .nav-links {
+        gap: 15px;
+      }
+
+      .hero {
+        padding-top: 60px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr .75fr;
+        gap: 24px;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .hero-visual {
+        min-height: 280px;
+      }
+
+      .visual-card {
+        padding: 23px;
+      }
+
+      .explore-grid,
+      .post-grid {
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        width: min(100% - 28px, 520px);
+      }
+
+      .nav-inner {
+        min-height: 68px;
+      }
+
+      .brand-mark {
+        width: 39px;
+        height: 39px;
+      }
+
+      .brand-name {
+        font-size: 21px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        padding: 15px 20px 20px;
+        background: #10182c;
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 13px 5px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links .account-link {
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      .hero {
+        padding: 52px 0 35px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .hero h1 {
+        font-size: clamp(38px, 11vw, 53px);
+        letter-spacing: -2px;
+      }
+
+      .hero-description {
+        font-size: 13px;
+        margin: 18px 0 23px;
+      }
+
+      .search-box {
+        gap: 5px;
+      }
+
+      .search-box input {
+        font-size: 12px;
+      }
+
+      .search-box button {
+        padding: 12px 13px;
+      }
+
+      .hero-visual {
+        min-height: 285px;
+        margin: 0 10px;
+      }
+
+      .visual-card {
+        max-width: 290px;
+      }
+
+      .tag-one {
+        right: -2px;
+      }
+
+      .tag-two {
+        left: -2px;
+      }
+
+      .section {
+        padding: 33px 0;
+      }
+
+      .section-heading {
+        align-items: start;
+      }
+
+      .section-heading h2 {
+        font-size: 24px;
+      }
+
+      .explore-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .explore-card {
+        min-height: auto;
+        padding: 19px;
+        display: grid;
+        grid-template-columns: 47px 1fr;
+        column-gap: 14px;
+        align-items: center;
+      }
+
+      .explore-icon {
+        grid-row: span 2;
+        margin: 0;
+      }
+
+      .explore-card h3 {
+        margin-bottom: 3px;
+      }
+
+      .explore-card p {
+        font-size: 11px;
+      }
+
+      .explore-arrow {
+        top: 20px;
+        right: 17px;
+      }
+
+      .post-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .post-image,
+      .post-placeholder {
+        height: 190px;
+      }
+
+      .posts-section {
+        padding-top: 36px;
+        padding-bottom: 48px;
+      }
+
+      .cta {
+        padding: 25px;
+        margin-bottom: 45px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <main class="app">
-    <header class="brand">
-      <div class="logo" aria-label="OR logo">
-        <svg viewBox="0 0 100 100" role="img" aria-label="OR">
-          <defs>
-            <linearGradient id="orGradient" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0%" stop-color="#00d5ff"/>
-              <stop offset="50%" stop-color="#6488ff"/>
-              <stop offset="100%" stop-color="#b45aff"/>
-            </linearGradient>
-          </defs>
-          <circle cx="39" cy="48" r="23" fill="none"
-                  stroke="url(#orGradient)" stroke-width="10"/>
-          <path d="M49 70 L49 42 Q49 29 64 29 Q76 29 76 42 L76 70 M50 49 L76 70"
-                fill="none" stroke="url(#orGradient)" stroke-width="9"
-                stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <h1>Or <span class="gradient">Account</span></h1>
-      <p class="subtitle">Satu identitas. Banyak kemungkinan.</p>
-    </header>
 
-    <section class="panel" id="authPanel">
-      <div class="tabs" role="tablist" aria-label="Akun OR">
-        <button class="tab active" id="loginTab" type="button">Masuk</button>
-        <button class="tab" id="registerTab" type="button">Daftar</button>
-      </div>
+  <!-- NAVIGASI UTAMA -->
+  <header class="navbar">
+    <div class="container nav-inner">
 
-      <form id="authForm">
-        <h2 id="formTitle">Selamat datang kembali</h2>
-        <p class="hint" id="formHint">
-          Masuk menggunakan nama pengguna OR kamu.
-        </p>
+      <a class="brand" href="./index.html" aria-label="OeR Beranda">
+        <div class="brand-mark">OeR</div>
+        <div>
+          <div class="brand-name">O<span>e</span>R</div>
+          <span class="brand-caption">Ruang Belajar</span>
+        </div>
+      </a>
 
-        <div id="registerFields" hidden>
-          <label for="username">Nama pengguna OR</label>
-          <input id="username" name="username"
-            type="text" minlength="3" maxlength="24"
-            pattern="[A-Za-z0-9_]{3,24}"
-            autocomplete="username"
-            placeholder="contoh: namakamu">
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Buka menu navigasi"
+        aria-expanded="false"
+      >☰</button>
 
-          <p class="hint">
-            3–24 karakter. Gunakan huruf, angka, atau garis bawah.
+      <nav class="nav-links" id="navLinks" aria-label="Navigasi utama">
+        <a class="active" href="./index.html">Beranda</a>
+        <a href="./search.html">Pencarian</a>
+        <a href="./manfaat.html">Manfaat</a>
+        <a href="./reels.html">Reels</a>
+        <a class="account-link" href="./or-account.html">OR Account ↗</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO DAN PENCARIAN -->
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            RUANG BELAJAR DAN BERBAGI
+          </div>
+
+          <h1>
+            Temukan hal baru,
+            <span class="gradient-text">mulai dari OeR.</span>
+          </h1>
+
+          <p class="hero-description">
+            Jelajahi pengetahuan, temukan manfaat, dan dapatkan inspirasi
+            dalam satu ruang. Perjalanan belajar kamu dimulai di sini.
           </p>
+
+          <form class="search-box" id="searchForm" role="search">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Cari pengetahuan, manfaat, atau topik..."
+              aria-label="Cari di OeR"
+              autocomplete="off"
+              required
+            >
+            <button type="submit">Cari ↗</button>
+          </form>
+
+          <div class="search-hints">
+            <span>Jelajahi:</span>
+            <a href="./search.html?q=pendidikan">Pendidikan</a>
+            <a href="./manfaat.html">Manfaat</a>
+            <a href="./search.html?q=belajar">Belajar</a>
+          </div>
         </div>
 
-        <div id="loginFields">
-          <label for="loginUsername">Nama pengguna OR</label>
-          <input id="loginUsername" name="loginUsername"
-            type="text" required maxlength="24"
-            pattern="[A-Za-z0-9_]{3,24}"
-            autocomplete="username"
-            placeholder="nama pengguna">
+        <div class="hero-visual" aria-label="Ilustrasi ruang belajar OeR">
+          <div class="visual-glow"></div>
+
+          <div class="visual-card">
+            <div class="visual-card-top">
+              <div class="visual-mini-logo">OeR</div>
+              <span class="visual-status">● RUANG BELAJAR</span>
+            </div>
+
+            <h3>Belajar hari ini,<br><span class="gradient-text">bertumbuh esok hari.</span></h3>
+
+            <p>Setiap pengetahuan punya manfaat. Temukan dan bagikan bersama OeR.</p>
+
+            <div class="visual-progress"><span></span></div>
+
+            <div class="visual-card-bottom">
+              <span>Terus menjelajah</span>
+              <span>OeR Platform</span>
+            </div>
+          </div>
+
+          <div class="floating-tag tag-one">✦ Temukan manfaat</div>
+          <div class="floating-tag tag-two">↗ Wawasan baru</div>
         </div>
 
-        <label for="password">Kata sandi</label>
-        <input id="password" name="password"
-          type="password" required minlength="8"
-          autocomplete="current-password"
-          placeholder="Minimal 8 karakter">
-
-        <div id="confirmField" hidden>
-          <label for="confirmPassword">Ulangi kata sandi</label>
-          <input id="confirmPassword" type="password"
-            minlength="8" autocomplete="new-password"
-            placeholder="Masukkan kembali kata sandi">
-        </div>
-
-        <button class="main-btn" id="submitBtn" type="submit">
-          Masuk ke OR
-        </button>
-
-        <div class="message" id="message" role="status"
-             aria-live="polite"></div>
-      </form>
-
-      <section class="profile" id="profilePanel">
-        <h2>Akun kamu aktif</h2>
-        <p class="hint">Inilah identitas digital OR kamu.</p>
-        <div class="profile-id" id="profileId">OR-XXXXXXXX</div>
-        <div class="username" id="profileUsername">@namakamu</div>
-        <button class="main-btn" id="copyId" type="button">
-          Salin ID OR
-        </button>
-        <button class="logout-btn" id="logoutBtn" type="button">
-          Keluar dari akun
-        </button>
-      </section>
+      </div>
     </section>
 
-    <button class="install-btn" id="installBtn" type="button" hidden>
-      Pasang OR Account di HP
-    </button>
+    <!-- JELAJAHI FITUR -->
+    <section class="section">
+      <div class="container">
 
-    <p class="security-note">
-      Identitas OR dikelola oleh sistem OR. Jangan bagikan kata sandi
-      kepada siapa pun. Gunakan perangkat pribadi saat masuk.
-    </p>
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Jelajahi OeR</div>
+            <h2>Apa yang ingin kamu temukan?</h2>
+            <p>Pilih ruang yang sesuai dengan kebutuhanmu.</p>
+          </div>
+        </div>
 
-    <footer>OR Account · Identitas digital OR</footer>
+        <div class="explore-grid">
+
+          <a class="explore-card" href="./manfaat.html">
+            <span class="explore-arrow">↗</span>
+            <div class="explore-icon">🌱</div>
+            <h3>Temukan Manfaat</h3>
+            <p>Jelajahi manfaat berbagai hal dan pengetahuan yang berguna.</p>
+          </a>
+
+          <a class="explore-card" href="./search.html">
+            <span class="explore-arrow">↗</span>
+            <div class="explore-icon">🔎</div>
+            <h3>Pencarian OeR</h3>
+            <p>Cari informasi dan topik yang ingin kamu pelajari.</p>
+          </a>
+
+          <a class="explore-card" href="./reels.html">
+            <span class="explore-arrow">↗</span>
+            <div class="explore-icon">▶️</div>
+            <h3>OeR Reels</h3>
+            <p>Jelajahi ruang video dan inspirasi singkat OeR.</p>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- POSTINGAN DARI SUPABASE -->
+    <section class="section posts-section" id="postingan">
+      <div class="container">
+
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker">Dari ruang OeR</div>
+            <h2>Postingan terbaru</h2>
+            <p>Konten yang tersedia di OeR akan ditampilkan di sini.</p>
+          </div>
+
+          <a class="text-link" href="./search.html">Jelajahi OeR ↗</a>
+        </div>
+
+        <div class="post-grid" id="postGrid" aria-live="polite">
+          <div class="empty-state">
+            <div class="empty-icon">✦</div>
+            <h3>Menyiapkan ruang OeR...</h3>
+            <p>Memeriksa konten yang tersedia.</p>
+          </div>
+        </div>
+
+        <p class="notice" id="postNotice" hidden></p>
+
+      </div>
+    </section>
+
+    <!-- AJAKAN -->
+    <section class="container">
+      <div class="cta">
+        <div>
+          <h2>Terus belajar bersama OeR.</h2>
+          <p>Mulai dengan mencari pengetahuan yang kamu butuhkan hari ini.</p>
+        </div>
+        <a class="cta-button" href="./search.html">Mulai Menjelajah ↗</a>
+      </div>
+    </section>
+
   </main>
 
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+
+      <a class="brand" href="./index.html">
+        <div class="brand-mark">OeR</div>
+        <div>
+          <div class="brand-name">O<span>e</span>R</div>
+          <span class="brand-caption">Ruang Belajar</span>
+        </div>
+      </a>
+
+      <p>© <span id="currentYear"></span> OeR Platform. Ruang untuk bertumbuh.</p>
+
+      <div class="footer-links">
+        <a href="./index.html">Beranda</a>
+        <a href="./manfaat.html">Manfaat</a>
+        <a href="./search.html">Pencarian</a>
+        <a href="./or-account.html">OR Account</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- SUPABASE OeR -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
     "use strict";
 
-    // Gunakan proyek Supabase OeR yang sudah ada.
-    // Publishable key boleh digunakan di browser.
-    const OR_CONFIG = {
-      SUPABASE_URL: "https://jhopfzmyxuafdbwwkjbf.supabase.co",
-      SUPABASE_KEY: "sb_publishable_FE4-8ZuWD3FgKCcjxjaErg_w97N3fwk"
-    };
+    /*
+      PENTING:
+      Kredensial di bawah menggunakan konfigurasi OeR lama yang tersedia
+      dari kode sebelumnya, bukan proyek OR Account.
 
-    const $ = id => document.getElementById(id);
+      Jika URL atau publishable key proyek OeR yang lama berbeda,
+      ganti hanya kedua nilai ini dengan kredensial proyek OeR yang benar.
+      Jangan menggunakan kredensial proyek OR Account di sini.
+    */
 
-    const authPanel = $("authPanel");
-    const authForm = $("authForm");
-    const profilePanel = $("profilePanel");
-    const message = $("message");
+    const OER_SUPABASE_URL = "https://jhopfzmyxuafdbwwkjbf.supabase.co";
+    const OER_SUPABASE_KEY = "sb_publishable_FE4-8ZuWD3FgKCcjxjaErg_w97N3fwk";
 
-    let mode = "login";
-    let installPrompt = null;
-    let client = null;
-    let busy = false;
+    const postGrid = document.getElementById("postGrid");
+    const postNotice = document.getElementById("postNotice");
 
-    function showMessage(text, type = "error") {
-      message.textContent = text;
-      message.className = "message show " + type;
-    }
+    // MENU RESPONSIF
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
 
-    function clearMessage() {
-      message.textContent = "";
-      message.className = "message";
-    }
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.textContent = isOpen ? "✕" : "☰";
+    });
 
-    function setMode(nextMode) {
-      mode = nextMode;
-      clearMessage();
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.textContent = "☰";
+      });
+    });
 
-      const registering = mode === "register";
+    // TAHUN OTOMATIS
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
 
-      $("loginTab").classList.toggle("active", !registering);
-      $("registerTab").classList.toggle("active", registering);
-
-      $("loginFields").hidden = registering;
-      $("registerFields").hidden = !registering;
-      $("confirmField").hidden = !registering;
-
-      $("username").required = registering;
-      $("confirmPassword").required = registering;
-
-      $("password").autocomplete =
-        registering ? "new-password" : "current-password";
-
-      $("formTitle").textContent = registering
-        ? "Buat OR Account"
-        : "Selamat datang kembali";
-
-      $("formHint").textContent = registering
-        ? "Buat identitas OR milikmu sendiri."
-        : "Masuk menggunakan nama pengguna OR kamu.";
-
-      $("submitBtn").textContent = registering
-        ? "Buat akun OR"
-        : "Masuk ke OR";
-    }
-
-    $("loginTab").addEventListener("click", () => setMode("login"));
-    $("registerTab").addEventListener("click", () => setMode("register"));
-
-    function validUsername(value) {
-      return /^[a-z0-9_]{3,24}$/.test(value);
-    }
-
-    // Alamat internal untuk Supabase Auth, bukan email pengguna.
-    // Domain .invalid tidak digunakan untuk menerima email.
-    function internalIdentity(username) {
-      return username.toLowerCase() + "@or-account.invalid";
-    }
-
-    async function showProfile(user) {
-      if (!client || !user) return;
-
-      const { data, error } = await client
-        .from("or_accounts")
-        .select("or_id, username")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (error || !data) {
-        showMessage(
-          "Sesi masuk ditemukan, tetapi profil OR belum tersedia. " +
-          "Pastikan SQL OR Account sudah dijalankan.",
-          "error"
-        );
-        return;
-      }
-
-      authForm.hidden = true;
-      profilePanel.classList.add("show");
-      $("profileId").textContent = data.or_id;
-      $("profileUsername").textContent = "@" + data.username;
-      clearMessage();
-    }
-
-    async function restoreSession() {
-      if (!client) return;
-
-      const { data, error } = await client.auth.getSession();
-
-      if (error) {
-        showMessage("Sesi belum dapat diperiksa. Periksa koneksi internet.");
-        return;
-      }
-
-      if (data.session) {
-        await showProfile(data.session.user);
-      }
-    }
-
-    authForm.addEventListener("submit", async event => {
+    // PENCARIAN
+    document.getElementById("searchForm").addEventListener("submit", event => {
       event.preventDefault();
-      if (!client || busy) return;
 
-      clearMessage();
+      const input = document.getElementById("searchInput");
+      const query = input.value.trim();
 
-      const username = (
-        mode === "register"
-          ? $("username").value
-          : $("loginUsername").value
-      ).trim().toLowerCase();
-
-      const password = $("password").value;
-
-      if (!validUsername(username)) {
-        showMessage(
-          "Nama pengguna harus 3–24 karakter dan hanya berisi " +
-          "huruf kecil, angka, atau garis bawah."
-        );
+      if (!query) {
+        input.focus();
         return;
       }
 
-      if (password.length < 8) {
-        showMessage("Kata sandi minimal 8 karakter.");
-        return;
+      // Kirim kata pencarian ke halaman search OeR.
+      window.location.href = "./search.html?q=" + encodeURIComponent(query);
+    });
+
+    // BANTUAN MENAMPILKAN KONTEN DENGAN AMAN
+    function safeText(value, fallback = "") {
+      if (value === null || value === undefined) return fallback;
+
+      if (typeof value === "string" || typeof value === "number") {
+        return String(value);
       }
 
-      if (mode === "register" &&
-          password !== $("confirmPassword").value) {
-        showMessage("Konfirmasi kata sandi belum cocok.");
-        return;
-      }
+      return fallback;
+    }
 
-      busy = true;
-      $("submitBtn").disabled = true;
-      $("submitBtn").textContent = "Memproses...";
-
-      try {
-        const email = internalIdentity(username);
-        let result;
-
-        if (mode === "register") {
-          result = await client.auth.signUp({
-            email,
-            password,
-            options: {
-              data: { username }
-            }
-          });
-
-          if (result.error) throw result.error;
-
-          if (!result.data.session) {
-            showMessage(
-              "Pendaftaran diterima, tetapi sesi belum aktif. " +
-              "Periksa pengaturan Supabase Auth: konfirmasi email " +
-              "harus dinonaktifkan untuk metode identitas internal OR.",
-              "error"
-            );
-            return;
-          }
-
-          showMessage("Akun OR berhasil dibuat.", "success");
-          await showProfile(result.data.user);
-
-        } else {
-          result = await client.auth.signInWithPassword({
-            email,
-            password
-          });
-
-          if (result.error) throw result.error;
-
-          await showProfile(result.data.user);
+    function firstValue(row, keys, fallback = "") {
+      for (const key of keys) {
+        if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
+          return row[key];
         }
+      }
+      return fallback;
+    }
 
-      } catch (error) {
-        console.error("OR Account authentication error:", error);
+    function makeElement(tag, className, content) {
+      const element = document.createElement(tag);
 
-        const detail = String(error?.message || "").toLowerCase();
+      if (className) element.className = className;
+      if (content !== undefined) element.textContent = content;
 
-        if (detail.includes("duplicate") ||
-            detail.includes("unique") ||
-            detail.includes("already registered")) {
-          showMessage("Nama pengguna tersebut sudah digunakan.");
-        } else if (detail.includes("invalid login") ||
-                   detail.includes("invalid credentials")) {
-          showMessage("Nama pengguna atau kata sandi tidak cocok.");
+      return element;
+    }
+
+    function formatDate(value) {
+      if (!value) return "Konten OeR";
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) return "Konten OeR";
+
+      return new Intl.DateTimeFormat("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      }).format(date);
+    }
+
+    function renderPosts(rows) {
+      postGrid.replaceChildren();
+
+      if (!Array.isArray(rows) || rows.length === 0) {
+        const state = makeElement("div", "empty-state");
+        state.append(
+          makeElement("div", "empty-icon", "✦"),
+          makeElement("h3", "", "Belum ada postingan untuk ditampilkan"),
+          makeElement(
+            "p",
+            "",
+            "Home OeR sudah siap. Postingan akan muncul setelah sumber konten dan izin akses Supabase OeR tersedia."
+          )
+        );
+
+        postGrid.appendChild(state);
+        return;
+      }
+
+      rows.forEach(row => {
+        const title = safeText(
+          firstValue(row, ["title", "judul", "name", "nama"]),
+          "Postingan OeR"
+        );
+
+        const description = safeText(
+          firstValue(
+            row,
+            ["content", "body", "caption", "description", "isi", "deskripsi", "excerpt"],
+            "Jelajahi konten ini di OeR."
+          )
+        );
+
+        const imageUrl = safeText(
+          firstValue(row, ["image_url", "thumbnail_url", "thumbnail", "image", "gambar"]),
+          ""
+        );
+
+        const dateValue = firstValue(
+          row,
+          ["created_at", "published_at", "tanggal", "date"],
+          ""
+        );
+
+        const category = safeText(
+          firstValue(row, ["category", "kategori", "type", "jenis"]),
+          "Konten OeR"
+        );
+
+        const postUrl = safeText(
+          firstValue(row, ["url", "link", "permalink"]),
+          ""
+        );
+
+        const article = makeElement("article", "post-card");
+
+        if (imageUrl && /^https?:\/\//i.test(imageUrl)) {
+          const image = makeElement("img", "post-image");
+          image.src = imageUrl;
+          image.alt = title;
+          image.loading = "lazy";
+          image.referrerPolicy = "no-referrer";
+          image.addEventListener("error", () => {
+            const placeholder = makeElement("div", "post-placeholder", "✦");
+            image.replaceWith(placeholder);
+          });
+          article.appendChild(image);
         } else {
-          showMessage(
-            "Belum berhasil. Pastikan SQL dan pengaturan Supabase " +
-            "sudah benar, lalu coba kembali."
+          article.appendChild(
+            makeElement("div", "post-placeholder", "✦")
           );
         }
-      } finally {
-        busy = false;
-        $("submitBtn").disabled = false;
-        $("submitBtn").textContent =
-          mode === "register" ? "Buat akun OR" : "Masuk ke OR";
-      }
-    });
 
-    $("logoutBtn").addEventListener("click", async () => {
-      if (!client) return;
+        const content = makeElement("div", "post-content");
+        content.appendChild(makeElement("div", "post-meta", category));
+        content.appendChild(makeElement("h3", "", title));
+        content.appendChild(makeElement("p", "", description.slice(0, 180)));
 
-      const { error } = await client.auth.signOut();
+        const footer = makeElement("div", "post-footer");
+        footer.appendChild(makeElement("span", "", formatDate(dateValue)));
 
-      if (error) {
-        showMessage("Belum berhasil keluar. Coba kembali.");
-        return;
-      }
+        const link = makeElement("a", "", "Baca selengkapnya ↗");
 
-      profilePanel.classList.remove("show");
-      authForm.hidden = false;
-      authForm.reset();
-      setMode("login");
-      showMessage("Kamu sudah keluar dari OR Account.", "success");
-    });
-
-    $("copyId").addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText($("profileId").textContent);
-        showMessage("ID OR berhasil disalin.", "success");
-      } catch {
-        showMessage("Salin ID OR secara manual.", "error");
-      }
-    });
-
-    // Instalasi PWA pada browser yang mendukung.
-    window.addEventListener("beforeinstallprompt", event => {
-      event.preventDefault();
-      installPrompt = event;
-      $("installBtn").hidden = false;
-    });
-
-    $("installBtn").addEventListener("click", async () => {
-      if (installPrompt) {
-        installPrompt.prompt();
-        await installPrompt.userChoice;
-        installPrompt = null;
-        $("installBtn").hidden = true;
-      } else {
-        showMessage(
-          "Di iPhone, buka menu Bagikan lalu pilih Tambahkan ke Layar Utama. " +
-          "Di Android, gunakan menu browser lalu pilih Instal aplikasi " +
-          "atau Tambahkan ke layar utama.",
-          "success"
-        );
-      }
-    });
-
-    async function start() {
-      if (!window.supabase) {
-        showMessage("Layanan autentikasi belum dapat dimuat. Periksa internet.");
-        return;
-      }
-
-      client = window.supabase.createClient(
-        OR_CONFIG.SUPABASE_URL,
-        OR_CONFIG.SUPABASE_KEY
-      );
-
-      await restoreSession();
-
-      client.auth.onAuthStateChange((event, session) => {
-        if (event === "SIGNED_OUT") {
-          profilePanel.classList.remove("show");
-          authForm.hidden = false;
-        } else if (event === "SIGNED_IN" && session?.user) {
-          // Biarkan pemuatan profil ditangani setelah autentikasi.
-          showProfile(session.user);
+        if (postUrl && /^https?:\/\//i.test(postUrl)) {
+          link.href = postUrl;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+        } else {
+          link.href = "./search.html?q=" + encodeURIComponent(title);
         }
-      });
 
-      if ("serviceWorker" in navigator && location.protocol === "https:") {
-        navigator.serviceWorker.register("./sw.js").catch(error => {
-          console.warn("PWA offline belum aktif:", error);
-        });
+        footer.appendChild(link);
+        content.appendChild(footer);
+        article.appendChild(content);
+        postGrid.appendChild(article);
+      });
+    }
+
+    function showPostMessage(message) {
+      postNotice.hidden = false;
+      postNotice.textContent = message;
+    }
+
+    // MEMUAT POSTINGAN SUPABASE
+    async function loadOeRPosts() {
+      if (
+        !window.supabase ||
+        !OER_SUPABASE_URL ||
+        !OER_SUPABASE_KEY
+      ) {
+        renderPosts([]);
+        showPostMessage(
+          "Supabase belum tersedia. Bagian postingan tetap aman dan halaman utama masih dapat digunakan."
+        );
+        return;
+      }
+
+      try {
+        const client = window.supabase.createClient(
+          OER_SUPABASE_URL,
+          OER_SUPABASE_KEY
+        );
+
+        /*
+          Nama tabel "posts" di bawah adalah asumsi awal.
+          Skema tabel OeR lama belum tersedia di sini.
+          Jika tabel konten OeR menggunakan nama lain, ubah nama tabel
+          setelah memeriksa struktur database yang sebenarnya.
+        */
+        const { data, error } = await client
+          .from("posts")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(6);
+
+        if (error) {
+          console.warn("Konten Supabase OeR belum dapat dimuat:", error.message);
+          renderPosts([]);
+          showPostMessage(
+            "Postingan belum dapat dimuat. Periksa nama tabel, kolom tanggal, dan kebijakan akses publik di Supabase OeR. Fitur akun OeR tidak diubah."
+          );
+          return;
+        }
+
+        renderPosts(data || []);
+
+      } catch (error) {
+        console.error("Kesalahan memuat konten OeR:", error);
+        renderPosts([]);
+        showPostMessage(
+          "Konten belum dapat dihubungkan. Bagian lain dari home OeR tetap dapat digunakan."
+        );
       }
     }
 
-    start();
+    loadOeRPosts();
   </script>
+
 </body>
 </html>
