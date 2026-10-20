@@ -1,406 +1,487 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#05070a">
-<title>OER — Connect Everything</title>
+<meta name="theme-color" content="#080d1b">
+<title>Or Account — Identitas Digital</title>
 <style>
 :root {
-  --bg: #05070a;
-  --panel: #0b0f14;
-  --panel2: #11161d;
-  --panel3: #171d26;
-  --border: #1e2630;
-  --text: #f1f5f9;
-  --muted: #8b97a8;
-  --cyan: #00a8e8;
-  --cyan-dim: #0088c2;
-  --cyan-glow: rgba(0, 168, 232, 0.15);
-  --success: #22c55e;
-  --radius: 16px;
-  --radius-sm: 12px;
-  --radius-xs: 8px;
-  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  --bg: #080d1b;
+  --panel: #111a30;
+  --text: #f5f7ff;
+  --muted: #9aa8c3;
+  --cyan: #39e7ff;
+  --blue: #6682ff;
+  --purple: #b45cff;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  margin: 0;
   min-height: 100vh;
-  line-height: 1.5;
+  font-family: Inter, system-ui, Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 12% 15%, #16346b55, transparent 40%),
+    radial-gradient(ellipse at 85% 75%, #6625a933, transparent 40%),
+    var(--bg);
 }
+button, input { font: inherit; }
+button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
-button, input, textarea { font: inherit; }
-button { cursor: pointer; border: none; background: none; color: inherit; }
-img { max-width: 100%; display: block; }
+.wrap { width: min(1120px, calc(100% - 36px)); margin: auto; }
 
-.app {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  min-height: 100vh;
-}
-.sidebar {
-  background: var(--panel);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-}
-.sidebar-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px 16px;
-}
-.main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  background: var(--bg);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 8px 28px;
-}
-.brand-logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
-  background: var(--cyan);
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  box-shadow: 0 0 24px var(--cyan-glow);
-}
-.brand-logo svg { width: 26px; height: 26px; }
-.brand-name {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-.brand-tag {
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-.nav {
-  display: grid;
-  gap: 4px;
-}
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 48px;
-  padding: 0 14px;
-  border-radius: var(--radius-sm);
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.15s ease;
-}
-.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
-.nav-item:hover {
-  background: var(--panel2);
-  color: var(--text);
-}
-.nav-item.active {
-  background: linear-gradient(135deg, rgba(0,168,232,0.15), rgba(0,168,232,0.05));
-  color: var(--cyan);
-  border: 1px solid rgba(0,168,232,0.2);
-}
-
-.bottom-nav {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background: var(--panel);
-  border-top: 1px solid var(--border);
-  grid-template-columns: repeat(5, 1fr);
-  z-index: 50;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.bottom-nav a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  font-size: 10px;
-  color: var(--muted);
-  font-weight: 600;
-}
-.bottom-nav a.active { color: var(--cyan); }
-.bottom-nav svg { width: 20px; height: 20px; }
-
-.topbar {
-  height: 64px;
+header {
+  height: 82px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(11,15,20,0.8);
-  backdrop-filter: blur(12px);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  border-bottom: 1px solid #ffffff10;
 }
-.topbar h1 { font-size: 18px; font-weight: 700; }
-.btn {
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 21px;
+  font-weight: 850;
+  letter-spacing: -.05em;
+}
+.brand small {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  letter-spacing: .2em;
+  color: var(--muted);
+}
+.logo { width: 45px; height: 45px; }
+.nav { display: flex; align-items: center; gap: 20px; font-size: 13px; color: #c7d1e7; }
+.nav a:hover { color: white; }
+.nav .nav-btn {
+  border: 1px solid #6682ff66;
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: #6682ff15;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 35px;
+  align-items: center;
+  min-height: 600px;
+  padding: 65px 0;
+}
+.eyebrow {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 42px;
-  padding: 0 18px;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 650;
-  transition: all 0.15s ease;
-}
-.btn-primary {
-  background: var(--cyan);
-  color: #001018;
-}
-.btn-primary:hover { background: #00b8f5; }
-.btn-ghost {
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-.btn-ghost:hover { background: var(--panel3); }
-
-.hero {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 24px;
-  text-align: center;
-}
-.hero-logo {
-  width: 88px;
-  height: 88px;
-  border-radius: 28px;
-  background: var(--cyan);
-  display: grid;
-  place-items: center;
-  margin-bottom: 28px;
-  box-shadow: 0 0 60px var(--cyan-glow);
-}
-.hero-logo svg { width: 52px; height: 52px; }
-.hero h1 {
-  font-size: 32px;
+  gap: 9px;
+  padding: 9px 13px;
+  border: 1px solid #39e7ff35;
+  border-radius: 30px;
+  color: #a3f1ff;
+  background: #39e7ff09;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: -1px;
-  margin-bottom: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
 }
-.hero p {
-  color: var(--muted);
+.dot {
+  width: 7px; height: 7px;
+  background: var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--cyan);
+}
+h1 {
+  font-size: clamp(42px, 6vw, 69px);
+  line-height: 1.04;
+  letter-spacing: -.065em;
+  margin: 24px 0 19px;
+}
+.gradient {
+  background: linear-gradient(100deg, var(--cyan), var(--blue) 52%, var(--purple));
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+.lead {
+  max-width: 520px;
+  color: #aab6ce;
   font-size: 15px;
-  max-width: 380px;
-  line-height: 1.7;
-  margin-bottom: 32px;
+  line-height: 1.85;
 }
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 27px; }
+.btn {
+  border: 1px solid transparent;
+  border-radius: 13px;
+  padding: 13px 18px;
+  font-size: 13px;
+  font-weight: 800;
+  transition: .2s;
 }
-.features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  max-width: 720px;
-  margin-top: 48px;
-  width: 100%;
+.btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.primary {
+  color: #07101e;
+  background: linear-gradient(105deg, var(--cyan), #8a9cff 65%, #c17aff);
+  box-shadow: 0 8px 28px #6682ff30;
 }
-.feature {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 16px;
-  text-align: center;
+.secondary { color: white; background: #ffffff08; border-color: #ffffff20; }
+.note { color: #75829d; font-size: 11px; line-height: 1.7; margin-top: 17px; }
+
+.visual { position: relative; min-height: 400px; display: grid; place-items: center; }
+.orbit {
+  position: absolute;
+  width: 315px; height: 315px;
+  border: 1px solid #8196ff25;
+  border-radius: 50%;
+  box-shadow: 0 0 70px #5f63ff10, inset 0 0 60px #6682ff08;
 }
-.feature-icon {
-  width: 44px;
-  height: 44px;
+.orbit:before {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid #39e7ff20;
+  border-radius: 50%;
+}
+.orbit:after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border: 1px dashed #a66cff30;
+  border-radius: 50%;
+}
+.logo-stage {
+  width: 225px; height: 225px;
+  display: grid; place-items: center;
+  position: relative; z-index: 1;
+  border-radius: 53px;
+  background: linear-gradient(145deg, #1b2948, #0c1223);
+  border: 1px solid #91a3ff35;
+  box-shadow: 0 30px 80px #0008, inset 0 1px #ffffff12;
+}
+.logo-large { width: 185px; height: 150px; filter: drop-shadow(0 0 16px #6682ff25); }
+.float-tag {
+  position: absolute; z-index: 2;
+  padding: 12px 14px;
+  border: 1px solid #ffffff1c;
   border-radius: 14px;
-  background: var(--cyan-glow);
-  color: var(--cyan);
-  display: grid;
-  place-items: center;
-  margin: 0 auto 12px;
+  background: #0e1629ed;
+  box-shadow: 0 12px 30px #0004;
+  color: #cbd6ec;
+  font-size: 11px;
+}
+.float-tag strong { display: block; color: white; margin-bottom: 5px; font-size: 12px; }
+.tag-one { top: 35px; right: 0; }
+.tag-two { bottom: 35px; left: 0; }
+.features { padding: 35px 0 70px; border-top: 1px solid #ffffff0d; }
+.section-head { text-align: center; margin-bottom: 28px; }
+.section-head h2 { font-size: 26px; letter-spacing: -.04em; margin-bottom: 8px; }
+.section-head p { color: var(--muted); font-size: 13px; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.card {
+  padding: 23px;
+  border: 1px solid #ffffff17;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #15203aab, #0c1222bb);
+}
+.card-icon {
+  width: 39px; height: 39px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  border: 1px solid #6682ff35;
+  background: #6682ff18;
+  color: #9cdbff;
   font-size: 20px;
 }
-.feature strong {
-  display: block;
-  font-size: 13px;
-  margin-bottom: 4px;
-}
-.feature span {
-  font-size: 11px;
-  color: var(--muted);
+.card h3 { font-size: 15px; margin: 17px 0 8px; }
+.card p { color: var(--muted); font-size: 12px; line-height: 1.8; margin: 0; }
+footer {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  padding: 23px 0;
+  border-top: 1px solid #ffffff10;
+  color: #75829d; font-size: 11px;
 }
 
-@media (max-width: 800px) {
-  .app { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .bottom-nav { display: grid; }
-  .main { padding-bottom: 72px; }
-  .features { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 26px; }
+/* Formulir masuk dan daftar */
+.backdrop {
+  display: none;
+  position: fixed; inset: 0; z-index: 10;
+  place-items: center; padding: 18px;
+  background: #02050edb;
+  backdrop-filter: blur(12px);
+}
+.backdrop.show { display: grid; }
+.modal {
+  position: relative;
+  width: min(430px, 100%);
+  padding: 28px;
+  border: 1px solid #91a3ff35;
+  border-radius: 24px;
+  background: #0e1629;
+  box-shadow: 0 28px 100px #0009;
+}
+.close {
+  position: absolute; right: 15px; top: 12px;
+  background: none; border: 0; color: #9aa8c3; font-size: 25px;
+}
+.modal-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; margin-bottom: 22px; }
+.modal h2 { font-size: 25px; margin: 0 0 9px; letter-spacing: -.04em; }
+.modal-desc { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.field { display: block; margin: 14px 0; }
+.field span { display: block; font-size: 11px; color: #c7d1e7; margin-bottom: 7px; }
+.field input {
+  width: 100%; padding: 13px 14px;
+  border: 1px solid #9aa8c333;
+  border-radius: 12px; outline: none;
+  background: #0a1121; color: white;
+}
+.field input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px #6682ff20; }
+.full { width: 100%; margin-top: 9px; }
+.message { color: #a8b7d3; font-size: 11px; line-height: 1.7; margin-top: 14px; }
+.switch { text-align: center; color: var(--muted); font-size: 12px; margin-top: 18px; }
+.switch button { border: 0; background: none; color: #7fe9ff; font-weight: 800; }
+[hidden] { display: none !important; }
+
+@media(max-width: 800px) {
+  .hero { grid-template-columns: 1fr; gap: 15px; padding: 50px 0; }
+  .hero-copy { text-align: center; }
+  .lead { margin-left: auto; margin-right: auto; }
+  .actions { justify-content: center; }
+  .visual { min-height: 350px; }
+  .orbit { width: 275px; height: 275px; }
+  .logo-stage { width: 190px; height: 190px; }
+  .logo-large { width: 155px; }
+  .cards { grid-template-columns: 1fr; }
+  .nav { gap: 12px; }
+  .nav a:not(.nav-btn) { display: none; }
+}
+@media(max-width: 420px) {
+  .wrap { width: calc(100% - 28px); }
+  header { height: 70px; }
+  h1 { font-size: 43px; }
+  .visual { min-height: 310px; }
+  .orbit { width: 240px; height: 240px; }
+  .logo-stage { width: 165px; height: 165px; border-radius: 40px; }
+  .logo-large { width: 135px; }
+  .float-tag { padding: 9px 10px; font-size: 10px; }
+  .tag-one { top: 15px; }
+  .tag-two { bottom: 15px; }
+  .modal { padding: 23px; }
 }
 </style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar">
-    <div class="sidebar-scroll">
-      <div class="brand">
-        <div class="brand-logo">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/>
-          </svg>
-        </div>
-        <div>
-          <div class="brand-name">OER</div>
-          <div class="brand-tag">Connect Everything</div>
-        </div>
-      </div>
+<div class="wrap">
+<header>
+  <a class="brand" href="#" aria-label="Or Account">
+    <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="Logo Or">
+      <defs>
+        <linearGradient id="orHead" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#39e7ff"/>
+          <stop offset=".5" stop-color="#6682ff"/>
+          <stop offset="1" stop-color="#b45cff"/>
+        </linearGradient>
+      </defs>
+      <path d="M17 48C17 27 31 15 49 15s32 13 32 33-14 34-32 34S17 69 17 48Z"
+        fill="none" stroke="url(#orHead)" stroke-width="12" stroke-linecap="round"/>
+      <path d="M51 52h17c10 0 15 6 15 16v8"
+        fill="none" stroke="url(#orHead)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M68 52h11c9 0 14 5 14 14"
+        fill="none" stroke="url(#orHead)" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="85" cy="19" r="4" fill="#39e7ff"/>
+    </svg>
+    <span>Or <small>ACCOUNT</small></span>
+  </a>
+  <nav class="nav">
+    <a href="#fitur">Fitur</a>
+    <a href="#tentang">Tentang</a>
+    <a href="#" class="nav-btn" data-open="login">Masuk akun ↗</a>
+  </nav>
+</header>
 
-      <nav class="nav">
-        <!-- PROFIL PALING ATAS -->
-        <a class="nav-item" href="profile.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
-          </svg>
-          Profil
-        </a>
-        <a class="nav-item active" href="index.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/>
-          </svg>
-          Beranda
-        </a>
-        <a class="nav-item" href="chat.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
-          </svg>
-          Chat
-        </a>
-        <a class="nav-item" href="status.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="12" r="5.5"/>
-            <circle cx="12" cy="12" r="2"/>
-          </svg>
-          Status
-        </a>
-        <a class="nav-item" href="friends.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Teman
-        </a>
-      </nav>
+<main>
+<section class="hero" id="tentang">
+  <div>
+    <div class="eyebrow"><span class="dot"></span> Identitas digital generasi baru</div>
+    <h1>Satu identitas.<br><span class="gradient">Lebih banyak kemungkinan.</span></h1>
+    <p class="lead">
+      Kenalkan Or Account — pusat identitas digital yang dirancang untuk
+      membantu kamu terhubung dengan layanan Or melalui pengalaman yang
+      modern, praktis, dan aman.
+    </p>
+    <div class="actions">
+      <button class="btn primary" data-open="register">Buat akun Or ↗</button>
+      <button class="btn secondary" data-open="login">Saya sudah punya akun</button>
     </div>
-  </aside>
+    <p class="note">Konsep awal Or Account. Pendaftaran dan login belum aktif sampai sistem akun dihubungkan.</p>
+  </div>
 
-  <main class="main">
-    <div class="hero">
-      <div class="hero-logo">
-        <svg viewBox="0 0 48 48" fill="none">
-          <path d="M24 6C13.5 6 5 13.1 5 22c0 5.1 2.9 9.7 7.4 12.6L10 42l11-5.1c1 .2 2 .3 3 .3 10.5 0 19-7.1 19-16S34.5 6 24 6Z" fill="white"/>
-        </svg>
-      </div>
-      <h1>OER</h1>
-      <p>Ruang komunikasi modern untuk mengirim pesan, file, status, dan terhubung dengan teman.</p>
-      
-      <div class="hero-actions">
-        <a href="chat.html" class="btn btn-primary">Mulai Chat</a>
-        <a href="friends.html" class="btn btn-ghost">Cari Teman</a>
-      </div>
-
-      <div class="features">
-        <div class="feature">
-          <div class="feature-icon">💬</div>
-          <strong>Pesan & File</strong>
-          <span>Kirim teks, foto, video, musik, APK</span>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">◌</div>
-          <strong>Status</strong>
-          <span>Bagikan momen harianmu</span>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">👥</div>
-          <strong>Teman</strong>
-          <span>Temukan dan terhubung</span>
-        </div>
-      </div>
+  <div class="visual" aria-label="Konsep logo Or">
+    <div class="orbit"></div>
+    <div class="logo-stage">
+      <svg class="logo-large" viewBox="0 0 220 170" role="img" aria-label="Simbol Or gradasi cyan, biru, dan ungu">
+        <defs>
+          <linearGradient id="orLarge" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#39e7ff"/>
+            <stop offset="48%" stop-color="#6682ff"/>
+            <stop offset="100%" stop-color="#b45cff"/>
+          </linearGradient>
+          <linearGradient id="orAccent" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#39e7ff"/>
+            <stop offset="100%" stop-color="#b45cff"/>
+          </linearGradient>
+        </defs>
+        <path d="M23 80C23 42 48 18 81 18s57 25 57 62-24 62-57 62S23 118 23 80Z"
+          fill="none" stroke="url(#orLarge)" stroke-width="19" stroke-linecap="round"/>
+        <path d="M84 83h36c20 0 31 11 31 31v12"
+          fill="none" stroke="url(#orLarge)" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M137 82h22c18 0 29 11 29 28"
+          fill="none" stroke="url(#orAccent)" stroke-width="16" stroke-linecap="round"/>
+        <path d="M169 27l22-11-5 24"
+          fill="none" stroke="#39e7ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="201" cy="25" r="5" fill="#b45cff"/>
+      </svg>
     </div>
-  </main>
+    <div class="float-tag tag-one"><strong>● Identitas Or</strong>Dirancang untuk terhubung</div>
+    <div class="float-tag tag-two"><strong>OR / ACCOUNT</strong>Satu pusat akun digital</div>
+  </div>
+</section>
+
+<section class="features" id="fitur">
+  <div class="section-head">
+    <h2>Mulai dari satu identitas</h2>
+    <p>Fondasi untuk pengalaman Or yang saling terhubung.</p>
+  </div>
+  <div class="cards">
+    <article class="card">
+      <div class="card-icon">◇</div>
+      <h3>Profil pribadi</h3>
+      <p>Rencanakan profil dan nama pengguna yang menjadi identitasmu di ekosistem Or.</p>
+    </article>
+    <article class="card">
+      <div class="card-icon">⌘</div>
+      <h3>Satu identitas</h3>
+      <p>Dirancang sebagai pintu masuk untuk layanan Or yang akan dihubungkan pada tahap berikutnya.</p>
+    </article>
+    <article class="card">
+      <div class="card-icon">✧</div>
+      <h3>Keamanan sebagai dasar</h3>
+      <p>Sistem akun nantinya perlu autentikasi, pengelolaan sesi, dan perlindungan data.</p>
+    </article>
+  </div>
+</section>
+</main>
+
+<footer>
+  <span>© <span id="year"></span> Or Account</span>
+  <span>Platform identitas digital · Dalam pengembangan</span>
+</footer>
 </div>
 
-<!-- BOTTOM NAV (Profil paling kiri) -->
-<nav class="bottom-nav">
-  <a href="profile.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="8" r="4"/>
-      <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
-    </svg>
-    Profil
-  </a>
-  <a href="index.html" class="active">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"/>
-    </svg>
-    Home
-  </a>
-  <a href="chat.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
-    </svg>
-    Chat
-  </a>
-  <a href="status.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="9"/>
-      <circle cx="12" cy="12" r="5.5"/>
-      <circle cx="12" cy="12" r="2"/>
-    </svg>
-    Status
-  </a>
-  <a href="friends.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-      <circle cx="9" cy="7" r="4"/>
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-    </svg>
-    Teman
-  </a>
-</nav>
+<div class="backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <section class="modal">
+    <button class="close" id="closeModal" aria-label="Tutup">&times;</button>
+    <div class="modal-brand">
+      <svg width="37" height="37" viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <linearGradient id="orModal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#39e7ff"/>
+            <stop offset=".5" stop-color="#6682ff"/>
+            <stop offset="1" stop-color="#b45cff"/>
+          </linearGradient>
+        </defs>
+        <path d="M17 48C17 27 31 15 49 15s32 13 32 33-14 34-32 34S17 69 17 48Z"
+          fill="none" stroke="url(#orModal)" stroke-width="12" stroke-linecap="round"/>
+        <path d="M51 52h17c10 0 15 6 15 16v8"
+          fill="none" stroke="url(#orModal)" stroke-width="12" stroke-linecap="round"/>
+      </svg>
+      <span>Or Account</span>
+    </div>
+    <h2 id="modalTitle">Masuk ke Or Account</h2>
+    <p class="modal-desc" id="modalDesc">Pusat identitas digital Or.</p>
+    <form id="authForm">
+      <label class="field">
+        <span>Nama pengguna</span>
+        <input id="username" name="username" autocomplete="username" placeholder="Nama pengguna kamu" required>
+      </label>
+      <label class="field" id="emailField" hidden>
+        <span>Email pemulihan (opsional)</span>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="nama@contoh.com">
+      </label>
+      <label class="field">
+        <span>Kata sandi</span>
+        <input id="password" name="password" type="password" autocomplete="current-password"
+          minlength="8" placeholder="Minimal 8 karakter" required>
+      </label>
+      <button class="btn primary full" type="submit" id="submitAuth">Masuk</button>
+      <div class="message" id="formMessage" role="status">
+        Demo tampilan saja — data tidak dikirim atau disimpan.
+      </div>
+    </form>
+    <div class="switch" id="switchText">
+      Belum punya akun? <button type="button" data-switch="register">Buat akun</button>
+    </div>
+  </section>
+</div>
+
+<script>
+const modal = document.getElementById('authModal');
+const title = document.getElementById('modalTitle');
+const desc = document.getElementById('modalDesc');
+const emailField = document.getElementById('emailField');
+const password = document.getElementById('password');
+const submit = document.getElementById('submitAuth');
+const message = document.getElementById('formMessage');
+const switchText = document.getElementById('switchText');
+
+function setMode(mode) {
+  const registering = mode === 'register';
+  title.textContent = registering ? 'Buat identitas Or' : 'Masuk ke Or Account';
+  desc.textContent = registering
+    ? 'Siapkan identitasmu untuk ekosistem Or. Pendaftaran sungguhan belum diaktifkan.'
+    : 'Masuk ke pusat identitas Or. Login sungguhan belum diaktifkan.';
+  emailField.hidden = !registering;
+  password.autocomplete = registering ? 'new-password' : 'current-password';
+  submit.textContent = registering ? 'Buat akun' : 'Masuk';
+  switchText.innerHTML = registering
+    ? 'Sudah punya akun? <button type="button" data-switch="login">Masuk</button>'
+    : 'Belum punya akun? <button type="button" data-switch="register">Buat akun</button>';
+  message.textContent = 'Demo tampilan saja — data tidak dikirim atau disimpan.';
+}
+
+function openModal(mode) {
+  setMode(mode);
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('username').focus(), 50);
+}
+function closeModal() {
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('[data-open]').forEach(button => {
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    openModal(button.dataset.open);
+  });
+});
+document.getElementById('closeModal').addEventListener('click', closeModal);
+modal.addEventListener('click', event => {
+  if (event.target === modal) closeModal();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeModal();
+});
+switchText.addEventListener('click', event => {
+  const nextMode = event.target.dataset.switch;
+  if (nextMode) setMode(nextMode);
+});
+document.getElementById('authForm').addEventListener('submit', event => {
+  event.preventDefault();
+  message.textContent = 'Ini masih demo antarmuka. Belum ada akun yang dibuat atau sesi login yang dimulai.';
+});
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
