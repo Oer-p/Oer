@@ -2,572 +2,879 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101326">
-  <title>OR Account — Satu Identitas untuk OR</title>
-  <meta name="description" content="OR Account adalah identitas akun untuk layanan OR.">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101329">
+<title>OR Account — Satu Akun, Terhubung</title>
+<meta name="description" content="OR Account adalah akun untuk terhubung dan berkirim pesan melalui OR Mail.">
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0b0d19;
-      --panel: #15182b;
-      --border: #292d47;
-      --text: #f6f7ff;
-      --muted: #a2a8c4;
-      --purple: #a78bfa;
-      --blue: #7c9cff;
-      --green: #69e4b0;
-      --red: #ff929e;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 24px 16px;
-      display: grid;
-      place-items: center;
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(ellipse at 15% 5%, #292052 0, transparent 40%),
-        radial-gradient(ellipse at 90% 90%, #15264c 0, transparent 40%),
-        var(--bg);
-    }
-
-    .shell { width: 100%; max-width: 440px; }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      margin: 0 0 26px 4px;
-    }
-
-    .logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 17px;
-      display: grid;
-      place-items: center;
-      font-weight: 950;
-      font-size: 25px;
-      letter-spacing: -3px;
-      color: white;
-      background: linear-gradient(135deg, #a78bfa, #647cff 65%, #54d9d0);
-      box-shadow: 0 8px 28px #7163e544;
-    }
-
-    .brand-name { font-size: 23px; font-weight: 850; }
-    .brand-sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
-
-    .card {
-      padding: 27px;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      background: #14172aee;
-      box-shadow: 0 24px 80px #0005;
-    }
-
-    h1 { margin: 0 0 8px; font-size: 27px; letter-spacing: -.7px; }
-    .intro { color: var(--muted); font-size: 14px; line-height: 1.65; margin: 0 0 24px; }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-      padding: 5px;
-      background: #0d1020;
-      border-radius: 13px;
-      margin-bottom: 23px;
-    }
-
-    .tab {
-      border: 0;
-      border-radius: 9px;
-      padding: 11px;
-      cursor: pointer;
-      color: var(--muted);
-      background: transparent;
-      font-weight: 750;
-      font-size: 14px;
-    }
-
-    .tab.active { color: white; background: #303353; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      margin: 17px 0 8px;
-    }
-
-    input {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #0c0f1d;
-      color: white;
-      padding: 14px;
-      font: inherit;
-      outline: none;
-    }
-
-    input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px #a78bfa20; }
-    input::placeholder { color: #737b9b; }
-
-    .hint { color: var(--muted); font-size: 11px; margin-top: 7px; line-height: 1.5; }
-
-    .primary {
-      width: 100%;
-      border: 0;
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 24px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 850;
-      color: #101326;
-      background: linear-gradient(110deg, #b8a0ff, #83a4ff);
-    }
-
-    .primary:disabled { opacity: .55; cursor: wait; }
-
-    .message {
-      display: none;
-      margin-top: 17px;
-      padding: 12px;
-      border-radius: 11px;
-      font-size: 13px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .message.show { display: block; }
-    .message.error { background: #49222d; color: #ffc4cb; }
-    .message.success { background: #123b32; color: #a5f5d4; }
-    .message.info { background: #242849; color: #d5d9ff; }
-
-    .divider { height: 1px; background: var(--border); margin: 24px 0; }
-    .foot { text-align: center; color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 18px; }
-
-    .profile { display: none; }
-    .profile.show { display: block; }
-
-    .avatar {
-      width: 72px;
-      height: 72px;
-      margin-bottom: 17px;
-      display: grid;
-      place-items: center;
-      border-radius: 24px;
-      background: linear-gradient(135deg, #a78bfa, #657eff);
-      font-size: 28px;
-      font-weight: 900;
-    }
-
-    .idbox {
-      margin-top: 22px;
-      padding: 17px;
-      background: #0d1020;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-    }
-
-    .idlabel { color: var(--muted); font-size: 12px; }
-    .orid { margin-top: 6px; font-size: 22px; font-weight: 850; letter-spacing: .5px; }
-
-    .copy {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 11px;
-      margin-top: 13px;
-      background: #20243c;
-      color: white;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .secondary {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: white;
-      border-radius: 11px;
-      padding: 13px;
-      cursor: pointer;
-      font-weight: 750;
-      margin-top: 12px;
-    }
-
-    .feature {
-      padding: 14px;
-      margin-top: 12px;
-      border-radius: 12px;
-      background: #0d1020;
-      border: 1px solid var(--border);
-    }
-
-    .feature strong { display: block; font-size: 14px; margin-bottom: 5px; }
-    .feature span { color: var(--muted); font-size: 12px; line-height: 1.6; }
-
-    @media (max-width: 420px) {
-      .card { padding: 21px; }
-      h1 { font-size: 24px; }
-    }
-  </style>
+<style>
+:root {
+  --bg: #0c1020;
+  --panel: #151a30;
+  --panel2: #1c2340;
+  --text: #f4f5ff;
+  --muted: #9da7c7;
+  --accent: #8b7bff;
+  --accent2: #42d6c6;
+  --border: rgba(255,255,255,.1);
+  --danger: #ff7777;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 10% 0%, #242052 0, transparent 45%),
+    radial-gradient(ellipse at 100% 100%, #103c46 0, transparent 38%),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+a { color: var(--accent2); }
+header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 5%;
+  border-bottom: 1px solid var(--border);
+  background: rgba(12,16,32,.88);
+  backdrop-filter: blur(18px);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #9c81ff, #39d9c8);
+  color: #101329;
+  font-size: 19px;
+  font-weight: 950;
+  letter-spacing: -3px;
+  padding-right: 3px;
+  box-shadow: 0 5px 25px #8171ff38;
+}
+.brand-name { font-weight: 850; font-size: 20px; letter-spacing: -.7px; }
+.brand-sub { color: var(--muted); font-size: 11px; margin-top: 3px; }
+main { width: min(1080px, 92%); margin: 38px auto 65px; }
+h1 { font-size: clamp(28px, 5vw, 44px); line-height: 1.12; margin: 0 0 12px; letter-spacing: -1.4px; }
+h2 { font-size: 23px; margin: 0 0 10px; }
+h3 { font-size: 16px; margin: 0 0 12px; }
+p { line-height: 1.65; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.hero { margin-bottom: 28px; max-width: 680px; }
+.hero p { color: var(--muted); margin: 0; }
+.pill {
+  display: inline-flex;
+  border: 1px solid #8b7bff55;
+  background: #8b7bff15;
+  color: #c5bcff;
+  padding: 7px 11px;
+  border-radius: 99px;
+  font-size: 12px;
+  margin-bottom: 17px;
+}
+.gradient-text {
+  background: linear-gradient(90deg, #b5a5ff, #54e5d1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.card {
+  background: linear-gradient(145deg, #191f38ee, #11172aee);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 18px 55px #00000018;
+  min-width: 0;
+}
+.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.field { margin: 14px 0; }
+label { display: block; margin-bottom: 7px; color: #c5cce2; font-size: 13px; }
+input, textarea {
+  width: 100%;
+  color: var(--text);
+  background: #0d1224;
+  border: 1px solid #343b59;
+  border-radius: 12px;
+  padding: 13px 14px;
+  outline: none;
+}
+input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #8b7bff20; }
+textarea { min-height: 150px; resize: vertical; }
+.btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: linear-gradient(110deg, #9b84ff, #6e78ff);
+  color: white;
+  font-weight: 750;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn-secondary {
+  color: var(--text);
+  background: #ffffff0b;
+  border: 1px solid var(--border);
+}
+.btn-danger { color: #ffb3b3; background: #ff77771a; border: 1px solid #ff777733; }
+.btn-full { width: 100%; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 17px; }
+.message {
+  display: none;
+  margin: 15px 0;
+  border: 1px solid var(--border);
+  background: #ffffff08;
+  padding: 12px 14px;
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+.message.error { display: block; color: #ffaaaa; border-color: #ff777744; }
+.message.success { display: block; color: #80f1ce; border-color: #42d6c644; }
+#appView, #authView { display: none; }
+.account-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.account-id {
+  margin-top: 12px; padding: 14px; border-radius: 14px;
+  background: #0c1225; border: 1px solid var(--border);
+}
+.account-id strong { display: block; font-size: 20px; margin-top: 5px; letter-spacing: .4px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 22px 0 16px; }
+.tab {
+  border: 1px solid var(--border); background: #ffffff07; color: #bdc5df;
+  border-radius: 12px; padding: 11px 14px;
+}
+.tab.active { color: white; background: #8b7bff27; border-color: #8b7bff88; }
+.mail-list { display: grid; gap: 10px; margin-top: 16px; }
+.mail-item {
+  border: 1px solid var(--border); border-radius: 15px; padding: 15px;
+  background: #ffffff04; cursor: pointer; overflow-wrap: anywhere;
+}
+.mail-item:hover { background: #ffffff0a; }
+.mail-item.unread { border-color: #8b7bff77; background: #8b7bff0b; }
+.mail-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.mail-subject { font-weight: 750; margin: 9px 0 5px; }
+.mail-preview { color: var(--muted); font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.empty {
+  border: 1px dashed #3a4260; border-radius: 16px; padding: 30px 15px;
+  color: var(--muted); text-align: center; line-height: 1.7;
+}
+footer {
+  text-align: center; padding: 24px 15px 34px; color: #808aa9;
+  border-top: 1px solid var(--border); font-size: 12px;
+}
+hr { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+@media(max-width:720px) {
+  main { margin-top: 27px; }
+  .grid { grid-template-columns: 1fr; }
+  .card { padding: 19px; border-radius: 18px; }
+  header { padding: 12px 4%; }
+  .brand-name { font-size: 18px; }
+  .logo { width: 41px; height: 41px; }
+}
+</style>
 </head>
 
 <body>
-  <main class="shell">
-    <header class="brand">
-      <div class="logo">OR</div>
-      <div>
-        <div class="brand-name">OR Account</div>
-        <div class="brand-sub">Satu identitas untuk layanan OR</div>
+<header>
+  <div class="brand">
+    <div class="logo" aria-label="OR">OR</div>
+    <div>
+      <div class="brand-name">OR Account</div>
+      <div class="brand-sub">Satu akun, terhubung</div>
+    </div>
+  </div>
+  <button id="headerLogout" class="btn btn-secondary" style="display:none" type="button">
+    Keluar
+  </button>
+</header>
+
+<main>
+  <section class="hero">
+    <span class="pill">✦ Selamat datang di OR</span>
+    <h1>Akunmu. Identitasmu. <span class="gradient-text">Koneksi OR.</span></h1>
+    <p>
+      Buat akun OR, miliki OR ID milikmu, dan gunakan OR Mail
+      untuk berkirim pesan dengan pengguna OR lainnya.
+    </p>
+  </section>
+
+  <div id="globalMessage" class="message" role="status"></div>
+
+  <section id="authView">
+    <div class="grid">
+      <div class="card">
+        <h2>Buat OR Account</h2>
+        <p class="muted small">Daftar menggunakan email asli yang dapat kamu akses.</p>
+        <form id="signupForm">
+          <div class="field">
+            <label for="signupUsername">Username OR</label>
+            <input id="signupUsername" required minlength="3" maxlength="24"
+              pattern="[A-Za-z0-9_]+"
+              autocomplete="username" placeholder="contoh: arip_or">
+            <div class="muted small">3–24 karakter: huruf, angka, dan garis bawah.</div>
+          </div>
+          <div class="field">
+            <label for="signupEmail">Email aktif</label>
+            <input id="signupEmail" type="email" required autocomplete="email"
+              placeholder="nama@email.com">
+          </div>
+          <div class="field">
+            <label for="signupPassword">Password OR</label>
+            <input id="signupPassword" type="password" required minlength="8"
+              autocomplete="new-password" placeholder="Minimal 8 karakter">
+          </div>
+          <button class="btn btn-full" id="signupButton" type="submit">Buat Akun OR</button>
+        </form>
       </div>
-    </header>
 
-    <section class="card" id="authPanel">
-      <h1 id="heading">Selamat datang di OR</h1>
-      <p class="intro" id="intro">
-        Buat identitas OR milikmu. Gunakan username dan kata sandi untuk masuk.
-      </p>
+      <div class="card">
+        <h2>Masuk ke OR</h2>
+        <p class="muted small">Gunakan email dan password yang terdaftar.</p>
+        <form id="loginForm">
+          <div class="field">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" required autocomplete="email"
+              placeholder="nama@email.com">
+          </div>
+          <div class="field">
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" type="password" required
+              autocomplete="current-password" placeholder="Password OR kamu">
+          </div>
+          <button class="btn btn-full" id="loginButton" type="submit">Masuk</button>
+        </form>
+        <hr>
+        <p class="muted small">
+          Password OR tidak perlu sama dengan password email kamu.
+          Jangan bagikan password kepada siapa pun.
+        </p>
+      </div>
+    </div>
+  </section>
 
-      <div class="tabs">
-        <button class="tab active" id="loginTab" type="button">Masuk</button>
-        <button class="tab" id="registerTab" type="button">Buat akun</button>
+  <section id="appView">
+    <div class="card">
+      <div class="account-top">
+        <div>
+          <span class="pill">✓ Area akun</span>
+          <h2 id="welcomeTitle">Halo, pengguna OR</h2>
+          <div class="muted small">Akun OR kamu siap digunakan.</div>
+        </div>
+        <button id="refreshButton" class="btn btn-secondary" type="button">
+          Muat ulang
+        </button>
       </div>
 
-      <form id="authForm">
-        <div id="usernameWrap">
-          <label for="username">Username OR</label>
-          <input id="username" name="username"
-                 autocomplete="username"
-                 placeholder="contoh: kawanor"
-                 minlength="3" maxlength="24"
-                 pattern="[A-Za-z0-9_]+"
-                 required>
-          <div class="hint">3–24 karakter. Gunakan huruf, angka, atau garis bawah.</div>
+      <div class="account-id">
+        <span class="muted small">OR ID kamu</span>
+        <strong id="myOrId">Memuat...</strong>
+        <div id="myUsername" class="muted small" style="margin-top:6px"></div>
+        <div class="actions">
+          <button id="copyIdButton" class="btn btn-secondary" type="button">Salin OR ID</button>
+          <button id="copyUsernameButton" class="btn btn-secondary" type="button">Salin Username</button>
         </div>
+      </div>
+    </div>
 
-        <label for="password">Kata sandi</label>
-        <input id="password" name="password" type="password"
-               autocomplete="current-password"
-               minlength="8" maxlength="72"
-               placeholder="Minimal 8 karakter" required>
+    <nav class="tabs" aria-label="Menu OR Mail">
+      <button class="tab active" data-tab="inbox" type="button">✉ Kotak Masuk</button>
+      <button class="tab" data-tab="sent" type="button">↗ Terkirim</button>
+      <button class="tab" data-tab="compose" type="button">＋ Tulis Pesan</button>
+    </nav>
 
-        <div id="confirmWrap" hidden>
-          <label for="confirmPassword">Ulangi kata sandi</label>
-          <input id="confirmPassword" type="password"
-                 autocomplete="new-password"
-                 minlength="8" maxlength="72"
-                 placeholder="Ketik ulang kata sandi">
+    <section id="mailPanel" class="card">
+      <div class="account-top">
+        <div>
+          <h2 id="panelTitle">Kotak Masuk</h2>
+          <div id="panelDescription" class="muted small">Pesan yang dikirim ke akunmu.</div>
         </div>
+        <button id="reloadMailButton" class="btn btn-secondary" type="button">
+          Perbarui pesan
+        </button>
+      </div>
+      <div id="mailList" class="mail-list">
+        <div class="empty">Memuat pesan...</div>
+      </div>
+    </section>
 
-        <button class="primary" id="submitButton" type="submit">Masuk ke OR</button>
+    <section id="composePanel" class="card" style="display:none">
+      <h2>Tulis OR Mail</h2>
+      <p class="muted small">Kirim pesan kepada pengguna OR lainnya.</p>
+      <form id="composeForm">
+        <div class="field">
+          <label for="recipient">Penerima — username atau OR ID</label>
+          <input id="recipient" required placeholder="contoh: arip_or atau OR-XXXXXXXXXXXX">
+        </div>
+        <div class="field">
+          <label for="subject">Subjek</label>
+          <input id="subject" maxlength="180" placeholder="Subjek pesan">
+        </div>
+        <div class="field">
+          <label for="body">Isi pesan</label>
+          <textarea id="body" required maxlength="20000"
+            placeholder="Tulis pesanmu di sini..."></textarea>
+        </div>
+        <button id="sendButton" class="btn" type="submit">Kirim OR Mail</button>
       </form>
-
-      <div class="message" id="message" role="status" aria-live="polite"></div>
-      <div class="foot">
-        OR Account · Identitas akun OR<br>
-        OR Mail internal akan dikembangkan terpisah.
-      </div>
+      <div id="composeMessage" class="message" role="status"></div>
     </section>
 
-    <section class="card profile" id="profilePanel">
-      <div class="avatar">OR</div>
-      <h1 id="welcome">Akun OR kamu</h1>
-      <p class="intro">Identitas akun berhasil dimuat.</p>
-
-      <div class="idbox">
-        <div class="idlabel">OR ID kamu</div>
-        <div class="orid" id="orId">Memuat...</div>
-        <button class="copy" id="copyId" type="button">Salin OR ID</button>
+    <section id="detailPanel" class="card" style="display:none;margin-top:18px">
+      <div class="account-top">
+        <h2>Detail pesan</h2>
+        <button id="closeDetailButton" class="btn btn-secondary" type="button">Tutup</button>
       </div>
-
-      <div class="feature">
-        <strong>Profil OR</strong>
-        <span id="profileUsername">Memuat username...</span>
+      <div id="mailDetail"></div>
+      <div class="actions">
+        <button id="replyButton" class="btn" type="button">Balas pesan</button>
       </div>
-
-      <div class="feature">
-        <strong>OR Mail</strong>
-        <span>Kotak masuk dan pesan antar pengguna OR akan tersedia setelah modul pesan dibuat.</span>
-      </div>
-
-      <button class="secondary" id="refreshProfile" type="button">Muat ulang profil</button>
-      <button class="secondary" id="logoutButton" type="button">Keluar dari akun</button>
-      <div class="message" id="profileMessage" role="status" aria-live="polite"></div>
     </section>
-  </main>
+  </section>
+</main>
 
-  <script>
-    (() => {
-      "use strict";
+<footer>
+  <div><strong>OR Account</strong> · Identitas dan komunikasi dalam satu tempat.</div>
+  <div style="margin-top:7px">OR Mail saat ini melayani pesan antar pengguna OR.</div>
+</footer>
 
-      const SUPABASE_URL = "https://mkjetsmaozegaqbgfsyk.supabase.co";
-      const SUPABASE_KEY = "sb_publishable_QIxIe-teLAlFNdGX77pMGw_3NZkPJw1";
+<script>
+(() => {
+  "use strict";
 
-      const client = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+  // Konfigurasi Supabase OR Account
+  const SUPABASE_URL = "https://mkjetsmaozegaqbgfsyk.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_QIxIe-teLAlFNdGX77pMGw_3NZkPJw1";
+
+  const $ = (id) => document.getElementById(id);
+  const authView = $("authView");
+  const appView = $("appView");
+  const globalMessage = $("globalMessage");
+
+  let db;
+  let currentUser = null;
+  let currentProfile = null;
+  let currentTab = "inbox";
+  let openedMessage = null;
+  let loadingProfile = false;
+
+  function showMessage(element, text, type = "success") {
+    element.textContent = text;
+    element.className = "message " + type;
+    element.style.display = "block";
+  }
+
+  function hideMessage(element) {
+    element.textContent = "";
+    element.className = "message";
+    element.style.display = "none";
+  }
+
+  function showGlobal(text, type = "success") {
+    showMessage(globalMessage, text, type);
+  }
+
+  function setBusy(button, busy, busyText, originalText) {
+    button.disabled = busy;
+    button.textContent = busy ? busyText : originalText;
+  }
+
+  function formatDate(value) {
+    if (!value) return "";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+      ? ""
+      : date.toLocaleString("id-ID", {
+          dateStyle: "medium",
+          timeStyle: "short"
+        });
+  }
+
+  function makeElement(tag, className, text) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+
+  async function copyText(value) {
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      showGlobal("Berhasil disalin.", "success");
+    } catch {
+      showGlobal("Gagal menyalin. Silakan salin teks secara manual.", "error");
+    }
+  }
+
+  function setSignedOut() {
+    currentUser = null;
+    currentProfile = null;
+    openedMessage = null;
+    authView.style.display = "block";
+    appView.style.display = "none";
+    $("headerLogout").style.display = "none";
+    $("mailDetail").replaceChildren();
+  }
+
+  function setSignedIn() {
+    authView.style.display = "none";
+    appView.style.display = "block";
+    $("headerLogout").style.display = "inline-block";
+  }
+
+  async function loadProfile() {
+    if (!currentUser || loadingProfile) return;
+    loadingProfile = true;
+
+    try {
+      const { data, error } = await db
+        .from("or_accounts")
+        .select("id, or_id, username, created_at")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!data) {
+        $("myOrId").textContent = "Profil belum tersedia";
+        $("myUsername").textContent =
+          "Profil OR belum ditemukan. Periksa trigger pembuatan akun di Supabase.";
+        return;
+      }
+
+      currentProfile = data;
+      $("welcomeTitle").textContent = "Halo, @" + data.username;
+      $("myOrId").textContent = data.or_id;
+      $("myUsername").textContent = "Username: @" + data.username;
+    } catch (error) {
+      console.error(error);
+      showGlobal("Gagal memuat profil: " + error.message, "error");
+    } finally {
+      loadingProfile = false;
+    }
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    openedMessage = null;
+    $("detailPanel").style.display = "none";
+
+    document.querySelectorAll(".tab").forEach((button) => {
+      button.classList.toggle("active", button.dataset.tab === tab);
+    });
+
+    if (tab === "compose") {
+      $("mailPanel").style.display = "none";
+      $("composePanel").style.display = "block";
+      $("panelTitle").textContent = "Tulis OR Mail";
+      hideMessage($("composeMessage"));
+    } else {
+      $("composePanel").style.display = "none";
+      $("mailPanel").style.display = "block";
+      $("panelTitle").textContent =
+        tab === "inbox" ? "Kotak Masuk" : "Pesan Terkirim";
+      $("panelDescription").textContent =
+        tab === "inbox"
+          ? "Pesan yang dikirim ke akunmu."
+          : "Pesan yang kamu kirim kepada pengguna OR.";
+      loadMessages();
+    }
+  }
+
+  async function loadMessages() {
+    if (!currentUser || !["inbox", "sent"].includes(currentTab)) return;
+
+    const list = $("mailList");
+    list.replaceChildren(makeElement("div", "empty", "Memuat pesan..."));
+
+    try {
+      const column = currentTab === "inbox" ? "recipient_id" : "sender_id";
+
+      const { data, error } = await db
+        .from("or_mail_messages")
+        .select("id, sender_id, recipient_id, subject, body, created_at, read_at")
+        .eq(column, currentUser.id)
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (error) throw error;
+
+      list.replaceChildren();
+
+      if (!data || data.length === 0) {
+        list.append(makeElement(
+          "div",
+          "empty",
+          currentTab === "inbox"
+            ? "Belum ada pesan masuk. Pesan OR yang dikirim kepadamu akan muncul di sini."
+            : "Belum ada pesan terkirim. Pesan yang kamu kirim akan muncul di sini."
+        ));
+        return;
+      }
+
+      data.forEach((mail) => {
+        const item = makeElement(
+          "article",
+          "mail-item" +
+            (currentTab === "inbox" && !mail.read_at ? " unread" : "")
+        );
+
+        const meta = makeElement("div", "mail-meta");
+        meta.append(
+          makeElement(
+            "span",
+            "muted small",
+            currentTab === "inbox" ? "Dari pengguna OR" : "Kepada pengguna OR"
+          ),
+          makeElement("span", "muted small", formatDate(mail.created_at))
+        );
+
+        const subject = makeElement(
+          "div",
+          "mail-subject",
+          mail.subject || "(Tanpa subjek)"
+        );
+
+        const preview = makeElement(
+          "div",
+          "mail-preview",
+          (mail.body || "").slice(0, 180)
+        );
+
+        item.append(meta, subject, preview);
+
+        item.addEventListener("click", () => openMessage(mail));
+        list.append(item);
+      });
+    } catch (error) {
+      console.error(error);
+      list.replaceChildren(makeElement(
+        "div",
+        "empty",
+        "Gagal memuat pesan: " + error.message
+      ));
+    }
+  }
+
+  async function openMessage(mail) {
+    openedMessage = mail;
+    $("detailPanel").style.display = "block";
+    $("mailDetail").replaceChildren();
+
+    const detail = $("mailDetail");
+    detail.append(
+      makeElement("div", "muted small", formatDate(mail.created_at)),
+      makeElement("h3", "", mail.subject || "(Tanpa subjek)"),
+      makeElement(
+        "div",
+        "muted small",
+        currentTab === "inbox" ? "Pengirim: pengguna OR" : "Penerima: pengguna OR"
+      ),
+      makeElement("hr"),
+      makeElement("div", "mail-preview", mail.body || "")
+    );
+
+    $("replyButton").style.display = currentTab === "inbox" ? "inline-block" : "none";
+
+    if (currentTab === "inbox" && !mail.read_at) {
+      try {
+        const { error } = await db
+          .from("or_mail_messages")
+          .update({ read_at: new Date().toISOString() })
+          .eq("id", mail.id)
+          .eq("recipient_id", currentUser.id);
+
+        if (error) throw error;
+        mail.read_at = new Date().toISOString();
+      } catch (error) {
+        console.error("Tidak bisa menandai pesan telah dibaca:", error);
+      }
+    }
+  }
+
+  async function findRecipient(query) {
+    const { data, error } = await db.rpc("find_or_account", {
+      p_query: query.trim()
+    });
+
+    if (error) throw error;
+    return Array.isArray(data) ? data[0] : null;
+  }
+
+  $("signupForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    hideMessage(globalMessage);
+
+    const button = $("signupButton");
+    const username = $("signupUsername").value.trim().toLowerCase();
+    const email = $("signupEmail").value.trim();
+    const password = $("signupPassword").value;
+
+    if (!/^[a-z0-9_]{3,24}$/.test(username)) {
+      showGlobal("Username harus 3–24 karakter: huruf, angka, atau garis bawah.", "error");
+      return;
+    }
+
+    setBusy(button, true, "Membuat akun...", "Buat Akun OR");
+
+    try {
+      const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        currentUser = data.user;
+        setSignedIn();
+        await loadProfile();
+        switchTab("inbox");
+        showGlobal("Akun OR berhasil dibuat.", "success");
+      } else {
+        showGlobal(
+          "Pendaftaran diterima. Periksa email untuk konfirmasi akun, lalu masuk menggunakan email dan password tersebut. Jika username sudah digunakan, coba username lain.",
+          "success"
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      showGlobal("Pendaftaran gagal: " + error.message, "error");
+    } finally {
+      setBusy(button, false, "", "Buat Akun OR");
+    }
+  });
+
+  $("loginForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    hideMessage(globalMessage);
+
+    const button = $("loginButton");
+    setBusy(button, true, "Memeriksa akun...", "Masuk");
+
+    try {
+      const { data, error } = await db.auth.signInWithPassword({
+        email: $("loginEmail").value.trim(),
+        password: $("loginPassword").value
+      });
+
+      if (error) throw error;
+
+      currentUser = data.user;
+      setSignedIn();
+      await loadProfile();
+      switchTab("inbox");
+      showGlobal("Berhasil masuk ke OR Account.", "success");
+    } catch (error) {
+      console.error(error);
+      showGlobal("Login gagal: " + error.message, "error");
+    } finally {
+      setBusy(button, false, "", "Masuk");
+    }
+  });
+
+  $("headerLogout").addEventListener("click", async () => {
+    const button = $("headerLogout");
+    button.disabled = true;
+
+    try {
+      const { error } = await db.auth.signOut();
+      if (error) throw error;
+      setSignedOut();
+      showGlobal("Kamu sudah keluar dari OR Account.", "success");
+    } catch (error) {
+      showGlobal("Gagal keluar: " + error.message, "error");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  document.querySelectorAll(".tab").forEach((button) => {
+    button.addEventListener("click", () => switchTab(button.dataset.tab));
+  });
+
+  $("refreshButton").addEventListener("click", async () => {
+    await loadProfile();
+    if (currentTab !== "compose") await loadMessages();
+    showGlobal("Data akun diperbarui.", "success");
+  });
+
+  $("reloadMailButton").addEventListener("click", loadMessages);
+
+  $("copyIdButton").addEventListener("click", () => {
+    copyText(currentProfile && currentProfile.or_id);
+  });
+
+  $("copyUsernameButton").addEventListener("click", () => {
+    copyText(currentProfile && currentProfile.username);
+  });
+
+  $("composeForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    hideMessage($("composeMessage"));
+
+    if (!currentUser) {
+      showMessage($("composeMessage"), "Silakan masuk terlebih dahulu.", "error");
+      return;
+    }
+
+    const button = $("sendButton");
+    const query = $("recipient").value.trim();
+    const subject = $("subject").value.trim();
+    const body = $("body").value.trim();
+
+    if (!query || !body) {
+      showMessage($("composeMessage"), "Isi penerima dan pesan terlebih dahulu.", "error");
+      return;
+    }
+
+    setBusy(button, true, "Mengirim pesan...", "Kirim OR Mail");
+
+    try {
+      const recipient = await findRecipient(query);
+
+      if (!recipient) {
+        throw new Error("Akun penerima tidak ditemukan. Periksa username atau OR ID.");
+      }
+
+      if (recipient.id === currentUser.id) {
+        throw new Error("Kamu tidak dapat mengirim pesan kepada akunmu sendiri.");
+      }
+
+      const { error } = await db
+        .from("or_mail_messages")
+        .insert({
+          sender_id: currentUser.id,
+          recipient_id: recipient.id,
+          subject: subject || "",
+          body
+        });
+
+      if (error) throw error;
+
+      showMessage(
+        $("composeMessage"),
+        "Pesan berhasil dikirim ke @" + recipient.username + ".",
+        "success"
       );
 
-      const $ = (id) => document.getElementById(id);
+      $("composeForm").reset();
+    } catch (error) {
+      console.error(error);
+      showMessage($("composeMessage"), "Pesan gagal dikirim: " + error.message, "error");
+    } finally {
+      setBusy(button, false, "", "Kirim OR Mail");
+    }
+  });
 
-      let mode = "login";
-      let currentOrId = "";
+  $("closeDetailButton").addEventListener("click", () => {
+    $("detailPanel").style.display = "none";
+    openedMessage = null;
+    if (currentTab === "inbox") loadMessages();
+  });
 
-      function showMessage(text, type = "info", target = "message") {
-        const box = $(target);
-        box.textContent = text;
-        box.className = "message show " + type;
-      }
+  $("replyButton").addEventListener("click", async () => {
+    if (!openedMessage) return;
 
-      function clearMessage(target = "message") {
-        const box = $(target);
-        box.textContent = "";
-        box.className = "message";
-      }
-
-      function setMode(nextMode) {
-        mode = nextMode;
-        const registering = mode === "register";
-
-        $("loginTab").classList.toggle("active", !registering);
-        $("registerTab").classList.toggle("active", registering);
-        $("heading").textContent = registering
-          ? "Buat akun OR"
-          : "Selamat datang di OR";
-
-        $("intro").textContent = registering
-          ? "Buat username unik dan kata sandi untuk identitas OR kamu."
-          : "Masuk menggunakan username dan kata sandi OR kamu.";
-
-        $("confirmWrap").hidden = !registering;
-        $("confirmPassword").required = registering;
-        $("password").autocomplete = registering ? "new-password" : "current-password";
-        $("submitButton").textContent = registering ? "Buat akun sekarang" : "Masuk ke OR";
-        clearMessage();
-      }
-
-      $("loginTab").addEventListener("click", () => setMode("login"));
-      $("registerTab").addEventListener("click", () => setMode("register"));
-
-      // Supabase Auth membutuhkan identitas email atau nomor telepon.
-      // Untuk prototipe username, kita gunakan alias internal non-email.
-      // Alias .invalid bukan alamat email sungguhan dan tidak menerima email.
-      function makeAuthAlias(username) {
-        return username.toLowerCase() + "@or-account.invalid";
-      }
-
-      async function loadProfile(user) {
-        clearMessage("profileMessage");
-
-        const { data, error } = await client
-          .from("or_accounts")
-          .select("id, or_id, username, created_at")
-          .eq("id", user.id)
-          .maybeSingle();
-
-        if (error) {
-          console.error("Gagal membaca profil OR:", error);
-          showMessage(
-            "Profil gagal dibaca. Periksa SQL, kebijakan RLS, dan koneksi Supabase.",
-            "error",
-            "profileMessage"
-          );
-          return false;
-        }
-
-        if (!data) {
-          showMessage(
-            "Akun login ditemukan, tetapi profil OR belum tersedia. Pastikan SQL OR Account sudah dijalankan. Akun tidak dihapus.",
-            "error",
-            "profileMessage"
-          );
-          return false;
-        }
-
-        currentOrId = data.or_id;
-        $("orId").textContent = data.or_id;
-        $("welcome").textContent = "Halo, " + data.username + "!";
-        $("profileUsername").textContent = "Username: " + data.username;
-
-        $("authPanel").style.display = "none";
-        $("profilePanel").classList.add("show");
-        return true;
-      }
-
-      async function showCurrentSession() {
-        const { data, error } = await client.auth.getSession();
-
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        if (data.session) {
-          await loadProfile(data.session.user);
-        }
-      }
-
-      $("authForm").addEventListener("submit", async (event) => {
-        event.preventDefault();
-        clearMessage();
-
-        const username = $("username").value.trim().toLowerCase();
-        const password = $("password").value;
-        const confirmPassword = $("confirmPassword").value;
-        const button = $("submitButton");
-
-        if (!/^[a-z0-9_]{3,24}$/.test(username)) {
-          showMessage(
-            "Username harus 3–24 karakter dan hanya boleh berisi huruf, angka, serta garis bawah.",
-            "error"
-          );
-          return;
-        }
-
-        if (password.length < 8) {
-          showMessage("Kata sandi harus minimal 8 karakter.", "error");
-          return;
-        }
-
-        if (mode === "register" && password !== confirmPassword) {
-          showMessage("Kedua kata sandi tidak sama.", "error");
-          return;
-        }
-
-        button.disabled = true;
-        button.textContent = "Mohon tunggu...";
-
-        try {
-          const email = makeAuthAlias(username);
-          let result;
-
-          if (mode === "register") {
-            result = await client.auth.signUp({
-              email,
-              password,
-              options: {
-                data: { username }
-              }
-            });
-
-            if (result.error) throw result.error;
-
-            if (!result.data.session) {
-              showMessage(
-                "Pendaftaran diterima, tetapi belum ada sesi login. Untuk prototipe username, periksa pengaturan Confirm email di Supabase Auth. Jangan menganggap akun siap digunakan sebelum sesi tersedia.",
-                "info"
-              );
-              return;
-            }
-
-            showMessage("Pendaftaran berhasil. Memuat profil OR...", "success");
-            await loadProfile(result.data.user);
-          } else {
-            result = await client.auth.signInWithPassword({
-              email,
-              password
-            });
-
-            if (result.error) throw result.error;
-
-            showMessage("Login berhasil. Memuat profil OR...", "success");
-            await loadProfile(result.data.user);
-          }
-        } catch (error) {
-          console.error("Kesalahan autentikasi:", error);
-          const msg = String(error.message || "");
-
-          if (/already registered|already exists|duplicate key/i.test(msg)) {
-            showMessage(
-              "Username mungkin sudah dipakai. Coba username lain atau masuk dengan akun yang sudah ada.",
-              "error"
-            );
-          } else if (/Invalid login credentials/i.test(msg)) {
-            showMessage(
-              "Username atau kata sandi salah. Pastikan username benar.",
-              "error"
-            );
-          } else if (/Database error saving new user/i.test(msg)) {
-            showMessage(
-              "Pembuatan profil gagal. Periksa SQL trigger dan apakah username sudah digunakan. Akun lama tidak otomatis dihapus.",
-              "error"
-            );
-          } else {
-            showMessage(msg || "Terjadi kesalahan. Periksa koneksi dan konfigurasi Supabase.", "error");
-          }
-        } finally {
-          button.disabled = false;
-          button.textContent = mode === "register" ? "Buat akun sekarang" : "Masuk ke OR";
-        }
+    try {
+      const { data, error } = await db.rpc("find_or_account", {
+        p_query: openedMessage.sender_id
       });
 
-      $("copyId").addEventListener("click", async () => {
-        if (!currentOrId) return;
+      // Pencarian username/OR ID bukan pencarian berdasarkan UUID.
+      // Karena itu, balasan otomatis memakai ID pengirim hanya jika
+      // fungsi khusus UUID tersedia; untuk keamanan, minta penerima diisi manual.
+      if (error) console.info("Balasan: penerima dapat diisi manual.");
 
-        try {
-          await navigator.clipboard.writeText(currentOrId);
-          $("copyId").textContent = "OR ID berhasil disalin";
-        } catch {
-          showMessage("Tidak bisa menyalin otomatis. Salin OR ID secara manual.", "info", "profileMessage");
-        }
+      $("recipient").value = "";
+      $("subject").value = openedMessage.subject
+        ? "Re: " + openedMessage.subject
+        : "Re: Pesan OR";
+      $("body").value = "";
+      switchTab("compose");
+      showMessage(
+        $("composeMessage"),
+        "Isi username atau OR ID pengirim pesan sebagai penerima balasan.",
+        "success"
+      );
+      $("recipient").focus();
+    } catch (error) {
+      showGlobal("Tidak dapat membuka formulir balasan: " + error.message, "error");
+    }
+  });
 
-        setTimeout(() => {
-          $("copyId").textContent = "Salin OR ID";
-        }, 1800);
-      });
+  async function start() {
+    if (!window.supabase || !window.supabase.createClient) {
+      showGlobal("Pustaka Supabase gagal dimuat. Periksa koneksi internet.", "error");
+      authView.style.display = "block";
+      return;
+    }
 
-      $("refreshProfile").addEventListener("click", async () => {
-        const { data, error } = await client.auth.getUser();
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
 
-        if (error || !data.user) {
-          showMessage("Sesi tidak ditemukan. Silakan masuk kembali.", "error", "profileMessage");
-          return;
-        }
+    try {
+      const { data, error } = await db.auth.getSession();
+      if (error) throw error;
 
-        await loadProfile(data.user);
-      });
+      if (data.session && data.session.user) {
+        currentUser = data.session.user;
+        setSignedIn();
+        await loadProfile();
+        switchTab("inbox");
+      } else {
+        setSignedOut();
+      }
 
-      $("logoutButton").addEventListener("click", async () => {
-        $("logoutButton").disabled = true;
-
-        const { error } = await client.auth.signOut();
-
-        $("logoutButton").disabled = false;
-
-        if (error) {
-          showMessage("Gagal keluar: " + error.message, "error", "profileMessage");
-          return;
-        }
-
-        currentOrId = "";
-        $("profilePanel").classList.remove("show");
-        $("authPanel").style.display = "";
-        $("authForm").reset();
-        setMode("login");
-        showMessage("Kamu sudah keluar dari OR Account.", "success");
-      });
-
-      client.auth.onAuthStateChange((event, session) => {
+      db.auth.onAuthStateChange((event, session) => {
         if (event === "SIGNED_OUT") {
-          currentOrId = "";
-          $("profilePanel").classList.remove("show");
-          $("authPanel").style.display = "";
+          setSignedOut();
+        } else if (session && session.user) {
+          currentUser = session.user;
+          setSignedIn();
+          // Hindari menjalankan permintaan Supabase bersarang di callback auth.
+          setTimeoutSafeProfile();
         }
       });
+    } catch (error) {
+      console.error(error);
+      setSignedOut();
+      showGlobal("Gagal memeriksa sesi akun: " + error.message, "error");
+    }
+  }
 
-      showCurrentSession();
-    })();
-  </script>
+  function setTimeoutSafeProfile() {
+    Promise.resolve().then(async () => {
+      await loadProfile();
+      if (currentTab !== "compose") await loadMessages();
+    });
+  }
+
+  start();
+})();
+</script>
 </body>
 </html>
