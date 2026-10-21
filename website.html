@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#65a30d">
+<meta name="description" content="Buat, simpan, dan terbitkan website gratis dengan OoeR Website.">
+<title>OoeR Website — Buat Website Gratis</title>
+<style>
+:root{--green:#65a30d;--bg:#f7f9f5;--card:#fff;--text:#172018;--muted:#667166;--line:#dfe7da}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}button{cursor:pointer}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(14px,4vw,38px);background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;text-decoration:none;color:inherit}
+.brand-mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#a3e635,#4d7c0f);color:white;display:grid;place-items:center}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:white;color:var(--text);padding:10px 14px;border-radius:11px;font-weight:650}
+.btn.primary{background:var(--green);border-color:var(--green);color:white}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+main{max-width:1120px;margin:auto;padding:26px 16px 70px}
+.hero{padding:28px 0 20px}
+.eyebrow{color:#4d7c0f;font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.04em;margin:9px 0 12px}
+.hero p{max-width:650px;color:var(--muted);line-height:1.7}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.8fr);gap:18px;align-items:start}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 5px 20px #1f3a1010}
+.panel h2{font-size:18px;margin:0 0 14px}
+.field{display:grid;gap:6px;margin-bottom:13px}
+.field label{font-size:13px;font-weight:750}
+.field input,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:white;color:#172018}
+.field textarea{min-height:115px;resize:vertical;line-height:1.5}
+.field small,.muted{font-size:12px;color:var(--muted);line-height:1.5}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.status{padding:11px 13px;border-radius:11px;background:#eef7e7;color:#365314;font-size:13px;line-height:1.5;margin:12px 0;overflow-wrap:anywhere}
+.status.error{background:#fef2f2;color:#b91c1c}
+.status:empty{display:none}
+.preview{position:sticky;top:86px}
+.preview-frame{min-height:300px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:white;color:#172018}
+.preview-cover{height:125px;background:linear-gradient(135deg,#d9f99d,#65a30d);background-size:cover;background-position:center}
+.preview-body{padding:22px}
+.preview-body h1{font-size:27px;margin:0 0 12px;line-height:1.15;overflow-wrap:anywhere}
+.preview-body p{line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.preview-link{display:inline-block;margin-top:8px;padding:9px 13px;border-radius:9px;background:var(--green);color:white;text-decoration:none;font-weight:700}
+.hidden{display:none!important}
+.auth-box{max-width:480px;margin:20px auto}
+.tabs{display:flex;gap:8px;margin-bottom:15px}
+.tabs button{flex:1}
+.projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:16px}
+.project{border:1px solid var(--line);border-radius:14px;padding:14px;background:white;min-width:0}
+.project h3{margin:0 0 7px;overflow-wrap:anywhere}
+.project p{font-size:12px;color:var(--muted);line-height:1.5}
+.project-actions{display:flex;gap:7px;flex-wrap:wrap}
+.project-actions .btn{padding:7px 9px;font-size:12px}
+.public-shell{max-width:900px;margin:26px auto;padding:16px}
+.public-site{background:white;color:#172018;border-radius:18px;overflow:hidden;min-height:65vh;box-shadow:0 8px 35px #0001}
+.public-site .preview-cover{height:220px}
+.public-site .preview-body{padding:clamp(22px,6vw,60px)}
+.public-site .preview-body h1{font-size:clamp(32px,6vw,54px)}
+.foot{margin-top:22px;text-align:center;color:var(--muted);font-size:12px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.preview{position:static}header{align-items:flex-start}.hero{padding-top:16px}}
+@media(max-width:460px){.row{grid-template-columns:1fr}.brand{font-size:15px}.brand-mark{width:34px;height:34px}.btn{padding:9px 10px;font-size:13px}main{padding-top:16px}}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="./index.html"><span class="brand-mark">W</span><span>OoeR Website</span></a>
+  <div class="actions">
+    <button class="btn" id="dashboardBtn">Dashboard</button>
+    <button class="btn" id="authBtn">Masuk OR Account</button>
+  </div>
+</header>
+
+<div id="publicView" class="hidden">
+  <div class="public-shell">
+    <div id="publicMessage" class="status">Memuat website…</div>
+    <article id="publicSite" class="public-site hidden">
+      <div id="publicCover" class="preview-cover"></div>
+      <div class="preview-body">
+        <h1 id="publicTitle"></h1>
+        <p id="publicDescription"></p>
+        <a id="publicLink" class="preview-link hidden" target="_blank" rel="noopener noreferrer"></a>
+        <p class="foot">Diterbitkan melalui OoeR Website</p>
+      </div>
+    </article>
+  </div>
+</div>
+
+<main id="appView">
+  <section class="hero">
+    <div class="eyebrow">Kreator website gratis</div>
+    <h1>Idemu. Website-mu.<br>Terbitkan dengan OoeR.</h1>
+    <p>Buat halaman profil, portofolio, karya, atau halaman informasi dari HP maupun komputer. Simpan sebagai draf, lihat pratinjau, lalu terbitkan dengan tautan publik.</p>
+  </section>
+
+  <section id="authPanel" class="panel auth-box hidden">
+    <h2 id="authTitle">Masuk dengan OR Account</h2>
+    <p class="muted">Gunakan OR Account jika sistem autentikasinya terhubung ke proyek Supabase yang dikonfigurasi.</p>
+    <div class="tabs">
+      <button class="btn primary" id="loginTab">Masuk</button>
+      <button class="btn" id="signupTab">Daftar</button>
+    </div>
+    <form id="authForm">
+      <div class="field"><label for="email">Email OR Account</label><input id="email" type="email" autocomplete="email" required placeholder="email@contoh.com"></div>
+      <div class="field"><label for="password">Kata sandi</label><input id="password" type="password" minlength="6" autocomplete="current-password" required placeholder="Minimal 6 karakter"></div>
+      <button class="btn primary" type="submit" id="authSubmit">Masuk</button>
+    </form>
+    <div id="authStatus" class="status"></div>
+    <p class="muted">Catatan: sesi Supabase tidak otomatis dibagikan antarproyek. Jika OR Account memakai proyek atau metode login lain, perlu integrasi autentikasi resmi.</p>
+  </section>
+
+  <section id="workspace" class="hidden">
+    <div class="layout">
+      <div class="panel">
+        <h2 id="editorHeading">Buat website pertamamu</h2>
+        <form id="siteForm">
+          <div class="field"><label for="siteTitle">Nama / judul website</label><input id="siteTitle" maxlength="90" required placeholder="Contoh: Portofolio Saya"></div>
+          <div class="field"><label for="siteSlug">Alamat website (slug)</label><input id="siteSlug" maxlength="48" pattern="[a-z0-9]+(-[a-z0-9]+)*" required placeholder="portofolio-saya"><small>Alamat publik menggunakan parameter situs pada halaman OoeR Website.</small></div>
+          <div class="field"><label for="siteDescription">Isi website</label><textarea id="siteDescription" maxlength="12000" required placeholder="Ceritakan tentang dirimu, karya, layanan, atau informasi yang ingin kamu bagikan."></textarea></div>
+          <div class="field"><label for="siteCover">Gambar sampul (opsional)</label><input id="siteCover" type="file" accept="image/png,image/jpeg,image/webp"><small>Format JPG, PNG, atau WebP. Maksimal 4 MB.</small></div>
+          <div class="row">
+            <div class="field"><label for="siteColor">Warna utama</label><input id="siteColor" type="color" value="#65a30d"></div>
+            <div class="field"><label for="siteLink">Tautan tambahan (opsional)</label><input id="siteLink" type="url" placeholder="https://..."></div>
+          </div>
+          <div class="field"><label for="siteLinkLabel">Teks tautan</label><input id="siteLinkLabel" maxlength="60" placeholder="Lihat karya saya"></div>
+          <div class="actions">
+            <button class="btn" type="button" id="newBtn">Website baru</button>
+            <button class="btn" type="button" id="saveBtn">Simpan draf</button>
+            <button class="btn primary" type="button" id="publishBtn">Terbitkan</button>
+          </div>
+        </form>
+        <div id="editorStatus" class="status"></div>
+      </div>
+      <aside class="panel preview">
+        <h2>Pratinjau langsung</h2>
+        <article class="preview-frame">
+          <div id="previewCover" class="preview-cover"></div>
+          <div class="preview-body">
+            <h1 id="previewTitle">Judul website kamu</h1>
+            <p id="previewDescription">Isi website akan muncul di sini saat kamu mengetik.</p>
+            <a id="previewLink" class="preview-link hidden" target="_blank" rel="noopener noreferrer">Lihat selengkapnya</a>
+          </div>
+        </article>
+        <p class="muted">Editor awal mendukung judul, teks, warna, gambar sampul, dan satu tautan eksternal. Belum mendukung editor drag-and-drop atau unggah kode HTML/JavaScript bebas.</p>
+      </aside>
+    </div>
+    <section class="panel" style="margin-top:18px">
+      <h2>Website saya</h2>
+      <p class="muted">Draf dan website terbit milik akun yang sedang masuk.</p>
+      <button class="btn" id="refreshBtn">Muat ulang daftar</button>
+      <div id="projectStatus" class="status"></div>
+      <div id="projects" class="projects"></div>
+    </section>
+  </section>
+  <div id="configWarning" class="status error hidden"></div>
+  <div class="foot">OoeR Website · Tahap awal · Unggah hanya karya yang kamu punya haknya.</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* Isi dengan publishable/anon key dari proyek Supabase OR Account.
+   Jangan gunakan service_role key di browser. */
+const SUPABASE_URL = "https://mkjetsmaozegaqbgfsyc.supabase.co";
+const SUPABASE_ANON_KEY = "GANTI_DENGAN_PUBLISHABLE_KEY_OR_ACCOUNT";
+
+const $ = id => document.getElementById(id);
+let supabaseClient = null;
+let currentUser = null;
+let currentSiteId = null;
+let authMode = "login";
+let coverUrl = "";
+const params = new URLSearchParams(location.search);
+const publicSlug = params.get("site");
+
+function showStatus(id,message,error=false){
+  const el=$(id);el.textContent=message||"";el.classList.toggle("error",!!error);
+}
+function safeSlug(value){
+  return value.toLowerCase().trim().normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"").slice(0,48);
+}
+function getFormData(){
+  return {
+    title:$("siteTitle").value.trim(),
+    slug:safeSlug($("siteSlug").value||$("siteTitle").value),
+    description:$("siteDescription").value.trim(),
+    cover_url:coverUrl||null,
+    theme_color:$("siteColor").value||"#65a30d",
+    external_url:$("siteLink").value.trim()||null,
+    external_label:$("siteLinkLabel").value.trim()||"Buka tautan",
+    status:"draft"
+  };
+}
+function paintPreview(){
+  const d=getFormData();
+  $("previewTitle").textContent=d.title||"Judul website kamu";
+  $("previewDescription").textContent=d.description||"Isi website akan muncul di sini saat kamu mengetik.";
+  $("previewCover").style.backgroundColor=d.theme_color;
+  $("previewCover").style.backgroundImage=d.cover_url?`url("${d.cover_url}")`:"";
+  $("previewLink").style.backgroundColor=d.theme_color;
+  if(d.external_url){
+    $("previewLink").href=d.external_url;
+    $("previewLink").textContent=d.external_label;
+    $("previewLink").classList.remove("hidden");
+  }else $("previewLink").classList.add("hidden");
+}
+["siteTitle","siteSlug","siteDescription","siteColor","siteLink","siteLinkLabel"].forEach(id=>{
+  $(id).addEventListener("input",()=>{
+    if(id==="siteTitle"&&!$("siteSlug").dataset.edited)$("siteSlug").value=safeSlug($("siteTitle").value);
+    if(id==="siteSlug")$("siteSlug").dataset.edited="1";
+    paintPreview();
+  });
+});
+$("siteCover").addEventListener("change",async event=>{
+  const file=event.target.files&&event.target.files[0];
+  if(!file)return;
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+    showStatus("editorStatus","Format gambar harus JPG, PNG, atau WebP.",true);return;
+  }
+  if(file.size>4*1024*1024){
+    showStatus("editorStatus","Ukuran gambar maksimal 4 MB.",true);return;
+  }
+  if(!currentUser){showStatus("editorStatus","Masuk terlebih dahulu untuk mengunggah gambar.",true);return;}
+  showStatus("editorStatus","Mengunggah gambar…");
+  const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
+  const path=`${currentUser.id}/${crypto.randomUUID()}.${ext}`;
+  const {data,error}=await supabaseClient.storage.from("ooer-website-assets").upload(path,file,{upsert:false,contentType:file.type});
+  if(error){showStatus("editorStatus","Gagal mengunggah gambar: "+error.message,true);return;}
+  coverUrl=supabaseClient.storage.from("ooer-website-assets").getPublicUrl(data.path).data.publicUrl;
+  paintPreview();showStatus("editorStatus","Gambar berhasil diunggah. Simpan draf atau terbitkan untuk menyimpan perubahan.");
+});
+$("loginTab").addEventListener("click",()=>setAuthMode("login"));
+$("signupTab").addEventListener("click",()=>setAuthMode("signup"));
+function setAuthMode(mode){
+  authMode=mode;
+  $("authTitle").textContent=mode==="login"?"Masuk dengan OR Account":"Daftar OR Account";
+  $("authSubmit").textContent=mode==="login"?"Masuk":"Buat akun";
+  $("loginTab").classList.toggle("primary",mode==="login");
+  $("signupTab").classList.toggle("primary",mode==="signup");
+  $("password").autocomplete=mode==="login"?"current-password":"new-password";
+}
+$("authBtn").addEventListener("click",()=>{
+  $("authPanel").classList.toggle("hidden");
+  $("authPanel").scrollIntoView({behavior:"smooth",block:"center"});
+});
+$("dashboardBtn").addEventListener("click",()=>{
+  if(!currentUser){$("authPanel").classList.remove("hidden");$("authPanel").scrollIntoView({behavior:"smooth"});}
+  else $("workspace").scrollIntoView({behavior:"smooth"});
+});
+$("authForm").addEventListener("submit",async e=>{
+  e.preventDefault();if(!supabaseClient)return;
+  const email=$("email").value.trim(),password=$("password").value;
+  $("authSubmit").disabled=true;
+  showStatus("authStatus",authMode==="login"?"Sedang masuk…":"Membuat akun…");
+  const result=authMode==="login"
+    ?await supabaseClient.auth.signInWithPassword({email,password})
+    :await supabaseClient.auth.signUp({email,password});
+  $("authSubmit").disabled=false;
+  if(result.error){showStatus("authStatus",result.error.message,true);return;}
+  if(authMode==="signup"&&!result.data.session){
+    showStatus("authStatus","Pendaftaran diterima. Periksa email untuk konfirmasi, lalu masuk.");return;
+  }
+  showStatus("authStatus","Berhasil.");await loadSession();
+});
+async function loadSession(){
+  if(!supabaseClient)return;
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error){showStatus("authStatus",error.message,true);return;}
+  currentUser=data.session?.user||null;
+  $("authBtn").textContent=currentUser?(currentUser.email||"OR Account"):"Masuk OR Account";
+  $("authPanel").classList.toggle("hidden",!!currentUser);
+  $("workspace").classList.toggle("hidden",!currentUser);
+  if(currentUser)await loadProjects();
+}
+function resetEditor(){
+  currentSiteId=null;coverUrl="";
+  $("siteForm").reset();$("siteColor").value="#65a30d";
+  $("siteSlug").dataset.edited="";
+  $("editorHeading").textContent="Buat website baru";
+  paintPreview();showStatus("editorStatus","");
+}
+$("newBtn").addEventListener("click",resetEditor);
+$("saveBtn").addEventListener("click",()=>saveSite(false));
+$("publishBtn").addEventListener("click",()=>saveSite(true));
+$("refreshBtn").addEventListener("click",loadProjects);
+
+async function saveSite(publish){
+  if(!currentUser){showStatus("editorStatus","Masuk terlebih dahulu.",true);return;}
+  const d=getFormData();
+  if(!d.title||!d.slug||!d.description){
+    showStatus("editorStatus","Isi judul, alamat, dan isi website terlebih dahulu.",true);return;
+  }
+  if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(d.slug)){
+    showStatus("editorStatus","Alamat hanya boleh berisi huruf kecil, angka, dan tanda hubung.",true);return;
+  }
+  if(d.external_url&&!/^https?:\/\//i.test(d.external_url)){
+    showStatus("editorStatus","Tautan tambahan harus diawali https:// atau http://.",true);return;
+  }
+  d.status=publish?"published":"draft";
+  if(publish)d.published_at=new Date().toISOString();
+  showStatus("editorStatus",publish?"Menerbitkan website…":"Menyimpan draf…");
+  $("saveBtn").disabled=$("publishBtn").disabled=true;
+  const result=currentSiteId
+    ?await supabaseClient.from("ooer_websites").update(d).eq("id",currentSiteId).eq("owner_id",currentUser.id).select().single()
+    :await supabaseClient.from("ooer_websites").insert({...d,owner_id:currentUser.id}).select().single();
+  $("saveBtn").disabled=$("publishBtn").disabled=false;
+  if(result.error){showStatus("editorStatus","Gagal menyimpan: "+result.error.message,true);return;}
+  currentSiteId=result.data.id;$("editorHeading").textContent=d.title;
+  await loadProjects();
+  if(publish){
+    const url=new URL(location.href);url.searchParams.set("site",d.slug);url.hash="";
+    showStatus("editorStatus","Website diterbitkan! Tautan publik: "+url.toString());
+    if(confirm("Website berhasil diterbitkan. Buka halaman publik sekarang?"))window.open(url.toString(),"_blank","noopener");
+  }else showStatus("editorStatus","Draf berhasil disimpan.");
+}
+async function loadProjects(){
+  if(!currentUser||!supabaseClient)return;
+  showStatus("projectStatus","Memuat daftar website…");
+  const {data,error}=await supabaseClient.from("ooer_websites")
+    .select("id,title,slug,status,updated_at,published_at")
+    .eq("owner_id",currentUser.id).order("updated_at",{ascending:false});
+  if(error){showStatus("projectStatus","Tidak bisa memuat daftar. Pastikan SQL OoeR Website sudah dijalankan. "+error.message,true);return;}
+  showStatus("projectStatus",data.length?`${data.length} website ditemukan.`:"Belum ada website. Buat website pertamamu di atas.");
+  const root=$("projects");root.replaceChildren();
+  for(const item of data){
+    const card=document.createElement("article");card.className="project";
+    const h=document.createElement("h3");h.textContent=item.title;
+    const p=document.createElement("p");p.textContent=`/${item.slug} · ${item.status==="published"?"Sudah terbit":"Draf"}`;
+    const actions=document.createElement("div");actions.className="project-actions";
+    const edit=document.createElement("button");edit.className="btn";edit.textContent="Edit";edit.onclick=()=>editSite(item.id);actions.append(edit);
+    if(item.status==="published"){
+      const open=document.createElement("button");open.className="btn";open.textContent="Lihat";
+      open.onclick=()=>{const u=new URL(location.href);u.searchParams.set("site",item.slug);window.open(u.toString(),"_blank","noopener");};
+      actions.append(open);
+    }
+    const del=document.createElement("button");del.className="btn";del.textContent="Hapus";del.onclick=()=>deleteSite(item.id,item.title);actions.append(del);
+    card.append(h,p,actions);root.append(card);
+  }
+}
+async function editSite(id){
+  showStatus("editorStatus","Memuat website…");
+  const {data,error}=await supabaseClient.from("ooer_websites").select("*").eq("id",id).eq("owner_id",currentUser.id).single();
+  if(error){showStatus("editorStatus",error.message,true);return;}
+  currentSiteId=data.id;coverUrl=data.cover_url||"";
+  $("siteTitle").value=data.title||"";$("siteSlug").value=data.slug||"";$("siteSlug").dataset.edited="1";
+  $("siteDescription").value=data.description||"";$("siteColor").value=data.theme_color||"#65a30d";
+  $("siteLink").value=data.external_url||"";$("siteLinkLabel").value=data.external_label||"";
+  $("siteCover").value="";$("editorHeading").textContent="Edit: "+data.title;paintPreview();
+  showStatus("editorStatus",data.status==="published"?"Website sudah terbit. Tekan Terbitkan untuk memperbarui.":"Draf dimuat.");
+  $("workspace").scrollIntoView({behavior:"smooth"});
+}
+async function deleteSite(id,title){
+  if(!confirm(`Hapus website "${title}"? Tindakan ini tidak dapat dibatalkan.`))return;
+  const {error}=await supabaseClient.from("ooer_websites").delete().eq("id",id).eq("owner_id",currentUser.id);
+  if(error){showStatus("projectStatus","Gagal menghapus: "+error.message,true);return;}
+  if(currentSiteId===id)resetEditor();
+  await loadProjects();
+}
+async function loadPublicSite(slug){
+  $("appView").classList.add("hidden");$("publicView").classList.remove("hidden");
+  if(!supabaseClient){showStatus("publicMessage","Konfigurasi Supabase belum lengkap.",true);return;}
+  const {data,error}=await supabaseClient.from("ooer_websites")
+    .select("title,slug,description,cover_url,theme_color,external_url,external_label,status,published_at")
+    .eq("slug",slug).eq("status","published").maybeSingle();
+  if(error||!data){showStatus("publicMessage","Website tidak ditemukan, belum diterbitkan, atau sedang tidak tersedia.",true);return;}
+  $("publicMessage").classList.add("hidden");$("publicSite").classList.remove("hidden");
+  $("publicTitle").textContent=data.title;$("publicDescription").textContent=data.description;
+  $("publicCover").style.backgroundColor=data.theme_color||"#65a30d";
+  $("publicCover").style.backgroundImage=data.cover_url?`url("${data.cover_url}")`:"";
+  if(data.external_url){
+    $("publicLink").href=data.external_url;$("publicLink").textContent=data.external_label||"Buka tautan";
+    $("publicLink").style.backgroundColor=data.theme_color||"#65a30d";$("publicLink").classList.remove("hidden");
+  }else $("publicLink").classList.add("hidden");
+  document.title=data.title+" — OoeR Website";
+  document.querySelector('meta[name="description"]').content=data.description.slice(0,155);
+}
+(async function init(){
+  paintPreview();
+  if(!window.supabase){showStatus("authStatus","Pustaka Supabase gagal dimuat.",true);return;}
+  if(!SUPABASE_ANON_KEY||SUPABASE_ANON_KEY.startsWith("GANTI_")){
+    $("configWarning").classList.remove("hidden");
+    $("configWarning").textContent="Konfigurasi belum lengkap: ganti SUPABASE_ANON_KEY dengan publishable/anon key proyek Supabase OR Account. Jangan gunakan service_role key.";
+    return;
+  }
+  supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  await loadSession();
+  supabaseClient.auth.onAuthStateChange(()=>{setTimeout(loadSession,0);});
+  if(publicSlug)await loadPublicSite(safeSlug(publicSlug));
+})();
+</script>
+</body>
+</html>
